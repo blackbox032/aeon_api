@@ -27,7 +27,8 @@ function toXML(
 //may return success response
 //or standard error object
 function toObj(xml) {
-  return JSON.parse(xml);
+  json = parser.parse(xml);
+  return JSON.parse(json);
 }
 
 module.exports = {
