@@ -8,19 +8,19 @@ function toXML(
   amount,
   reference
 ) {
-  ret = `<request>
-         <Version>2.1</Version> 
-         <EventType>ConfirmMeter</EventType>
-         <event> 
-                <DeviceId>${deviceId}</DeviceId> 
-                <DeviceSer>${deviceSer}</DeviceSer> 
-                <UserPin>${userPin}</UserPin> 
-                <MeterNum>${meterNumber}</MeterNum> 
-                <Amount>${amount}</Amount>
-                <Reference>${reference}</Reference>
-         </event> 
-        </request>`;
-  return ret.replace("\n", "") + "\n";
+  ret = `<request>` +
+         `<Version>2.1</Version>` + 
+         `<EventType>ConfirmMeter</EventType>` +
+         `<event>` +
+                `<DeviceId>${deviceId}</DeviceId>` + 
+                `<DeviceSer>${deviceSer}</DeviceSer>` + 
+                `<UserPin>${userPin}</UserPin>` +
+                `<MeterNum>${meterNumber}</MeterNum>` + 
+                `<Amount>${amount}</Amount>` +
+                `<Reference>${reference}</Reference>` +
+         `</event>` + 
+        `</request>`;
+  return ret + "\n";
 }
 
 //may return success response

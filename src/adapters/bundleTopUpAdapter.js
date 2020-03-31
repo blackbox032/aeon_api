@@ -7,21 +7,21 @@ function toXML(
   transType,
   reference,
   phoneNumber,
-  amount
+  productCode
 ) {
-  ret = `<request>
-    <EventType>DoBundleTopup</EventType>
-    <event>
-      <UserPin>${userPin}</UserPin>
-      <DeviceId>${deviceId}</DeviceId>
-      <DeviceSer>${deviceSer}!</DeviceSer>
-      <TransType>${transType}</TransType>
-      <Reference>${reference}</Reference>
-      <PhoneNumber>${phoneNumber}</PhoneNumber>
-      <ProductCode>${amount}</ProductCode>
-    </event>
-  </request>`;
-  return ret.replace("\n", "") + "\n";
+  ret = `<request>` +
+    `<EventType>DoBundleTopup</EventType>` +
+    `<event>` +
+      `<UserPin>${userPin}</UserPin>` +
+      `<DeviceId>${deviceId}</DeviceId>` +
+      `<DeviceSer>${deviceSer}!</DeviceSer>` +
+      `<TransType>${transType}</TransType>` +
+      `<Reference>${reference}</Reference>` +
+      `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
+      `<ProductCode>${productCode}</ProductCode>` +
+    `</event>` +
+  `</request>`;
+  return ret + "\n";
 }
 
 //may return success response

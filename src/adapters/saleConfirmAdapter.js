@@ -7,19 +7,18 @@ function toXML(
   confrimationRef,
   reference
 ) {
-  ret = `<request>
-        <Version>2.1</Version>
-        <EventType>SoldVoucher</EventType>
-        <event> 
-                <DeviceId>${deviceId}</DeviceId> 
-                <DeviceSer>${deviceSer}</DeviceSer> 
-                <UserPin>${userPin}</UserPin> 
-                <TransRef>${confrimationRef}</TransRef>
-                <Reference>${reference}</Reference>
-        </event>
-        </request>
-`;
-  return ret.replace("\n", "") + "\n";
+  ret = `<request>` +
+        `<Version>2.1</Version>` +
+        `<EventType>SoldVoucher</EventType>` +
+        `<event>` + 
+                `<DeviceId>${deviceId}</DeviceId>` +
+                `<DeviceSer>${deviceSer}</DeviceSer>` + 
+                `<UserPin>${userPin}</UserPin>` + 
+                `<TransRef>${confrimationRef}</TransRef>` +
+                `<Reference>${reference}</Reference>` +
+        `</event>` +
+        `</request>`;
+  return ret + "\n";
 }
 
 //may return success response

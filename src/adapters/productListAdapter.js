@@ -1,16 +1,16 @@
 var parser = require("xml2json");
 
 function toXML(userPin, deviceId, deviceSer, transType) {
-  ret = `<request>
-    <EventType>GetProductList</EventType>
-    <event>
-      <UserPin>${userPin}</UserPin>
-      <DeviceId>${deviceId}</DeviceId>
-      <DeviceSer>${deviceSer}</DeviceSer>
-      <TransType>${transType}</TransType>
-    </event>
-  </request>`;
-  return ret.replace("\n", "") + "\n";
+  ret = `<request>` +
+    `<EventType>GetProductList</EventType>` +
+    `<event>` +
+      `<UserPin>${userPin}</UserPin>` +
+      `<DeviceId>${deviceId}</DeviceId>` +
+      `<DeviceSer>${deviceSer}</DeviceSer>` +
+      `<TransType>${transType}</TransType>` +
+    `</event>` +
+  `</request>`;
+  return ret + "\n";
 }
 
 //may return success response

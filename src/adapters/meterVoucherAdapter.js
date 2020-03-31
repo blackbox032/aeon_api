@@ -5,18 +5,17 @@ function toXML(
   confrimationRef,
   reference
 ) {
-  ret = `<request>
-        <Version>2.1</Version>
-        <SessionId>${sessionId}</SessionId>
-        <EventType>GetVoucher</EventType>
-        <event>
-                <Type>FBE</Type>
-                <TransRef>${confrimationRef}</TransRef>
-                <Reference>${reference}</Reference>
-        </event>
-        </request>
-`;
-  return ret.replace("\n", "") + "\n";
+  ret = `<request>` +
+        `<Version>2.1</Version>` +
+        `<SessionId>${sessionId}</SessionId>` +
+        `<EventType>GetVoucher</EventType>` +
+        `<event>` +
+                `<Type>FBE</Type>` +
+                `<TransRef>${confrimationRef}</TransRef>` +
+                `<Reference>${reference}</Reference>` +
+       `</event>` +
+        `</request>`;
+  return ret + "\n";
 }
 
 //may return success response
