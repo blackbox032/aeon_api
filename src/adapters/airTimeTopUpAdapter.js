@@ -9,25 +9,25 @@ function toXML(
   phoneNumber,
   amount
 ) {
-  return;
-  `<request>
-    <EventType>DoBundleTopup</EventType>
+  ret = `<request>
+    <EventType>GetTopup</EventType>
     <event>
       <UserPin>${userPin}</UserPin>
       <DeviceId>${deviceId}</DeviceId>
-      <DeviceSer>${deviceSer}!</DeviceSer>
+      <DeviceSer>${deviceSer}</DeviceSer>
       <TransType>${transType}</TransType>
       <Reference>${reference}</Reference>
       <PhoneNumber>${phoneNumber}</PhoneNumber>
-      <ProductCode>${amount}</ProductCode>
+      <Amount>${amount}</Amount>
     </event>
   </request>`;
+  return ret.replace("\n", "") + "\n";
 }
 
 //may return success response
 //or standard error object
-function toObj(xml) {
-  json = parser.parse(xml);
+function toJS(xml) {
+  json = parser.toJson(xml);
   return JSON.parse(json);
 }
 

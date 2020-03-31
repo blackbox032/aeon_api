@@ -1,5 +1,3 @@
-var parser = require("xml2json");
-
 /*jshint esversion: 6 */
 // var parser = require("fast-xml-parser");
 var xml = `<response>
