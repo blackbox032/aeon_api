@@ -1,7 +1,16 @@
 const net = require("net");
+const util = require("util");
 const errorAdapter = require("../adapters/errorAdapter");
 
-function request(address, port, xml, timeout, onComplete) {
+const request = (address, port, xml, timeout) => {
+  return new Promise((resolve, reject) => {
+    requestCallback(address, port, xml, timeout, data => {
+      resolve(data);
+    });
+  });
+};
+
+function requestCallback(address, port, xml, timeout, onComplete) {
   const client = {
     init: function() {
       const client = this; //Needed because 'this' reference changes scope inside event callbacks

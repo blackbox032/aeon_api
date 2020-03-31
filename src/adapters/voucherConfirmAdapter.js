@@ -1,10 +1,6 @@
 var parser = require("xml2json");
 
-function toXML(
-  sessionId,
-  confrimationRef,
-  reference
-) {
+function toXML(sessionId, confrimationRef, reference) {
   ret = `<request>
         <Version>2.1</Version>
         <SessionId>${sessionId}</SessionId>
