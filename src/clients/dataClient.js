@@ -13,7 +13,7 @@ async function getBundleList(transType) {
   xml = productListAdapter.toXML(userPin, deviceId, deviceSer, transType);
   return await socketRequest(host, port, xml, ttl).then(serverResponse => {
     // console.log("Bundle List response: ", serverResponse);
-    return bundleTopUpAdapter.toJS(serverResponse);
+    return productListAdapter.toJS(serverResponse);
   });
 }
 
