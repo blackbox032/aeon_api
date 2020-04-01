@@ -10,19 +10,20 @@ function toXML(
   amount,
   productCode
 ) {
-  ret = `<request>` +
+  ret =
+    `<request>` +
     `<EventType>MNOValidation</EventType>` +
     `<event>` +
-      `<UserPin>${userPin}</UserPin>` +
-      `<DeviceId>${deviceId}</DeviceId>` +
-      `<DeviceSer>${deviceSer}</DeviceSer>` +
-      `<TransType>${transType}</TransType>` +
-      `<Reference>${reference}</Reference>` +
-      `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
-      `<Amount>${amount}</Amount>` +
-      `<ProductCode>${productCode}</ProductCode>` +
+    `<UserPin>${userPin}</UserPin>` +
+    `<DeviceId>${deviceId}</DeviceId>` +
+    `<DeviceSer>${deviceSer}</DeviceSer>` +
+    `<TransType>${transType}</TransType>` +
+    `<Reference>${reference}</Reference>` +
+    `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
+    `<Amount>${amount}</Amount>` +
+    `<ProductCode>${productCode}</ProductCode>` +
     `</event>` +
-  `</request>`;
+    `</request>`;
   return ret + "\n";
 }
 

@@ -1,15 +1,16 @@
 var parser = require("xml2json");
 
 function toXML(sessionId, transRef, origReference, phoneNumber) {
-  ret = `<request>` +
+  ret =
+    `<request>` +
     `<SessionId>${sessionId}</SessionId>` +
     `<EventType>Reprint</EventType>` +
     `<event>` +
-      `<TransRef>${transRef}</TransRef>` +
-      `<OrigReference>${origReference}</OrigReference>` +
-      `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
+    `<TransRef>${transRef}</TransRef>` +
+    `<OrigReference>${origReference}</OrigReference>` +
+    `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
     `</event>` +
-  `</request>`;
+    `</request>`;
   return ret + "\n";
 }
 

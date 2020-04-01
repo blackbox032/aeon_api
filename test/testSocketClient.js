@@ -1,11 +1,9 @@
 const socketRequest = require("../src/clients/socketRequest");
 
 //Test socketRequest().then syntax
-serverResponse = socketRequest("127.0.0.1", 8090, "1", 60000).then(
-  serverResponse => {
-    console.log("1: ", serverResponse);
-  }
-);
+socketRequest("127.0.0.1", 8090, "1", 60000).then(serverResponse => {
+  console.log("1: ", serverResponse);
+});
 
 testAwait();
 

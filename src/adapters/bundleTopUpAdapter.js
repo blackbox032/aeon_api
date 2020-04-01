@@ -9,18 +9,19 @@ function toXML(
   phoneNumber,
   productCode
 ) {
-  ret = `<request>` +
+  ret =
+    `<request>` +
     `<EventType>DoBundleTopup</EventType>` +
     `<event>` +
-      `<UserPin>${userPin}</UserPin>` +
-      `<DeviceId>${deviceId}</DeviceId>` +
-      `<DeviceSer>${deviceSer}!</DeviceSer>` +
-      `<TransType>${transType}</TransType>` +
-      `<Reference>${reference}</Reference>` +
-      `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
-      `<ProductCode>${productCode}</ProductCode>` +
+    `<UserPin>${userPin}</UserPin>` +
+    `<DeviceId>${deviceId}</DeviceId>` +
+    `<DeviceSer>${deviceSer}!</DeviceSer>` +
+    `<TransType>${transType}</TransType>` +
+    `<Reference>${reference}</Reference>` +
+    `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
+    `<ProductCode>${productCode}</ProductCode>` +
     `</event>` +
-  `</request>`;
+    `</request>`;
   return ret + "\n";
 }
 

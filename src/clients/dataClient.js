@@ -1,5 +1,6 @@
 const socketRequest = require("./socketRequest");
 const bundleTopUpAdapter = require("../adapters/bundleTopUpAdapter");
+const productListAdapter = require("../adapters/productListAdapter");
 
 const port = process.env.PORT || 7898;
 const host = process.env.EXTERNAL_URL || "196.38.158.118";
@@ -8,9 +9,15 @@ const userPin = process.env.PIN || 011234;
 const deviceId = process.env.DEVICE_ID || 2215;
 const deviceSer = process.env.DEVICE_SER || "TiZZIw779!";
 
-//TODO: GetBundle
+async function getBundleList(transType) {
+  xml = productListAdapter.toXML(userPin, deviceId, deviceSer, transType);
+  return await socketRequest(host, port, xml, ttl).then(serverResponse => {
+    // console.log("Bundle List response: ", serverResponse);
+    return bundleTopUpAdapter.toJS(serverResponse);
+  });
+}
 
-function bundleTopUp(transType, reference, phoneNumber, amount) {
+async function doBundleTopUp(transType, reference, phoneNumber, productCode) {
   xml = bundleTopUpAdapter.toXML(
     userPin,
     deviceId,
@@ -18,12 +25,12 @@ function bundleTopUp(transType, reference, phoneNumber, amount) {
     transType,
     reference,
     phoneNumber,
-    amount
+    productCode
   );
-  socketRequest(host, port, xml, ttl, function(serverResponse) {
-    console.log("Bundle Topup response: ", serverResponse);
+  return await socketRequest(host, port, xml, ttl).then(serverResponse => {
+    // console.log("Bundle Topup response: ", serverResponse);
     return bundleTopUpAdapter.toJS(serverResponse);
   });
 }
 
-module.exports = { bundleTopUp };
+module.exports = { doBundleTopUp, getBundleList };
