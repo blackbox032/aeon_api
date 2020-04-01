@@ -1,14 +1,13 @@
 const socketRequest = require("./socketRequest");
 const airtimeTopUpAdapter = require("../adapters/airtimeTopUpAdapter");
 
-const port = process.env.PORT || 7898;
-const host = process.env.EXTERNAL_URL || "196.38.158.118";
+const port = process.env.PORT || 7800;
+const host = process.env.EXTERNAL_URL || "aeon.qa.bltelecoms.net";
 const ttl = process.env.TTL || 60000;
-const userPin = process.env.PIN || 011234;
-const deviceId = process.env.DEVICE_ID || 2215;
-const deviceSer = process.env.DEVICE_SER || "TiZZIw779!";
+const userPin = process.env.PIN || "016351";
+const deviceId = process.env.DEVICE_ID || "865181";
+const deviceSer = process.env.DEVICE_SER || "w!22!t";
 
-//TODO: GetBundle
 async function doAirtimeTopUp(transType, reference, phoneNumber, amount) {
   xml = airtimeTopUpAdapter.toXML(
     userPin,
