@@ -1,4 +1,4 @@
-var parser = require("xml2json");
+var utils = require("./adapterUtils");
 
 function toXML(userPin, deviceId, deviceSer, confrimationRef, reference) {
   ret =
@@ -19,8 +19,7 @@ function toXML(userPin, deviceId, deviceSer, confrimationRef, reference) {
 //may return success response
 //or standard error object
 function toJS(xml) {
-  json = parser.toJson(xml);
-  return JSON.parse(json);
+  return utils.getObj(xml);
 }
 
 module.exports = {

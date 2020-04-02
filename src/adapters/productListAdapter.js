@@ -24,7 +24,7 @@ function toJS(xml) {
       //look for "SMS" and "DATA" category array entries and promote them
       category = utils.nested(response, "ProductList.Category");
 
-      if (category != undefined && category) {
+      if (category != undefined && Array.isArray(category)) {
         category.forEach(cat => {
           if (!Array.isArray(cat.Product)) {
             cat.Product = [cat.Product];
@@ -35,6 +35,7 @@ function toJS(xml) {
       } else {
         response.ProductList = {};
       }
+      return response;
     } catch (ex) {
       utils.aeonError(
         utils.RESPONSECONVERSIONERROR,

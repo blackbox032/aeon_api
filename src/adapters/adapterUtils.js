@@ -1,5 +1,4 @@
 var xml2json = require("xml2json");
-const errorAdapter = require("./errorAdapter");
 
 const RESPONSECONVERSIONERROR = "ResponseConversionError";
 
@@ -35,10 +34,11 @@ function getObj(xml) {
     }
     //promote all properties in the response.data key
     //to root propertiies
-    response.data.keys.foreach(() => {
-      response[property] = response.data[property];
-      delete response.data[property];
+
+    Object.keys(response.data).forEach(key => {
+      response[key] = response.data[key];
     });
+    delete response.data;
   } catch (ex) {
     return aeonError(
       RESPONSECONVERSIONERROR,
