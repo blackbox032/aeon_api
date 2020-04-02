@@ -38,7 +38,7 @@ function transformArrayKeys(object, arrayKeys) {
     //["response","data","Productlist","Category"]
     keyPath = arrayKey.split(".");
     keyPath.foreach(key => {});
-    transformKeys(object, shift(keyPath), keyPath);
+    transformKeys(object, keyPath.shift(), keyPath);
   });
 }
 
