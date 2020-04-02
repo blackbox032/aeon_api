@@ -1,0 +1,351 @@
+{
+  "response": {
+    "SessionId": "c3ca01d4-3d27-4a6e-bf75-12a0e83a287a",
+    "EventType": "GetProductList",
+    "event": {
+      "EventCode": "0"
+    },
+    "data": {
+      "ProductList": {
+        "Category": [
+          {
+            "type": "SMS",
+            "Name": "SMS",
+            "Product": [
+              {
+                "Description": "30 SMS R10.00",
+                "Amount": "10.0",
+                "ProductCode": "284",
+                "Top5Seller": "true"
+              },
+              {
+                "Description": "50 SMS R17.00",
+                "Amount": "17.0",
+                "ProductCode": "285",
+                "Top5Seller": "true"
+              },
+              {
+                "Description": "100 SMS R30.00",
+                "Amount": "30.0",
+                "ProductCode": "286",
+                "Top5Seller": "true"
+              },
+              {
+                "Description": "200 SMS R50.00",
+                "Amount": "50.0",
+                "ProductCode": "287",
+                "Top5Seller": "true"
+              },
+              {
+                "Description": "300 SMS R75.00",
+                "Amount": "75.0",
+                "ProductCode": "288",
+                "Top5Seller": "true"
+              },
+              {
+                "Description": "15 SMS R5.00",
+                "Amount": "5.0",
+                "ProductCode": "302",
+                "Top5Seller": "true"
+              },
+              {
+                "Description": "2000 SMS R420.00",
+                "Amount": "420.0",
+                "ProductCode": "303",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "500 SMS R114.00",
+                "Amount": "114.0",
+                "ProductCode": "304",
+                "Top5Seller": "true"
+              }
+            ]
+          },
+          {
+            "type": "DATA",
+            "Name": "DATA",
+            "Product": [
+              {
+                "Description": "Muziq10",
+                "Amount": "10.0",
+                "ProductCode": "312",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Muziq20",
+                "Amount": "20.0",
+                "ProductCode": "313",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Muziq30",
+                "Amount": "30.0",
+                "ProductCode": "314",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R5 25MB Daily",
+                "Amount": "5.0",
+                "ProductCode": "841",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R8 50MB Daily",
+                "Amount": "8.0",
+                "ProductCode": "842",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R15 120MB Daily",
+                "Amount": "15.0",
+                "ProductCode": "843",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R27 300MB Daily",
+                "Amount": "27.0",
+                "ProductCode": "844",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R50 1GB Daily",
+                "Amount": "50.0",
+                "ProductCode": "845",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "DataBundle R110 1GBFortnightly",
+                "Amount": "110.0",
+                "ProductCode": "846",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R30 1GB Hourly",
+                "Amount": "30.0",
+                "ProductCode": "850",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R10 20MB Monthly",
+                "Amount": "10.0",
+                "ProductCode": "851",
+                "Top5Seller": "true"
+              },
+              {
+                "Description": "Data Bundle R20 50MB Monthly",
+                "Amount": "20.0",
+                "ProductCode": "852",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R29 100MB Monthly",
+                "Amount": "29.0",
+                "ProductCode": "853",
+                "Top5Seller": "true"
+              },
+              {
+                "Description": "Data Bundle R39 150MB Monthly",
+                "Amount": "39.0",
+                "ProductCode": "854",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R60 300MB Monthly",
+                "Amount": "60.0",
+                "ProductCode": "855",
+                "Top5Seller": "true"
+              },
+              {
+                "Description": "Data Bundle R99 600MB Monthly",
+                "Amount": "99.0",
+                "ProductCode": "856",
+                "Top5Seller": "true"
+              },
+              {
+                "Description": "Data Bundle R120 750MB Monthly",
+                "Amount": "120.0",
+                "ProductCode": "857",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R149 1GB Monthly",
+                "Amount": "149.0",
+                "ProductCode": "858",
+                "Top5Seller": "true"
+              },
+              {
+                "Description": "Data Bundle R189 1.5GB Monthly",
+                "Amount": "189.0",
+                "ProductCode": "859",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R299 3GB Monthly",
+                "Amount": "299.0",
+                "ProductCode": "860",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R399 6GB Monthly",
+                "Amount": "399.0",
+                "ProductCode": "861",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R499 10GB Monthly",
+                "Amount": "499.0",
+                "ProductCode": "862",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R899 20GB Monthly",
+                "Amount": "899.0",
+                "ProductCode": "863",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R1249 30GB Monthly",
+                "Amount": "1249.0",
+                "ProductCode": "864",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R1999 50GB Monthly",
+                "Amount": "1999.0",
+                "ProductCode": "865",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "DataBundle R3499 100GB Mnthly",
+                "Amount": "3499.0",
+                "ProductCode": "866",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R10 30MB Weekly",
+                "Amount": "10.0",
+                "ProductCode": "868",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R12 60MB Weekly",
+                "Amount": "12.0",
+                "ProductCode": "869",
+                "Top5Seller": "true"
+              },
+              {
+                "Description": "Data Bundle R17 120MB Weekly",
+                "Amount": "17.0",
+                "ProductCode": "870",
+                "Top5Seller": "true"
+              },
+              {
+                "Description": "Data Bundle R25 200MB Weekly",
+                "Amount": "25.0",
+                "ProductCode": "871",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R40 350MB Weekly",
+                "Amount": "40.0",
+                "ProductCode": "872",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R55 500MB Weekly",
+                "Amount": "55.0",
+                "ProductCode": "873",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R70 1GB Weekly",
+                "Amount": "70.0",
+                "ProductCode": "874",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R99 2GB Weekly",
+                "Amount": "99.0",
+                "ProductCode": "875",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R199 5GB Weekly",
+                "Amount": "199.0",
+                "ProductCode": "876",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R2 15MB Hourly",
+                "Amount": "2.0",
+                "ProductCode": "878",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R5 50MB Hourly",
+                "Amount": "5.0",
+                "ProductCode": "879",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "Data Bundle R12 150MB Hourly",
+                "Amount": "12.0",
+                "ProductCode": "880",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "MTN One Time 100MB 12months R159",
+                "Amount": "159.0",
+                "ProductCode": "1000",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "MTN One Time 1GB 12months R899",
+                "Amount": "899.0",
+                "ProductCode": "1002",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "MTN One Time 2GB 12months R1399",
+                "Amount": "1399.0",
+                "ProductCode": "1004",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "MTN One Time 300MB 12months R399",
+                "Amount": "399.0",
+                "ProductCode": "1006",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "MTN One Time 500MB 12months R529",
+                "Amount": "529.0",
+                "ProductCode": "1008",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "MTN One Week (Weekly) 100MB R15",
+                "Amount": "15.0",
+                "ProductCode": "1012",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "MTN One Week (Weekly) 2GB R99",
+                "Amount": "99.0",
+                "ProductCode": "1014",
+                "Top5Seller": "false"
+              },
+              {
+                "Description": "MTN One Week (Weekly) 70MB R12",
+                "Amount": "12.0",
+                "ProductCode": "1073",
+                "Top5Seller": "false"
+              }
+            ]
+          }
+        ]
+      }
+    }
+  }
+}
