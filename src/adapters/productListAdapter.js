@@ -1,4 +1,4 @@
-var parser = require("xml2json");
+var utils = require("./adapterUtils");
 
 function toXML(userPin, deviceId, deviceSer, transType) {
   ret =
@@ -17,8 +17,32 @@ function toXML(userPin, deviceId, deviceSer, transType) {
 //may return success response
 //or standard error object
 function toJS(xml) {
-  json = parser.toJson(xml);
-  return JSON.parse(json);
+  response = utils.getObj(xml);
+
+  if (!response.error) {
+    try {
+      //look for "SMS" and "DATA" category array entries and promote them
+      category = utils.nested(response, "ProductList.Category");
+
+      if (category != undefined && category) {
+        category.forEach(cat => {
+          if (!Array.isArray(cat.Product)) {
+            cat.Product = [cat.Product];
+          }
+          response.ProductList[cat.type] = cat.Product;
+        });
+        delete response.ProductList.Category;
+      } else {
+        response.ProductList = {};
+      }
+    } catch (ex) {
+      utils.aeonError(
+        utils.RESPONSECONVERSIONERROR,
+        "Failed to convert product list xml",
+        "Communication Error"
+      );
+    }
+  }
 }
 
 module.exports = {
