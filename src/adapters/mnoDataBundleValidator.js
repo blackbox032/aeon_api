@@ -7,7 +7,6 @@ function toXML(
   transType,
   reference,
   phoneNumber,
-  amount,
   productCode
 ) {
   ret =
@@ -20,7 +19,6 @@ function toXML(
     `<TransType>${transType}</TransType>` +
     `<Reference>${reference}</Reference>` +
     `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
-    `<Amount>${amount}</Amount>` +
     `<ProductCode>${productCode}</ProductCode>` +
     `</event>` +
     `</request>`;

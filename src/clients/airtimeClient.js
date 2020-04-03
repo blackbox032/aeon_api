@@ -1,6 +1,7 @@
 const socketRequest = require("./socketRequest");
 const airtimeTopUpAdapter = require("../adapters/airtimeTopUpAdapter");
-const mnoValidationAdapter = require("../adapters/mnoValidationAdapter");
+const mnoAirtimeValidationAdapter = require("../adapters/mnoAirtimeValidationAdapter");
+const mnoDataBundleValidationAdapter = require("../adapters/mnoDataBundleValidator");
 
 const port = process.env.PORT || 7800;
 const host = process.env.EXTERNAL_URL || "aeon.qa.bltelecoms.net";
@@ -10,7 +11,7 @@ const deviceId = process.env.DEVICE_ID || "865181";
 const deviceSer = process.env.DEVICE_SER || "w!22!t";
 
 async function doAirtimeValidation(transType, reference, phoneNumber, amount) {
-        xml = mnoValidationAdapter.toXML(
+        xml = mnoAirtimeValidationAdapter.toXML(
           userPin,
           deviceId,
           deviceSer,
@@ -21,7 +22,23 @@ async function doAirtimeValidation(transType, reference, phoneNumber, amount) {
         );
         return await socketRequest(host, port, xml, ttl).then(serverResponse => {
           console.log("AirTime Validation response: ", serverResponse);
-          return mnoValidationAdapter.toJS(serverResponse);
+          return mnoAirtimeValidationAdapter.toJS(serverResponse);
+        });
+      }
+
+async function doDataBundleValidation(transType, reference, phoneNumber, product) {
+        xml = mnoDataBundleValidationAdapter.toXML(
+          userPin,
+          deviceId,
+          deviceSer,
+          transType,
+          reference,
+          phoneNumber,
+          product
+        );
+        return await socketRequest(host, port, xml, ttl).then(serverResponse => {
+          console.log("DataBundle Validation response: ", serverResponse);
+          return mnoDataBundleValidationAdapter.toJS(serverResponse);
         });
       }
 
@@ -41,4 +58,4 @@ async function doAirtimeTopUp(transType, reference, phoneNumber, amount) {
   });
 }
 
-module.exports = { doAirtimeValidation, doAirtimeTopUp };
+module.exports = { doAirtimeValidation, doDataBundleValidation, doAirtimeTopUp };
