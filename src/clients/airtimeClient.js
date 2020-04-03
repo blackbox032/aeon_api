@@ -1,6 +1,6 @@
 const socketRequest = require("./socketRequest");
 const airtimeTopUpAdapter = require("../adapters/airtimeTopUpAdapter");
-const mnoValidationAdapter = require("../adapters/airtimeTopUpAdapter");
+const mnoValidationAdapter = require("../adapters/mnoValidationAdapter");
 
 const port = process.env.PORT || 7800;
 const host = process.env.EXTERNAL_URL || "aeon.qa.bltelecoms.net";
@@ -21,7 +21,7 @@ async function doAirtimeValidation(transType, reference, phoneNumber, amount) {
         );
         return await socketRequest(host, port, xml, ttl).then(serverResponse => {
           console.log("AirTime Validation response: ", serverResponse);
-          return doAirtimeValidation.toJS(serverResponse);
+          return mnoValidationAdapter.toJS(serverResponse);
         });
       }
 
