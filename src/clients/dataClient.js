@@ -34,11 +34,3 @@ async function doBundleTopUp(transType, reference, phoneNumber, productCode) {
 }
 
 module.exports = { doBundleTopUp, getBundleList };
-
-
-getBundleList("MTNBundles")
-        .then(function (result) {
-                console.log("This is result ", result.response.data.ProductList.Category[1]) 
-                console.log(`Promise Result ${JSON.stringify(result)}`)
-
-});
