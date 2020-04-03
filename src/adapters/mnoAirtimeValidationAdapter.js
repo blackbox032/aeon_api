@@ -20,6 +20,7 @@ function toXML(
     `<Reference>${reference}</Reference>` +
     `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
     `<Amount>${amount}</Amount>` +
+    `<ProductCode>0</ProductCode>` +
     `</event>` +
     `</request>`;
   return ret + "\n";
