@@ -26,12 +26,14 @@ function getObj(xml) {
       response.event.EventCode != undefined &&
       response.event.EventCode == 1
     ) {
-      //response is an error
+      //response is an error:
       //following code transforms the js object into one that
       //looks like the object in the aeonError function above
       delete response.event;
       response.error = true;
     }
+
+    //All response types:
     //promote all properties in the response.data key
     //to root propertiies
 
