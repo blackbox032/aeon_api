@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function toXML(sessionId, confrimationRef, reference) {
+function toXML(sessionId, confirmationRef, reference) {
   ret =
     `<request>` +
     `<Version>2.1</Version>` +
@@ -8,7 +8,7 @@ function toXML(sessionId, confrimationRef, reference) {
     `<EventType>GetVoucher</EventType>` +
     `<event>` +
     `<Type>FBE</Type>` +
-    `<TransRef>${confrimationRef}</TransRef>` +
+    `<TransRef>${confirmationRef}</TransRef>` +
     `<Reference>${reference}</Reference>` +
     `</event>` +
     `</request>`;
