@@ -10,14 +10,6 @@ const userPin = process.env.PIN || "011234";
 const deviceId = process.env.DEVICE_ID || "7305";
 const deviceSer = process.env.DEVICE_SER || "TiZZIw779!";
 
-async function doElectricityTopUp(sessionId, confrimRef, reference) {
-  xml = meterTopUpAdapter.toXML(sessionId, confrimRef, reference);
-  return await socketRequest(host, port, xml, ttl).then((serverResponse) => {
-    console.log("Electricity Topup response: ", serverResponse);
-    return meterTopUpAdapter.toJS(serverResponse);
-  });
-}
-
 async function doVerifyMeter(meterNumber, amount) {
   xml = meterConfirmAdapter.toXML(
     userPin,
@@ -29,14 +21,6 @@ async function doVerifyMeter(meterNumber, amount) {
   return await socketRequest(host, port, xml, ttl).then((serverResponse) => {
     console.log("Meter verify response: ", serverResponse);
     return meterConfirmAdapter.toJS(serverResponse);
-  });
-}
-
-async function doMeterTopUp(sessionId, confirmationRef, reference) {
-  xml = meterTopUpAdapter.toXML(sessionId, confirmationRef, reference);
-  return await socketRequest(host, port, xml, ttl).then((serverResponse) => {
-    console.log("Meter verify response: ", serverResponse);
-    return meterTopUpAdapter.toJS(serverResponse);
   });
 }
 
@@ -68,4 +52,4 @@ async function getSaleConfirmation(
   });
 }
 
-module.exports = { doElectricityTopUp, doVerifyMeter };
+module.exports = { doVerifyMeter, doMeterTopUp, getSaleConfirmation };
