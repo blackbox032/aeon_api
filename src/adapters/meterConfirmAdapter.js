@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function toXML(userPin, deviceId, deviceSer, meterNumber, amount, reference) {
+function toXML(userPin, deviceId, deviceSer, meterNumber, amount) {
   ret =
     `<request>` +
     `<Version>2.1</Version>` +
@@ -11,7 +11,6 @@ function toXML(userPin, deviceId, deviceSer, meterNumber, amount, reference) {
     `<UserPin>${userPin}</UserPin>` +
     `<MeterNum>${meterNumber}</MeterNum>` +
     `<Amount>${amount}</Amount>` +
-    `<Reference>${reference}</Reference>` +
     `</event>` +
     `</request>`;
   return ret + "\n";
@@ -25,5 +24,5 @@ function toJS(xml) {
 
 module.exports = {
   toXML,
-  toJS
+  toJS,
 };
