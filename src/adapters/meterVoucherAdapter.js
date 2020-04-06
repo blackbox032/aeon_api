@@ -23,5 +23,5 @@ function toJS(xml) {
 
 module.exports = {
   toXML,
-  toJS
+  toJS,
 };

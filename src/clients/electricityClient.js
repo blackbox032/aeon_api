@@ -11,13 +11,7 @@ const deviceId = process.env.DEVICE_ID || "7305";
 const deviceSer = process.env.DEVICE_SER || "TiZZIw779!";
 
 async function doVerifyMeter(meterNumber, amount) {
-  xml = meterConfirmAdapter.toXML(
-    userPin,
-    deviceId,
-    deviceSer,
-    meterNumber,
-    amount
-  );
+  xml = meterConfirmAdapter.toXML(meterNumber, amount);
   return await socketRequest(host, port, xml, ttl).then((serverResponse) => {
     console.log("Meter verify response: ", serverResponse);
     return meterConfirmAdapter.toJS(serverResponse);
@@ -32,13 +26,7 @@ async function doMeterTopUp(sessionId, confirmationRef, reference) {
   });
 }
 
-async function getSaleConfirmation(
-  userPin,
-  deviceId,
-  deviceSer,
-  confrimationRef,
-  reference
-) {
+async function getSaleConfirmation(confrimationRef, reference) {
   xml = saleConfirmAdapter.toXML(
     userPin,
     deviceId,
