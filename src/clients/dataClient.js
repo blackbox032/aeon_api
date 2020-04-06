@@ -17,6 +17,22 @@ async function getBundleList(transType) {
   });
 }
 
+async function doBundleValidation(transType, reference, phoneNumber, product) {
+  xml = mnoDataBundleValidationAdapter.toXML(
+    userPin,
+    deviceId,
+    deviceSer,
+    transType,
+    reference,
+    phoneNumber,
+    product
+  );
+  return await socketRequest(host, port, xml, ttl).then((serverResponse) => {
+    console.log("DataBundle Validation response: ", serverResponse);
+    return mnoDataBundleValidationAdapter.toJS(serverResponse);
+  });
+}
+
 async function doBundleTopUp(transType, reference, phoneNumber, productCode) {
   xml = bundleTopUpAdapter.toXML(
     userPin,
@@ -33,4 +49,4 @@ async function doBundleTopUp(transType, reference, phoneNumber, productCode) {
   });
 }
 
-module.exports = { doBundleTopUp, getBundleList };
+module.exports = { doBundleTopUp, doBundleValidation, getBundleList };

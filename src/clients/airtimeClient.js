@@ -26,27 +26,6 @@ async function doAirtimeValidation(transType, reference, phoneNumber, amount) {
   });
 }
 
-async function doDataBundleValidation(
-  transType,
-  reference,
-  phoneNumber,
-  product
-) {
-  xml = mnoDataBundleValidationAdapter.toXML(
-    userPin,
-    deviceId,
-    deviceSer,
-    transType,
-    reference,
-    phoneNumber,
-    product
-  );
-  return await socketRequest(host, port, xml, ttl).then((serverResponse) => {
-    console.log("DataBundle Validation response: ", serverResponse);
-    return mnoDataBundleValidationAdapter.toJS(serverResponse);
-  });
-}
-
 async function doAirtimeTopUp(transType, reference, phoneNumber, amount) {
   xml = airtimeTopUpAdapter.toXML(
     userPin,
@@ -65,6 +44,5 @@ async function doAirtimeTopUp(transType, reference, phoneNumber, amount) {
 
 module.exports = {
   doAirtimeValidation,
-  doDataBundleValidation,
   doAirtimeTopUp,
 };
