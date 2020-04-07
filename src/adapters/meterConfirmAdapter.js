@@ -3,7 +3,7 @@ var utils = require("./adapterUtils");
 function toXML(userPin, deviceId, deviceSer, meterNumber, amount) {
   ret =
     `<request>` +
-    `<Version>2.1</Version>` +
+    `<Version>2.0</Version>` +
     `<EventType>ConfirmMeter</EventType>` +
     `<event>` +
     `<DeviceId>${deviceId}</DeviceId>` +
