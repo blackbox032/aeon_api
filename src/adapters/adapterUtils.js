@@ -14,7 +14,7 @@ function aeonError(eventType, errorText, aeonErrorText) {
     ErrorText: errorText,
     AEONErrorCode: -1,
     AEONErrorText: aeonErrorText,
-    error: true
+    error: true,
   };
 }
 
@@ -37,9 +37,18 @@ function getObj(xml) {
     //promote all properties in the response.data key
     //to root propertiies
 
-    Object.keys(response.data).forEach(key => {
+    Object.keys(response.data).forEach((key) => {
       response[key] = response.data[key];
     });
+
+    if (response.AEONErrorCode == undefined) {
+      response.AEONErrorCode = response.ErrorCode;
+    }
+
+    if (response.AEONErrorText == undefined) {
+      response.AEONErrorText = response.ErrorText;
+    }
+
     delete response.data;
   } catch (ex) {
     return aeonError(
@@ -55,5 +64,5 @@ module.exports = {
   RESPONSECONVERSIONERROR,
   nested,
   aeonError,
-  getObj
+  getObj,
 };
