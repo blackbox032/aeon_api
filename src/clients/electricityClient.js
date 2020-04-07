@@ -27,7 +27,7 @@ async function doVerifyMeter(meterNumber, amount) {
 async function doMeterTopUp(sessionId, confirmationRef) {
   xml = meterTopUpAdapter.toXML(sessionId, confirmationRef);
   return await socketRequest(host, port, xml, ttl).then((serverResponse) => {
-    console.log("Meter verify response: ", serverResponse);
+    console.log("Meter topup response: ", serverResponse);
     return meterTopUpAdapter.toJS(serverResponse);
   });
 }

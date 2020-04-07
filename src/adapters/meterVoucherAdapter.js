@@ -3,7 +3,7 @@ var utils = require("./adapterUtils");
 function toXML(sessionId, confirmationRef) {
   ret =
     `<request>` +
-    `<Version>2.1</Version>` +
+    `<Version>2.0</Version>` +
     `<SessionId>${sessionId}</SessionId>` +
     `<EventType>GetVoucher</EventType>` +
     `<event>` +
