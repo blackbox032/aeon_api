@@ -86,7 +86,7 @@ socketClient = function (address, port, timeout) {
   });
 
   client.socket.on("timeout", () => {
-    debug("SOCKET TIMEOUT: ", error);
+    debug("SOCKET TIMEOUT");
     if (!client.connected) {
       client.rejectConnect(
         adapterUtils.aeonError(
