@@ -17,7 +17,7 @@ function toXML(userPin, deviceId, deviceSer, transType) {
 //may return success response
 //or standard error object
 function toJS(xml) {
-  response = utils.getObj(xml);
+  response = utils.getObj(userPin, deviceId, deviceSer, transType);
 
   if (!response.error) {
     try {
@@ -25,7 +25,7 @@ function toJS(xml) {
       category = utils.nested(response, "ProductList.Category");
 
       if (category != undefined && Array.isArray(category)) {
-        category.forEach(cat => {
+        category.forEach((cat) => {
           if (!Array.isArray(cat.Product)) {
             cat.Product = [cat.Product];
           }
@@ -48,5 +48,5 @@ function toJS(xml) {
 
 module.exports = {
   toXML,
-  toJS
+  toJS,
 };
