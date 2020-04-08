@@ -1,7 +1,7 @@
-const socketRequest = require("./socketRequest");
+const debug = require("../utils/debug");
+const socketClient = require("./socketClient");
 const airtimeTopUpAdapter = require("../adapters/airtimeTopUpAdapter");
 const mnoAirtimeValidationAdapter = require("../adapters/mnoAirtimeValidationAdapter");
-const mnoDataBundleValidationAdapter = require("../adapters/mnoDataBundleValidator");
 
 const port = process.env.AEON_AIRTIME_PORT || 7800;
 const host = process.env.AEON_AIRTIME_URL || "aeon.qa.bltelecoms.net";
@@ -20,10 +20,18 @@ async function doAirtimeValidation(transType, reference, phoneNumber, amount) {
     phoneNumber,
     amount
   );
-  return await socketRequest(host, port, xml, ttl).then((serverResponse) => {
-    console.log("AirTime Validation response: ", serverResponse);
-    return mnoAirtimeValidationAdapter.toJS(serverResponse);
-  });
+  const client = socketClient(host, port, ttl);
+  return await client
+    .request(xml)
+    .then((serverResponse) => {
+      debug("AirTime Validation response: ", serverResponse);
+      client.end();
+      return mnoAirtimeValidationAdapter.toJS(serverResponse);
+    })
+    .catch((aeonErrorObject) => {
+      client.end();
+      return aeonErrorObject;
+    });
 }
 
 async function doAirtimeTopUp(transType, reference, phoneNumber, amount) {
@@ -36,10 +44,18 @@ async function doAirtimeTopUp(transType, reference, phoneNumber, amount) {
     phoneNumber,
     amount
   );
-  return await socketRequest(host, port, xml, ttl).then((serverResponse) => {
-    console.log("AirTime Topup response: ", serverResponse);
-    return airtimeTopUpAdapter.toJS(serverResponse);
-  });
+  const client = socketClient(host, port, ttl);
+  return await client
+    .request(xml)
+    .then((serverResponse) => {
+      debug("AirTime Topup response: ", serverResponse);
+      client.end();
+      return airtimeTopUpAdapter.toJS(serverResponse);
+    })
+    .catch((aeonErrorObject) => {
+      client.end();
+      return aeonErrorObject;
+    });
 }
 
 module.exports = {

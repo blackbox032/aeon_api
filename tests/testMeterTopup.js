@@ -1,3 +1,3 @@
 const client = require("../src/clients/electricityClient");
 
-xml = client.doVerifyMeter("0105002000", "10000");
+xml = client.doMeterTopUp("01050020003", "10000");

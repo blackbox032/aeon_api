@@ -1,15 +1,22 @@
-const socketRequest = require("../src/clients/socketRequest");
+const socketClient = require("../src/clients/socketClient");
 
-//Test socketRequest().then syntax
-socketRequest("127.0.0.1", 8090, "1", 60000).then(serverResponse => {
-  console.log("1: ", serverResponse);
-});
-
-testAwait();
-
-//test await socketRequest() syntax in an async function
-async function testAwait() {
-  console.log("2: ", await socketRequest("127.0.0.1", 8090, "2", 60000));
-  console.log("3: ", await socketRequest("127.0.0.1", 8090, "3", 60000));
-  console.log("4: ", await socketRequest("127.0.0.1", 8090, "4", 60000));
-}
+//socketClient is a factory function
+//it produces a new client each time you call it
+const client1 = socketClient("127.0.0.1", 8090, 60000);
+client1
+  .request("1")
+  .then((serverResponse) => {
+    console.log("1: ", serverResponse);
+    client1
+      .request("2")
+      .then((serverResponse) => {
+        console.log("2: ", serverResponse);
+        client1.end();
+      })
+      .catch((ex) => {
+        console.log("client1 error: ", ex);
+      });
+  })
+  .catch((ex) => {
+    console.log("client1 error: ", ex);
+  });

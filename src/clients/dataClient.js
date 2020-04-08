@@ -1,6 +1,8 @@
-const socketRequest = require("./socketRequest");
+const debug = require("../utils/debug");
+const socketClient = require("./socketClient");
 const bundleTopUpAdapter = require("../adapters/bundleTopUpAdapter");
 const productListAdapter = require("../adapters/productListAdapter");
+const mnoDataBundleValidationAdapter = require("../adapters/mnoDataBundleValidator");
 
 const port = process.env.AEON_AIRTIME_PORT || 7800;
 const host = process.env.AEON_AIRTIME_URL || "aeon.qa.bltelecoms.net";
@@ -10,11 +12,18 @@ const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "865181";
 const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 
 async function getBundleList(transType) {
-  xml = productListAdapter.toXML(userPin, deviceId, deviceSer, transType);
-  return await socketRequest(host, port, xml, ttl).then((serverResponse) => {
-    // console.log("Bundle List response: ", serverResponse);
-    return productListAdapter.toJS(serverResponse);
-  });
+  const client = socketClient(host, port, ttl);
+  return await client
+    .request(xml)
+    .then((serverResponse) => {
+      debug("Get DataBundles response: ", serverResponse);
+      client.end();
+      return productListAdapter.toJS(serverResponse);
+    })
+    .catch((aeonErrorObject) => {
+      client.end();
+      return aeonErrorObject;
+    });
 }
 
 async function doBundleValidation(transType, reference, phoneNumber, product) {
@@ -27,10 +36,18 @@ async function doBundleValidation(transType, reference, phoneNumber, product) {
     phoneNumber,
     product
   );
-  return await socketRequest(host, port, xml, ttl).then((serverResponse) => {
-    console.log("DataBundle Validation response: ", serverResponse);
-    return mnoDataBundleValidationAdapter.toJS(serverResponse);
-  });
+  const client = socketClient(host, port, ttl);
+  return await client
+    .request(xml)
+    .then((serverResponse) => {
+      debug("DataBundle Validation response: ", serverResponse);
+      client.end();
+      return mnoDataBundleValidationAdapter.toJS(serverResponse);
+    })
+    .catch((aeonErrorObject) => {
+      client.end();
+      return aeonErrorObject;
+    });
 }
 
 async function doBundleTopUp(transType, reference, phoneNumber, productCode) {
@@ -43,10 +60,18 @@ async function doBundleTopUp(transType, reference, phoneNumber, productCode) {
     phoneNumber,
     productCode
   );
-  return await socketRequest(host, port, xml, ttl).then((serverResponse) => {
-    // console.log("Bundle Topup response: ", serverResponse);
-    return bundleTopUpAdapter.toJS(serverResponse);
-  });
+  const client = socketClient(host, port, ttl);
+  return await client
+    .request(xml)
+    .then((serverResponse) => {
+      debug("DataBundle Topup response: ", serverResponse);
+      client.end();
+      return bundleTopUpAdapter.toJS(serverResponse);
+    })
+    .catch((aeonErrorObject) => {
+      client.end();
+      return aeonErrorObject;
+    });
 }
 
 module.exports = { doBundleTopUp, doBundleValidation, getBundleList };
