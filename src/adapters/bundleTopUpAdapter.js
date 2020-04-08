@@ -15,7 +15,7 @@ function toXML(
     `<event>` +
     `<UserPin>${userPin}</UserPin>` +
     `<DeviceId>${deviceId}</DeviceId>` +
-    `<DeviceSer>${deviceSer}!</DeviceSer>` +
+    `<DeviceSer>${deviceSer}</DeviceSer>` +
     `<TransType>${transType}</TransType>` +
     `<Reference>${reference}</Reference>` +
     `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
@@ -33,5 +33,5 @@ function toJS(xml) {
 
 module.exports = {
   toXML,
-  toJS
+  toJS,
 };
