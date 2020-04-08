@@ -12,6 +12,7 @@ const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "865181";
 const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 
 async function getBundleList(transType) {
+  xml = productListAdapter.toXML(userPin, deviceId, deviceSer, transType);
   const client = socketClient(host, port, ttl);
   return await client
     .request(xml)
