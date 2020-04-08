@@ -28,7 +28,10 @@ function toXML(
 //may return success response
 //or standard error object
 function toJS(xml) {
-  return utils.getObj(xml);
+  obj = utils.getObj(xml);
+  delete obj.PrintLines;
+  delete obj.MerchantPrintLines;
+  return obj;
 }
 
 module.exports = {
