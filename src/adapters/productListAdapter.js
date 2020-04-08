@@ -17,7 +17,7 @@ function toXML(userPin, deviceId, deviceSer, transType) {
 //may return success response
 //or standard error object
 function toJS(xml) {
-  response = utils.getObj(userPin, deviceId, deviceSer, transType);
+  response = utils.getObj(xml);
 
   if (!response.error) {
     try {
