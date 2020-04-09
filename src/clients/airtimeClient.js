@@ -25,6 +25,7 @@ async function doAirtimeValidation(transType, reference, phoneNumber, amount) {
     phoneNumber,
     amount
   );
+  console.log(xml);
   try {
     const client = await socketClient(host, port, ttl);
     return await client

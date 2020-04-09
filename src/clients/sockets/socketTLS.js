@@ -92,7 +92,6 @@ socketClient = function (address, port, timeout) {
         client.resolve = resolve;
         client.reject = reject;
       });
-      //return client.promiseRequest;
     };
 
     client.end = async () => {
