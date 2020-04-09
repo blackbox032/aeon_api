@@ -1,5 +1,5 @@
 const debug = require("../utils/debug");
-const socketClient = require("./socketClient");
+const socketClient = require("./sockets/socketClient");
 const meterTopUpAdapter = require("../adapters/meterVoucherAdapter");
 const meterConfirmAdapter = require("../adapters/meterConfirmAdapter");
 const saleConfirmAdapter = require("../adapters/saleConfirmAdapter");
@@ -19,18 +19,22 @@ async function doVerifyMeter(meterNumber, amount) {
     meterNumber,
     amount
   );
-  const client = socketClient(host, port, ttl);
-  return await client
-    .request(xml)
-    .then((serverResponse) => {
-      debug("Meter verify response: ", serverResponse);
-      client.end();
-      return meterConfirmAdapter.toJS(serverResponse);
-    })
-    .catch((aeonErrorObject) => {
-      client.end();
-      return aeonErrorObject;
-    });
+  try {
+    const client = await socketClient(host, port, ttl);
+    return await client
+      .request(xml)
+      .then((serverResponse) => {
+        debug("Meter verify response: ", serverResponse);
+        client.end();
+        return meterConfirmAdapter.toJS(serverResponse);
+      })
+      .catch((aeonErrorObject) => {
+        client.end();
+        return aeonErrorObject;
+      });
+  } catch (error) {
+    return error;
+  }
 }
 
 async function doMeterTopUp(meterNumber, amount) {
@@ -41,30 +45,34 @@ async function doMeterTopUp(meterNumber, amount) {
     meterNumber,
     amount
   );
-  const client = socketClient(host, port, ttl);
-  return await client
-    .request(xml)
-    .then(async (verifyResponse) => {
-      debug("Meter verify response: ", verifyResponse);
-      response = meterConfirmAdapter.toJS(verifyResponse);
-      xml = meterTopUpAdapter.toXML(response.SessionId, response.TransRef);
-      return await client
-        .request(xml)
-        .then((serverResponse) => {
-          debug("Meter topup response: ", serverResponse);
-          client.end();
-          return meterTopUpAdapter.toJS(serverResponse);
-        })
-        .catch((aeonErrorObject) => {
-          client.end();
-          return aeonErrorObject;
-        });
-    })
-    .catch((aeonErrorObject) => {
-      debug("Error: " + aeonErrorObject);
-      client.end();
-      return aeonErrorObject;
-    });
+  try {
+    const client = await socketClient(host, port, ttl);
+    return await client
+      .request(xml)
+      .then(async (verifyResponse) => {
+        debug("Meter verify response: ", verifyResponse);
+        response = meterConfirmAdapter.toJS(verifyResponse);
+        xml = meterTopUpAdapter.toXML(response.SessionId, response.TransRef);
+        return await client
+          .request(xml)
+          .then((topupResponse) => {
+            debug("Meter topup response: ", topupResponse);
+            client.end();
+            return meterTopUpAdapter.toJS(topupResponse);
+          })
+          .catch((aeonErrorObject) => {
+            client.end();
+            return aeonErrorObject;
+          });
+      })
+      .catch((aeonErrorObject) => {
+        debug("Error: " + aeonErrorObject);
+        client.end();
+        return aeonErrorObject;
+      });
+  } catch (error) {
+    return error;
+  }
 }
 
 async function getSaleConfirmation(confrimationRef, reference) {
@@ -75,18 +83,22 @@ async function getSaleConfirmation(confrimationRef, reference) {
     confrimationRef,
     reference
   );
-  const client = socketClient(host, port, ttl);
-  return await client
-    .request(xml)
-    .then((serverResponse) => {
-      debug("Meter verify response: ", serverResponse);
-      client.end();
-      return saleConfirmAdapter.toJS(serverResponse);
-    })
-    .catch((aeonErrorObject) => {
-      client.end();
-      return aeonErrorObject;
-    });
+  try {
+    const client = await socketClient(host, port, ttl);
+    return await client
+      .request(xml)
+      .then((serverResponse) => {
+        debug("Meter verify response: ", serverResponse);
+        client.end();
+        return saleConfirmAdapter.toJS(serverResponse);
+      })
+      .catch((aeonErrorObject) => {
+        client.end();
+        return aeonErrorObject;
+      });
+  } catch (error) {
+    return error;
+  }
 }
 
 module.exports = { doVerifyMeter, doMeterTopUp, getSaleConfirmation };
