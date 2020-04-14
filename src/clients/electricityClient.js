@@ -82,8 +82,8 @@ async function doMeterTopUp(meterNumber, amount) {
   return await _doMeterTopUp(meterNumber, amount);
 }
 
-async function doMeterTopUpFBE(meterNumber, amount) {
-  return await _doMeterTopUp(meterNumber, amount, true);
+async function doMeterTopUpFBE(meterNumber) {
+  return await _doMeterTopUp(meterNumber, 0, true);
 }
 
 async function getSaleConfirmation(confrimationRef, reference) {
