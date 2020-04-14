@@ -1,6 +1,7 @@
 const debug = require("../utils/debug");
 const socketClient = require("./sockets/socketClient");
-const meterTopUpAdapter = require("../adapters/meterVoucherAdapter");
+const meterVoucherAdapter = require("../adapters/meterVoucherAdapter");
+const meterVoucherFBEAdapter = require("../adapters/meterVoucherFBEAdapter");
 const meterConfirmAdapter = require("../adapters/meterConfirmAdapter");
 const saleConfirmAdapter = require("../adapters/saleConfirmAdapter");
 
@@ -37,7 +38,7 @@ async function doVerifyMeter(meterNumber, amount) {
   }
 }
 
-async function doMeterTopUp(meterNumber, amount) {
+async function _doMeterTopUp(meterNumber, amount, fbe = false) {
   xml = meterConfirmAdapter.toXML(
     userPin,
     deviceId,
@@ -52,13 +53,15 @@ async function doMeterTopUp(meterNumber, amount) {
       .then(async (verifyResponse) => {
         debug("Meter verify response: ", verifyResponse);
         response = meterConfirmAdapter.toJS(verifyResponse);
-        xml = meterTopUpAdapter.toXML(response.SessionId, response.TransRef);
+        xml = fbe
+          ? meterVoucherFBEAdapter.toXML(response.SessionId, response.TransRef)
+          : meterVoucherAdapter.toXML(response.SessionId, response.TransRef);
         return await client
           .request(xml)
           .then((topupResponse) => {
             debug("Meter topup response: ", topupResponse);
             client.end();
-            return meterTopUpAdapter.toJS(topupResponse);
+            return meterVoucherAdapter.toJS(topupResponse);
           })
           .catch((aeonErrorObject) => {
             client.end();
@@ -73,6 +76,14 @@ async function doMeterTopUp(meterNumber, amount) {
   } catch (error) {
     return error;
   }
+}
+
+async function doMeterTopUp(meterNumber, amount) {
+  return await _doMeterTopUp(meterNumber, amount);
+}
+
+async function doMeterTopUpFBE(meterNumber, amount) {
+  return await _doMeterTopUp(meterNumber, amount, true);
 }
 
 async function getSaleConfirmation(confrimationRef, reference) {
@@ -101,4 +112,9 @@ async function getSaleConfirmation(confrimationRef, reference) {
   }
 }
 
-module.exports = { doVerifyMeter, doMeterTopUp, getSaleConfirmation };
+module.exports = {
+  doVerifyMeter,
+  doMeterTopUp,
+  doMeterTopUpFBE,
+  getSaleConfirmation,
+};
