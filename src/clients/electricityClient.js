@@ -38,13 +38,14 @@ async function doVerifyMeter(meterNumber, amount) {
   }
 }
 
-async function _doMeterTopUp(meterNumber, amount, fbe = false) {
+async function _doMeterTopUp(meterNumber, amount, transReference, fbe = false) {
   xml = meterConfirmAdapter.toXML(
     userPin,
     deviceId,
     deviceSer,
     meterNumber,
-    amount
+    amount,
+    transReference
   );
   try {
     const client = await socketClient(host, port, ttl);
@@ -78,20 +79,20 @@ async function _doMeterTopUp(meterNumber, amount, fbe = false) {
   }
 }
 
-async function doMeterTopUp(meterNumber, amount) {
-  return await _doMeterTopUp(meterNumber, amount);
+async function doMeterTopUp(meterNumber, amount, transReference) {
+  return await _doMeterTopUp(meterNumber, amount, transReference);
 }
 
 async function doMeterTopUpFBE(meterNumber) {
-  return await _doMeterTopUp(meterNumber, 0, true);
+  return await _doMeterTopUp(meterNumber, 0, "", true);
 }
 
-async function getSaleConfirmation(confrimationRef, reference) {
+async function getSaleConfirmation(confirmationRef, reference) {
   xml = saleConfirmAdapter.toXML(
     userPin,
     deviceId,
     deviceSer,
-    confrimationRef,
+    confirmationRef,
     reference
   );
   try {

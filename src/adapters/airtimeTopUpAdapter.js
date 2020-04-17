@@ -7,7 +7,8 @@ function toXML(
   transType,
   reference,
   phoneNumber,
-  amount
+  amount,
+  transReference
 ) {
   ret =
     `<request>` +
@@ -20,6 +21,7 @@ function toXML(
     `<Reference>${reference}</Reference>` +
     `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
     `<Amount>${amount}</Amount>` +
+    `<Recon transreference=${transReference}></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";
@@ -33,5 +35,5 @@ function toJS(xml) {
 
 module.exports = {
   toXML,
-  toJS
+  toJS,
 };

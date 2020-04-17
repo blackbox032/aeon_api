@@ -59,7 +59,13 @@ async function doBundleValidation(transType, reference, phoneNumber, product) {
   }
 }
 
-async function doBundleTopUp(transType, reference, phoneNumber, productCode) {
+async function doBundleTopUp(
+  transType,
+  reference,
+  phoneNumber,
+  productCode,
+  transReference
+) {
   xml = bundleTopUpAdapter.toXML(
     userPin,
     deviceId,
@@ -67,7 +73,8 @@ async function doBundleTopUp(transType, reference, phoneNumber, productCode) {
     transType,
     reference,
     phoneNumber,
-    productCode
+    productCode,
+    transReference
   );
   console.log(xml);
   try {

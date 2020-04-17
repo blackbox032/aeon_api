@@ -7,7 +7,8 @@ function toXML(
   transType,
   reference,
   phoneNumber,
-  productCode
+  productCode,
+  transReference
 ) {
   ret =
     `<request>` +
@@ -20,6 +21,7 @@ function toXML(
     `<Reference>${reference}</Reference>` +
     `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
     `<ProductCode>${productCode}</ProductCode>` +
+    `<Recon transreference=${transReference}></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";

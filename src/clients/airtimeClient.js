@@ -46,7 +46,13 @@ async function doAirtimeValidation(transType, reference, phoneNumber, amount) {
   }
 }
 
-async function doAirtimeTopUp(transType, reference, phoneNumber, amount) {
+async function doAirtimeTopUp(
+  transType,
+  reference,
+  phoneNumber,
+  amount,
+  transReference
+) {
   xml = airtimeTopUpAdapter.toXML(
     userPin,
     deviceId,
@@ -54,7 +60,8 @@ async function doAirtimeTopUp(transType, reference, phoneNumber, amount) {
     transType,
     reference,
     phoneNumber,
-    amount
+    amount,
+    transReference
   );
   try {
     const client = await socketClient(host, port, ttl);

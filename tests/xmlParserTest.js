@@ -1,5 +1,5 @@
 /*jshint esversion: 6 */
-// var parser = require("fast-xml-parser");
+var xml2json = require("xml2json");
 var xml = `<response>
 <SessionId>01234567890</SessionId>
 <EventType>TheEvent</EventType>
@@ -7,6 +7,7 @@ var xml = `<response>
 <EventCode>1</EventCode>
 </event>
 <arraynode><value>1</value></arraynode>
+<AttrTag attribute="hello"></AttrTag>
 <data>
 <ErrorCode>123</ErrorCode>
 <ErrorText>An error occured</ErrorText>
@@ -15,5 +16,5 @@ var xml = `<response>
 </data>
 </response>`;
 
-var json = parser.toJson(xml);
+var json = xml2json.toJson(xml);
 console.log("to json -> %s", json);
