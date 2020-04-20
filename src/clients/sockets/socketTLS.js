@@ -20,7 +20,7 @@ socketClient = function (address, port, timeout) {
     client.socket.setTimeout(timeout);
 
     client.socket.on("secureConnect", () => {
-      console.log("CONNECTED");
+      debug("CONNECTED");
       client.connected = true;
       resolve(client);
     });

@@ -1,4 +1,4 @@
-logDebug = process.env.LOG_DEBUG ? process.env.LOG_DEBUG == "true" : false;
+logDebug = process.env.LOG_DEBUG == "true" ? true : false;
 function debug() {
   if (logDebug) {
     var s = "";

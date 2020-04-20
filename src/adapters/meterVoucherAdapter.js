@@ -8,7 +8,7 @@ function toXML(sessionId, confirmationRef, transReference) {
     `<EventType>GetVoucher</EventType>` +
     `<event>` +
     `<TransRef>${confirmationRef}</TransRef>` +
-    `<Recon transreference=${transReference}></Recon>` +
+    `<Recon transReference="${transReference}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";
