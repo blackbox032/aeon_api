@@ -55,8 +55,16 @@ async function _doMeterTopUp(meterNumber, amount, transReference, fbe = false) {
         debug("Meter verify response: ", verifyResponse);
         response = meterConfirmAdapter.toJS(verifyResponse);
         xml = fbe
-          ? meterVoucherFBEAdapter.toXML(response.SessionId, response.TransRef)
-          : meterVoucherAdapter.toXML(response.SessionId, response.TransRef);
+          ? meterVoucherFBEAdapter.toXML(
+              response.SessionId,
+              response.TransRef,
+              transReference
+            )
+          : meterVoucherAdapter.toXML(
+              response.SessionId,
+              response.TransRef,
+              transReference
+            );
         return await client
           .request(xml)
           .then((topupResponse) => {
