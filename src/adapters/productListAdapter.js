@@ -24,14 +24,29 @@ function toJS(xml) {
       //look for "SMS" and "DATA" category array entries and promote them
       category = utils.nested(response, "ProductList.Category");
 
-      if (category != undefined && Array.isArray(category)) {
-        category.forEach((cat) => {
-          if (!Array.isArray(cat.Product)) {
-            cat.Product = [cat.Product];
+      if (category != undefined) {
+        if (Array.isArray(category)) {
+          //Category property is array of product types: e.g. [{SMS type object}, {DATA type object}, ...]
+          category.forEach((cat) => {
+            //if only one product in category, normalize to array if products with one element
+            //if its many products will already be an array
+            if (!Array.isArray(cat.Product)) {
+              cat.Product = [cat.Product];
+            }
+            //then store that value under a product type key we create on ProductList
+            response.ProductList[cat.type] = cat.Product;
+          });
+          delete response.ProductList.Category;
+        } else {
+          //Category property is single product type e.g. {SMS type object}
+          //if only one product in category, normalize to array if products with one element
+          //if its many products will already be an array
+          if (!Array.isArray(category.Product)) {
+            category.Product = [category.Product];
           }
-          response.ProductList[cat.type] = cat.Product;
-        });
-        delete response.ProductList.Category;
+          //then store that value under a product type key we create on ProductList
+          response.ProductList[category.type] = category.Product;
+        }
       } else {
         response.ProductList = {};
       }
