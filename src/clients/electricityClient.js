@@ -64,7 +64,8 @@ async function _doMeterTopUp(
               response.SessionId,
               response.TransRef,
               transReference,
-              reference
+              reference,
+              meterNumber
             )
           : meterVoucherAdapter.toXML(
               response.SessionId,
