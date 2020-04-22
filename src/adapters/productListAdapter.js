@@ -46,6 +46,7 @@ function toJS(xml) {
           }
           //then store that value under a product type key we create on ProductList
           response.ProductList[category.type] = category.Product;
+          delete response.ProductList.Category;
         }
       } else {
         response.ProductList = {};
