@@ -28,7 +28,7 @@ function toJS(xml) {
         if (Array.isArray(category)) {
           //Category property is array of product types: e.g. [{SMS type object}, {DATA type object}, ...]
           category.forEach((cat) => {
-            //if only one product in category, normalize to array if products with one element
+            //if only one product in category, normalize to array of products with one element
             //if its many products will already be an array
             if (!Array.isArray(cat.Product)) {
               cat.Product = [cat.Product];
@@ -39,7 +39,7 @@ function toJS(xml) {
           delete response.ProductList.Category;
         } else {
           //Category property is single product type e.g. {SMS type object}
-          //if only one product in category, normalize to array if products with one element
+          //if only one product in category, normalize to array of products with one element
           //if its many products will already be an array
           if (!Array.isArray(category.Product)) {
             category.Product = [category.Product];
