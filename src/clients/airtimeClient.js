@@ -30,7 +30,7 @@ async function doAirtimeValidation(transType, reference, phoneNumber, amount) {
     logger.levels.TRACE,
     logger.sources.AEON_API,
     `Aeon API Request: ${xml}`,
-    { host, port, userPin, deviceId, deviceSer }
+    { host, port }
   );
   try {
     const client = await socketClient(host, port, ttl);
@@ -84,7 +84,7 @@ async function doAirtimeTopUp(
     logger.levels.TRACE,
     logger.sources.AEON_API,
     `Aeon API Request: ${xml}`,
-    { host, port, userPin, deviceId, deviceSer }
+    { host, port }
   );
   try {
     const client = await socketClient(host, port, ttl);

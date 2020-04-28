@@ -25,7 +25,7 @@ async function doVerifyMeter(meterNumber, amount) {
     logger.levels.TRACE,
     logger.sources.AEON_API,
     `Aeon API Request: ${xml}`,
-    { host, port, userPin, deviceId, deviceSer }
+    { host, port }
   );
   try {
     const client = await socketClient(host, port, ttl);
@@ -76,7 +76,7 @@ async function _doMeterTopUp(
     logger.levels.TRACE,
     logger.sources.AEON_API,
     `Aeon API Request: ${xml}`,
-    { host, port, userPin, deviceId, deviceSer }
+    { host, port }
   );
   try {
     const client = await socketClient(host, port, ttl);
@@ -109,7 +109,7 @@ async function _doMeterTopUp(
           logger.levels.TRACE,
           logger.sources.AEON_API,
           `Aeon API Request: ${xml}`,
-          { host, port, userPin, deviceId, deviceSer }
+          { host, port }
         );
         return await client
           .request(xml)
@@ -166,7 +166,7 @@ async function getSaleConfirmation(confirmationRef, reference) {
     logger.levels.TRACE,
     logger.sources.AEON_API,
     `Aeon API Request: ${xml}`,
-    { host, port, userPin, deviceId, deviceSer }
+    { host, port }
   );
   try {
     const client = await socketClient(host, port, ttl);

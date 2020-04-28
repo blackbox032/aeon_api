@@ -18,7 +18,7 @@ async function getBundleList(transType) {
     logger.levels.TRACE,
     logger.sources.AEON_API,
     `Aeon API Request: ${xml}`,
-    { host, port, userPin, deviceId, deviceSer }
+    { host, port }
   );
   try {
     const client = await socketClient(host, port, ttl);
@@ -65,7 +65,7 @@ async function doBundleValidation(transType, reference, phoneNumber, product) {
     logger.levels.TRACE,
     logger.sources.AEON_API,
     `Aeon API Request: ${xml}`,
-    { host, port, userPin, deviceId, deviceSer }
+    { host, port }
   );
   try {
     const client = await socketClient(host, port, ttl);
@@ -119,7 +119,7 @@ async function doBundleTopUp(
     logger.levels.TRACE,
     logger.sources.AEON_API,
     `Aeon API Request: ${xml}`,
-    { host, port, userPin, deviceId, deviceSer }
+    { host, port }
   );
   try {
     const client = await socketClient(host, port, ttl);
