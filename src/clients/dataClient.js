@@ -1,8 +1,9 @@
-const debug = require("../utils/debug");
+const logger = require("../utils/logger");
+const debug = logger.debug;
 const socketClient = require("./sockets/socketClient");
 const bundleTopUpAdapter = require("../adapters/bundleTopUpAdapter");
 const productListAdapter = require("../adapters/productListAdapter");
-const mnoDataBundleValidationAdapter = require("../adapters/mnoDataBundleValidator");
+const mnoDataBundleValidationAdapter = require("../adapters/mnoDataBundleValidationAdapter");
 
 const port = process.env.AEON_AIRTIME_PORT || 7800;
 const host = process.env.AEON_AIRTIME_URL || "aeon.qa.bltelecoms.net";
@@ -13,12 +14,23 @@ const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 
 async function getBundleList(transType) {
   xml = productListAdapter.toXML(userPin, deviceId, deviceSer, transType);
+  logger.log(
+    logger.levels.TRACE,
+    logger.sources.AEON_API,
+    `Aeon API Request: ${xml}`,
+    { host, port, userPin, deviceId, deviceSer }
+  );
   try {
     const client = await socketClient(host, port, ttl);
     return await client
       .request(xml)
       .then((serverResponse) => {
-        debug("Get DataBundles response: ", serverResponse);
+        logger.log(
+          logger.levels.TRACE,
+          logger.sources.AEON_API,
+          `Aeon API Response: ${serverResponse}`,
+          {}
+        );
         client.end();
         return productListAdapter.toJS(serverResponse);
       })
@@ -27,6 +39,14 @@ async function getBundleList(transType) {
         return aeonErrorObject;
       });
   } catch (error) {
+    logger.log(
+      logger.levels.TRACE,
+      logger.sources.AEON_API,
+      `Aeon API Socket Client Error`,
+      {
+        error,
+      }
+    );
     return error;
   }
 }
@@ -41,12 +61,23 @@ async function doBundleValidation(transType, reference, phoneNumber, product) {
     phoneNumber,
     product
   );
+  logger.log(
+    logger.levels.TRACE,
+    logger.sources.AEON_API,
+    `Aeon API Request: ${xml}`,
+    { host, port, userPin, deviceId, deviceSer }
+  );
   try {
     const client = await socketClient(host, port, ttl);
     return await client
       .request(xml)
       .then((serverResponse) => {
-        debug("DataBundle Validation response: ", serverResponse);
+        logger.log(
+          logger.levels.TRACE,
+          logger.sources.AEON_API,
+          `Aeon API Response: ${serverResponse}`,
+          {}
+        );
         client.end();
         return mnoDataBundleValidationAdapter.toJS(serverResponse);
       })
@@ -55,6 +86,14 @@ async function doBundleValidation(transType, reference, phoneNumber, product) {
         return aeonErrorObject;
       });
   } catch (error) {
+    logger.log(
+      logger.levels.TRACE,
+      logger.sources.AEON_API,
+      `Aeon API Socket Client Error`,
+      {
+        error,
+      }
+    );
     return error;
   }
 }
@@ -76,13 +115,23 @@ async function doBundleTopUp(
     productCode,
     transReference
   );
-  console.log(xml);
+  logger.log(
+    logger.levels.TRACE,
+    logger.sources.AEON_API,
+    `Aeon API Request: ${xml}`,
+    { host, port, userPin, deviceId, deviceSer }
+  );
   try {
     const client = await socketClient(host, port, ttl);
     return await client
       .request(xml)
       .then((serverResponse) => {
-        debug("DataBundle Topup response: ", serverResponse);
+        logger.log(
+          logger.levels.TRACE,
+          logger.sources.AEON_API,
+          `Aeon API Response: ${serverResponse}`,
+          {}
+        );
         client.end();
         return bundleTopUpAdapter.toJS(serverResponse);
       })
@@ -91,6 +140,14 @@ async function doBundleTopUp(
         return aeonErrorObject;
       });
   } catch (error) {
+    logger.log(
+      logger.levels.TRACE,
+      logger.sources.AEON_API,
+      `Aeon API Socket Client Error`,
+      {
+        error,
+      }
+    );
     return error;
   }
 }

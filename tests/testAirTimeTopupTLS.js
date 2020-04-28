@@ -13,5 +13,4 @@ doTopup();
 
 async function doTopup() {
   xml = await client.doAirtimeTopUp("Vodacom", "123456", msisdn, "10");
-  console.log(xml);
 }

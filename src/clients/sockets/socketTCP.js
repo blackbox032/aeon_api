@@ -1,4 +1,5 @@
-const debug = require("../../utils/debug");
+const logger = require("../../utils/logger");
+const debug = logger.debug;
 const net = require("net");
 const adapterUtils = require("../../adapters/adapterUtils");
 //const errorAdapter = require("../adapters/errorAdapter");
@@ -63,8 +64,13 @@ socketClient = function (address, port, timeout) {
     });
 
     client.socket.on("error", (error) => {
-      debug("SOCKET ERROR: ", error);
       if (!client.connected) {
+        logger.log(
+          logger.levels.TRACE,
+          logger.sources.AEON_API,
+          "Aeon API Socket Connection Error",
+          error
+        );
         client.rejectConnect(
           adapterUtils.aeonError(
             "SocketConnectionError",
@@ -77,6 +83,12 @@ socketClient = function (address, port, timeout) {
 
       if (client.awaitingResponse) {
         client.connected = false;
+        logger.log(
+          logger.levels.TRACE,
+          logger.sources.AEON_API,
+          "Aeon API Socket Response Error",
+          error
+        );
         client.rejectRequest(
           adapterUtils.aeonError(
             "SocketRequestError",
@@ -89,8 +101,13 @@ socketClient = function (address, port, timeout) {
     });
 
     client.socket.on("timeout", () => {
-      debug("SOCKET TIMEOUT");
       if (!client.connected) {
+        logger.log(
+          logger.levels.TRACE,
+          logger.sources.AEON_API,
+          "Aeon API Socket Connection Timeout",
+          error
+        );
         client.rejectConnect(
           adapterUtils.aeonError(
             "SocketTimeoutError",
@@ -103,6 +120,12 @@ socketClient = function (address, port, timeout) {
       if (client.awaitingResponse) {
         client.connected = false;
         client.awaitingResponse = false;
+        logger.log(
+          logger.levels.TRACE,
+          logger.sources.AEON_API,
+          "Aeon API Socket Response Timeout",
+          error
+        );
         client.rejectRequest(
           adapterUtils.aeonError(
             "SocketTimeoutError",

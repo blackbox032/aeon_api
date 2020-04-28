@@ -1,4 +1,5 @@
-const debug = require("../../utils/debug");
+const logger = require("../../utils/logger");
+const debug = logger.debug;
 const tls = require("tls");
 const adapterUtils = require("../../adapters/adapterUtils");
 
@@ -26,8 +27,13 @@ socketClient = function (address, port, timeout) {
     });
 
     client.socket.on("error", (error) => {
-      debug("SOCKET ERROR: ", error);
       if (client.awaitingResponse) {
+        logger.log(
+          logger.levels.TRACE,
+          logger.sources.AEON_API,
+          "Aeon API Socket Response Error",
+          error
+        );
         client.connected = false;
         client.reject(
           adapterUtils.aeonError(
@@ -37,6 +43,12 @@ socketClient = function (address, port, timeout) {
           )
         );
       } else {
+        logger.log(
+          logger.levels.TRACE,
+          logger.sources.AEON_API,
+          "Aeon API Socket Connection Error",
+          error
+        );
         reject(
           adapterUtils.aeonError(
             "SocketConnectError",
@@ -48,8 +60,13 @@ socketClient = function (address, port, timeout) {
     });
 
     client.socket.on("timeout", () => {
-      debug("SOCKET TIMEOUT");
       if (client.awaitingResponse) {
+        logger.log(
+          logger.levels.TRACE,
+          logger.sources.AEON_API,
+          "Aeon API Socket Response Timeout",
+          error
+        );
         client.connected = false;
         client.awaitingResponse = false;
         client.rejectRequest(
@@ -60,6 +77,12 @@ socketClient = function (address, port, timeout) {
           )
         );
       } else {
+        logger.log(
+          logger.levels.TRACE,
+          logger.sources.AEON_API,
+          "Aeon API Socket Connection Timeout",
+          error
+        );
         reject(
           adapterUtils.aeonError(
             "SocketTimeourError",

@@ -1,4 +1,5 @@
-const debug = require("../utils/debug");
+const logger = require("../utils/logger");
+const debug = logger.debug;
 const socketClient = require("./sockets/socketClient");
 const airtimeTopUpAdapter = require("../adapters/airtimeTopUpAdapter");
 const mnoAirtimeValidationAdapter = require("../adapters/mnoAirtimeValidationAdapter");
@@ -25,23 +26,39 @@ async function doAirtimeValidation(transType, reference, phoneNumber, amount) {
     phoneNumber,
     amount
   );
-  console.log(xml);
+  logger.log(
+    logger.levels.TRACE,
+    logger.sources.AEON_API,
+    `Aeon API Request: ${xml}`,
+    { host, port, userPin, deviceId, deviceSer }
+  );
   try {
     const client = await socketClient(host, port, ttl);
     return await client
       .request(xml)
       .then((serverResponse) => {
-        debug("AirTime Validation response: ", serverResponse);
+        logger.log(
+          logger.levels.TRACE,
+          logger.sources.AEON_API,
+          `Aeon API Response: ${serverResponse}`,
+          {}
+        );
         client.end();
         return mnoAirtimeValidationAdapter.toJS(serverResponse);
       })
       .catch((aeonErrorObject) => {
-        debug("AirTime Validation error: ", serverResponse);
         client.end();
         return aeonErrorObject;
       });
   } catch (error) {
-    debug("AirTime Validation error: ", error);
+    logger.log(
+      logger.levels.TRACE,
+      logger.sources.AEON_API,
+      `Aeon API Socket Client Error`,
+      {
+        error,
+      }
+    );
     return error;
   }
 }
@@ -63,12 +80,23 @@ async function doAirtimeTopUp(
     amount,
     transReference
   );
+  logger.log(
+    logger.levels.TRACE,
+    logger.sources.AEON_API,
+    `Aeon API Request: ${xml}`,
+    { host, port, userPin, deviceId, deviceSer }
+  );
   try {
     const client = await socketClient(host, port, ttl);
     return await client
       .request(xml)
       .then((serverResponse) => {
-        debug("AirTime Topup response: ", serverResponse);
+        logger.log(
+          logger.levels.TRACE,
+          logger.sources.AEON_API,
+          `Aeon API Response: ${serverResponse}`,
+          {}
+        );
         client.end();
         return airtimeTopUpAdapter.toJS(serverResponse);
       })
@@ -77,6 +105,14 @@ async function doAirtimeTopUp(
         return aeonErrorObject;
       });
   } catch (error) {
+    logger.log(
+      logger.levels.TRACE,
+      logger.sources.AEON_API,
+      `Aeon API Socket Client Error`,
+      {
+        error,
+      }
+    );
     return error;
   }
 }

@@ -1,4 +1,5 @@
-const debug = require("../utils/debug");
+const logger = require("../utils/logger");
+const debug = logger.debug;
 const socketClient = require("./sockets/socketClient");
 const meterVoucherAdapter = require("../adapters/meterVoucherAdapter");
 const meterVoucherFBEAdapter = require("../adapters/meterVoucherFBEAdapter");
@@ -20,12 +21,23 @@ async function doVerifyMeter(meterNumber, amount) {
     meterNumber,
     amount
   );
+  logger.log(
+    logger.levels.TRACE,
+    logger.sources.AEON_API,
+    `Aeon API Request: ${xml}`,
+    { host, port, userPin, deviceId, deviceSer }
+  );
   try {
     const client = await socketClient(host, port, ttl);
     return await client
       .request(xml)
       .then((serverResponse) => {
-        debug("Meter verify response: ", serverResponse);
+        logger.log(
+          logger.levels.TRACE,
+          logger.sources.AEON_API,
+          `Aeon API Response: ${serverResponse}`,
+          {}
+        );
         client.end();
         return meterConfirmAdapter.toJS(serverResponse);
       })
@@ -34,6 +46,14 @@ async function doVerifyMeter(meterNumber, amount) {
         return aeonErrorObject;
       });
   } catch (error) {
+    logger.log(
+      logger.levels.TRACE,
+      logger.sources.AEON_API,
+      `Aeon API Socket Client Error`,
+      {
+        error,
+      }
+    );
     return error;
   }
 }
@@ -52,12 +72,23 @@ async function _doMeterTopUp(
     meterNumber,
     amount
   );
+  logger.log(
+    logger.levels.TRACE,
+    logger.sources.AEON_API,
+    `Aeon API Request: ${xml}`,
+    { host, port, userPin, deviceId, deviceSer }
+  );
   try {
     const client = await socketClient(host, port, ttl);
     return await client
       .request(xml)
       .then(async (verifyResponse) => {
-        debug("Meter verify response: ", verifyResponse);
+        logger.log(
+          logger.levels.TRACE,
+          logger.sources.AEON_API,
+          `Aeon API Response: ${serverResponse}`,
+          {}
+        );
         response = meterConfirmAdapter.toJS(verifyResponse);
         xml = fbe
           ? meterVoucherFBEAdapter.toXML(
@@ -74,10 +105,21 @@ async function _doMeterTopUp(
               reference,
               meterNumber
             );
+        logger.log(
+          logger.levels.TRACE,
+          logger.sources.AEON_API,
+          `Aeon API Request: ${xml}`,
+          { host, port, userPin, deviceId, deviceSer }
+        );
         return await client
           .request(xml)
           .then((topupResponse) => {
-            debug("Meter topup response: ", topupResponse);
+            logger.log(
+              logger.levels.TRACE,
+              logger.sources.AEON_API,
+              `Aeon API Response: ${serverResponse}`,
+              {}
+            );
             client.end();
             return meterVoucherAdapter.toJS(topupResponse);
           })
@@ -92,6 +134,14 @@ async function _doMeterTopUp(
         return aeonErrorObject;
       });
   } catch (error) {
+    logger.log(
+      logger.levels.TRACE,
+      logger.sources.AEON_API,
+      `Aeon API Socket Client Error`,
+      {
+        error,
+      }
+    );
     return error;
   }
 }
@@ -112,12 +162,23 @@ async function getSaleConfirmation(confirmationRef, reference) {
     confirmationRef,
     reference
   );
+  logger.log(
+    logger.levels.TRACE,
+    logger.sources.AEON_API,
+    `Aeon API Request: ${xml}`,
+    { host, port, userPin, deviceId, deviceSer }
+  );
   try {
     const client = await socketClient(host, port, ttl);
     return await client
       .request(xml)
       .then((serverResponse) => {
-        debug("Meter verify response: ", serverResponse);
+        logger.log(
+          logger.levels.TRACE,
+          logger.sources.AEON_API,
+          `Aeon API Response: ${serverResponse}`,
+          {}
+        );
         client.end();
         return saleConfirmAdapter.toJS(serverResponse);
       })
@@ -126,6 +187,14 @@ async function getSaleConfirmation(confirmationRef, reference) {
         return aeonErrorObject;
       });
   } catch (error) {
+    logger.log(
+      logger.levels.TRACE,
+      logger.sources.AEON_API,
+      `Aeon API Socket Client Error`,
+      {
+        error,
+      }
+    );
     return error;
   }
 }
