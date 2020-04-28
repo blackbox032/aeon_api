@@ -11,7 +11,6 @@ callingCode();
 
 async function callingCode() {
   ret = await test();
-  console.log(ret);
 }
 
 async function test() {
