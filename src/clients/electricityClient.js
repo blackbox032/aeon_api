@@ -86,7 +86,7 @@ async function _doMeterTopUp(
         logger.log(
           logger.levels.TRACE,
           logger.sources.AEON_API,
-          `Aeon API Response: ${serverResponse}`,
+          `Aeon API Response: ${verifyResponse}`,
           {}
         );
         response = meterConfirmAdapter.toJS(verifyResponse);
@@ -117,7 +117,7 @@ async function _doMeterTopUp(
             logger.log(
               logger.levels.TRACE,
               logger.sources.AEON_API,
-              `Aeon API Response: ${serverResponse}`,
+              `Aeon API Response: ${topupResponse}`,
               {}
             );
             client.end();
