@@ -8,7 +8,7 @@ async function callingCode() {
 
 async function test() {
   return await client
-    .doAirtimeValidation("MTN", "3576125376", "27713523879", "5.00")
+    .doAirtimeValidation("Vodacom", "3576125376", "27608815604", "10.00")
     .then((response) => {
       console.log("RETURNED: ", response);
       return response;
