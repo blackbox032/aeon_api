@@ -1,4 +1,4 @@
-const client = require("../src/clients/airtimeClient");
+const client = require("../src/clients/electricityClient");
 
 callingCode();
 
@@ -8,7 +8,7 @@ async function callingCode() {
 
 async function test() {
   return await client
-    .doAirtimeValidation("MTN", "3576125376", "27713523879", "5.00")
+    .doVerifyMeter("07063953108", "100.00")
     .then((response) => {
       console.log("RETURNED: ", response);
       return response;

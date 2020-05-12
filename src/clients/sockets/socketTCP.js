@@ -106,7 +106,7 @@ socketClient = function (address, port, timeout) {
           logger.levels.TRACE,
           logger.sources.AEON_API,
           "Aeon API Socket Connection Timeout",
-          error
+          "error"
         );
         client.rejectConnect(
           adapterUtils.aeonError(
@@ -124,7 +124,7 @@ socketClient = function (address, port, timeout) {
           logger.levels.TRACE,
           logger.sources.AEON_API,
           "Aeon API Socket Response Timeout",
-          error
+          "error"
         );
         client.rejectRequest(
           adapterUtils.aeonError(
