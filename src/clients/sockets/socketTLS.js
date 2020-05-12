@@ -65,7 +65,7 @@ socketClient = function (address, port, timeout) {
           logger.levels.TRACE,
           logger.sources.AEON_API,
           "Aeon API Socket Response Timeout",
-          error
+          "error"
         );
         client.connected = false;
         client.awaitingResponse = false;
@@ -81,12 +81,12 @@ socketClient = function (address, port, timeout) {
           logger.levels.TRACE,
           logger.sources.AEON_API,
           "Aeon API Socket Connection Timeout",
-          error
+          "error"
         );
         reject(
           adapterUtils.aeonError(
-            "SocketTimeourError",
-            error.message,
+            "SocketTimeoutError",
+            "Aeon API Socket Timeout Waiting for response",
             "Communication error"
           )
         );
