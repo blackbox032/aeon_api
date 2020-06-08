@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function AuthToXML(userPin, deviceId, deviceSer, transType) {
+function authToXML(userPin, deviceId, deviceSer, transType) {
 
   return `<request>` +
     `<EventType>Authentication</EventType>` +
@@ -14,7 +14,7 @@ function AuthToXML(userPin, deviceId, deviceSer, transType) {
     "\n";
 }
 
-function SubscriberInfoToXML(accountNo, sessionId, payParams) {
+function subscriberInfoToXML(accountNo, sessionId, payParams) {
   ret =
     `<request>` +
     `<EventType>GetSubscriberBillInfo</EventType>` +
@@ -28,6 +28,26 @@ function SubscriberInfoToXML(accountNo, sessionId, payParams) {
   return ret + "\n";
 }
 
+
+function paymentToXML(accountNo, amount, sessionId, payParams) {
+  ret =
+    `<request>` +
+    `<EventType>Confirm</EventType>` +
+    `<SessionId>${sessionId}</SessionId>` +
+    `<event>` +
+    `<accountNumber>${accountNo}</accountNumber>` +
+    `<amountDue>${amount}</amountDue>` +
+    `<confirmType>commit</confirmType>` +
+    `<productId>${payParams.productID}</productId>` +
+    '<tenderType>cash</tenderType>' +
+    `<providerId>${payParams.providerID}</providerId>` +
+    `<trxId>${payParams.trxId}</trxId>` +
+    '<wantPrintJob>0</wantPrintJob>' +
+    `</event>` +
+    `</request>`;
+  return ret + "\n";
+}
+
 //may return success response
 //or standard error object
 function toJS(xml) {
@@ -35,7 +55,8 @@ function toJS(xml) {
 }
 
 module.exports = {
-  AuthToXML,
-  SubscriberInfoToXML,
+  authToXML,
+  subscriberInfoToXML,
+  paymentToXML,
   toJS,
 };

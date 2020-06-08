@@ -1,4 +1,4 @@
-const client = require("../src/clients/dstvClient");
+const client = require("../src/clients/paymentsClient");
 // process.env.AEON_SOCKET_TYPE = "TLS";
 // process.env.AEON_AIRTIME_PORT = "443";
 // process.env.AEON_AIRTIME_URL = "aeonssl.live.bltelecoms.net";
@@ -19,5 +19,5 @@ doPayment();
 
 async function doPayment() {
   jsonResp = await client.doPayment(accountNo, '101', payParams);
-  console.log(jsonResp)
+  await client.doGetSubscriberInfo(accountNo, payParams)
 }
