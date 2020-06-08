@@ -1,9 +1,9 @@
-const logger = require("aeon_api/src/utils/logger");
+const logger = require("../utils/logger");
 const debug = logger.debug;
-const socketClient = require("aeon_api/src/clients/sockets/socketClient");
-const dstvGetSubscriberInfo = require("aeon_api/src/adapters/dstvGetSubscriberInfo");
-const mnoAirtimeValidationAdapter = require("aeon_api/src/adapters/mnoAirtimeValidationAdapter");
-const doAuthAdapter = require("aeon_api/src/adapters/doAuthAdapter");
+const socketClient = require("../clients/sockets/socketClient");
+const dstvGetSubscriberInfo = require("../adapters/dstvGetSubscriberInfo");
+const mnoAirtimeValidationAdapter = require("../adapters/mnoAirtimeValidationAdapter");
+const doAuthAdapter = require("../adapters/doAuthAdapter");
 
 const port = process.env.AEON_AIRTIME_PORT || 7800;
 const host = process.env.AEON_AIRTIME_URL || "aeon.qa.bltelecoms.net";

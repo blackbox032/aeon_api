@@ -14,18 +14,15 @@ function AuthToXML(userPin, deviceId, deviceSer, transType) {
     "\n";
 }
 
-function SubscriberInfoToXML(userPin, deviceId, deviceSer, accountNo, sessionId, productId, providerId) {
+function SubscriberInfoToXML(accountNo, sessionId, payParams) {
   ret =
     `<request>` +
     `<EventType>GetSubscriberBillInfo</EventType>` +
     `<SessionId>${sessionId}</SessionId>` +
     `<event>` +
-    `<UserPin>${userPin}</UserPin>` +
-    `<DeviceId>${deviceId}</DeviceId>` +
-    `<DeviceSer>${deviceSer}</DeviceSer>` +
     `<accountNo>${accountNo}</accountNo>` +
-    `<productId>${productId}</productId>` +
-    `<providerId>${providerId}</providerId>` +
+    `<productId>${payParams.productID}</productId>` +
+    `<providerId>${payParams.providerID}</providerId>` +
     `</event>` +
     `</request>`;
   return ret + "\n";

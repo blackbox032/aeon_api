@@ -1,6 +1,6 @@
-var utils = require("aeon_api/src/adapters/adapterUtils");
+var utils = require("../adapters/adapterUtils");
 
-function toXML(accountNo, sessionId, amount, trxId) {
+function toXML(accountNo, amount, sessionId, payParams) {
   ret =
     `<request>` +
     `<EventType>Confirm</EventType>` +
@@ -9,10 +9,10 @@ function toXML(accountNo, sessionId, amount, trxId) {
     `<accountNumber>${accountNo}</accountNumber>` +
     `<amountDue>${amount}</amountDue>` +
     `<confirmType>commit</confirmType>` +
-    `<productId>298</productId>` +
+    `<productId>${payParams.productID}</productId>` +
     '<tenderType>cash</tenderType>' +
-    `<providerId>198</providerId>` +
-    `<trxId>${trxId}</trxId>` +
+    `<providerId>${payParams.providerID}</providerId>` +
+    `<trxId>${payParams.trxId}</trxId>` +
     '<wantPrintJob>0</wantPrintJob>' +
     `</event>` +
     `</request>`;
