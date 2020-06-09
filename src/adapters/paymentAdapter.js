@@ -41,7 +41,7 @@ function paymentToXML(accountNo, amount, sessionId, payParams) {
     `<productId>${payParams.productID}</productId>` +
     '<tenderType>cash</tenderType>' +
     `<providerId>${payParams.providerID}</providerId>` +
-    `<trxId>${payParams.trxId}</trxId>` +
+    `<trxId>${payParams.trxID}</trxId>` +
     '<wantPrintJob>0</wantPrintJob>' +
     `</event>` +
     `</request>`;

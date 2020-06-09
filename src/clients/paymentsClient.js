@@ -47,7 +47,7 @@ async function doPayment(accountNo, amount, payParams) {
     }
 
     let payXML = paymentAdapter.paymentToXML(accountNo, amount, authResp.SessionId, payParams);
-    logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API payXML Req: ${infoXML}`, {});
+    logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API payXML Req: ${payXML}`, {});
     return await client.request(payXML)
       .then((serverResponse) => {
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API payXML Res: ${serverResponse}`, {});
