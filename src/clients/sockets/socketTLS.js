@@ -69,7 +69,7 @@ socketClient = function (address, port, timeout) {
         );
         client.connected = false;
         client.awaitingResponse = false;
-        client.rejectRequest(
+        client.reject(
           adapterUtils.aeonError(
             "SocketTimeoutError",
             "Socket timed out",
