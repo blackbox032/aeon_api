@@ -51,7 +51,7 @@ async function getBundleList(transType) {
   }
 }
 
-async function doBundleValidation(transType, reference, phoneNumber, product) {
+async function doBundleValidation(transType, reference, phoneNumber, product, amount) {
   xml = mnoDataBundleValidationAdapter.toXML(
     userPin,
     deviceId,
@@ -59,7 +59,8 @@ async function doBundleValidation(transType, reference, phoneNumber, product) {
     transType,
     reference,
     phoneNumber,
-    product
+    product,
+    amount
   );
   logger.log(
     logger.levels.TRACE,
