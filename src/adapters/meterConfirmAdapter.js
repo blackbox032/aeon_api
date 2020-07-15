@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function toXML(userPin, deviceId, deviceSer, meterNumber, amount) {
+function toXML(userPin, deviceId, deviceSer, meterNumber, amount, payParams) {
   ret =
     `<request>` +
     `<Version>2.0</Version>` +
@@ -11,6 +11,7 @@ function toXML(userPin, deviceId, deviceSer, meterNumber, amount) {
     `<UserPin>${userPin}</UserPin>` +
     `<MeterNum>${meterNumber}</MeterNum>` +
     `<Amount>${amount}</Amount>` +
+    `<LoyaltyProfileId>${payParams.profileId}</LoyaltyProfileId>` +
     `</event>` +
     `</request>`;
   return ret + "\n";

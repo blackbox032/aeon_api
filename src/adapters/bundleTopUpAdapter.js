@@ -8,7 +8,8 @@ function toXML(
   reference,
   phoneNumber,
   productCode,
-  transReference
+  transReference,
+  payParams
 ) {
   ret =
     `<request>` +
@@ -21,6 +22,7 @@ function toXML(
     `<Reference>${reference}</Reference>` +
     `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
     `<ProductCode>${productCode}</ProductCode>` +
+    `<LoyaltyProfileId>${payParams.profileId}</LoyaltyProfileId>` +
     `<Recon transReference="${transReference}" accountNumber="${phoneNumber}"></Recon>` +
     `</event>` +
     `</request>`;

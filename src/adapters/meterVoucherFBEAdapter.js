@@ -16,6 +16,7 @@ function toXML(
     `<Type>FBE</Type>` +
     `<TransRef>${confirmationRef}</TransRef>` +
     `<Reference>${reference}</Reference>` +
+    `<LoyaltyProfileId>${payParams.profileId}</LoyaltyProfileId>` +
     `<Recon transReference="${transReference}" accountNumber="${meterNumber}"></Recon>` +
     `</event>` +
     `</request>`;
