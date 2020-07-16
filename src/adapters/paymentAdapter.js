@@ -25,7 +25,7 @@ function subscriberInfoToXML(accountNo, sessionId, payParams) {
     `<providerId>${payParams.providerID}</providerId>` +
     `<LoyaltyProfileId>${payParams.profileId}</LoyaltyProfileId>` +
     `<profileId>${payParams.profileId}</profileId>` +
-    `<Recon transReference="${transReference}" accountNumber="${phoneNumber}"></Recon>` +
+    `<Recon transReference="${transReference}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";
@@ -46,6 +46,7 @@ function paymentToXML(accountNo, amount, sessionId, payParams) {
     `<providerId>${payParams.providerID}</providerId>` +
     `<trxId>${payParams.trxID}</trxId>` +
     '<wantPrintJob>0</wantPrintJob>' +
+    `<Recon transReference="${transReference}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";

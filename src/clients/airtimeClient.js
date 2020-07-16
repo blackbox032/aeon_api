@@ -16,7 +16,7 @@ const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 // const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "103936";
 // const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "GniRR3t5639!";
 
-async function doAirtimeValidation(transType, reference, phoneNumber, amount) {
+async function doAirtimeValidation(transType, reference, phoneNumber, amount, payParams) {
   xml = mnoAirtimeValidationAdapter.toXML(
     userPin,
     deviceId,
@@ -24,14 +24,10 @@ async function doAirtimeValidation(transType, reference, phoneNumber, amount) {
     transType,
     reference,
     phoneNumber,
-    amount
+    amount,
+    payParams
   );
-  logger.log(
-    logger.levels.TRACE,
-    logger.sources.AEON_API,
-    `Aeon API Request: ${xml}`,
-    { host, port }
-  );
+  logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${xml}`, { host, port });
   try {
     const client = await socketClient(host, port, ttl);
     return await client
@@ -40,8 +36,7 @@ async function doAirtimeValidation(transType, reference, phoneNumber, amount) {
         logger.log(
           logger.levels.TRACE,
           logger.sources.AEON_API,
-          `Aeon API Response: ${serverResponse}`,
-          {}
+          `Aeon API Response: ${serverResponse}`, {}
         );
         client.end();
         return mnoAirtimeValidationAdapter.toJS(serverResponse);
@@ -54,8 +49,7 @@ async function doAirtimeValidation(transType, reference, phoneNumber, amount) {
     logger.log(
       logger.levels.TRACE,
       logger.sources.AEON_API,
-      `Aeon API Socket Client Error`,
-      {
+      `Aeon API Socket Client Error`, {
         error,
       }
     );
@@ -68,7 +62,8 @@ async function doAirtimeTopUp(
   reference,
   phoneNumber,
   amount,
-  transReference
+  transReference,
+  payParams
 ) {
   xml = airtimeTopUpAdapter.toXML(
     userPin,
@@ -78,13 +73,13 @@ async function doAirtimeTopUp(
     reference,
     phoneNumber,
     amount,
-    transReference
+    transReference,
+    payParams
   );
   logger.log(
     logger.levels.TRACE,
     logger.sources.AEON_API,
-    `Aeon API Request: ${xml}`,
-    { host, port }
+    `Aeon API Request: ${xml}`, { host, port }
   );
   try {
     const client = await socketClient(host, port, ttl);
@@ -94,8 +89,7 @@ async function doAirtimeTopUp(
         logger.log(
           logger.levels.TRACE,
           logger.sources.AEON_API,
-          `Aeon API Response: ${serverResponse}`,
-          {}
+          `Aeon API Response: ${serverResponse}`, {}
         );
         client.end();
         return airtimeTopUpAdapter.toJS(serverResponse);
@@ -108,8 +102,7 @@ async function doAirtimeTopUp(
     logger.log(
       logger.levels.TRACE,
       logger.sources.AEON_API,
-      `Aeon API Socket Client Error`,
-      {
+      `Aeon API Socket Client Error`, {
         error,
       }
     );

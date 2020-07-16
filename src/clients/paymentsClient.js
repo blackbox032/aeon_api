@@ -10,7 +10,7 @@ const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "865181";
 const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 
 async function doPayment(accountNo, amount, payParams) {
-  authXML = paymentAdapter.authToXML(userPin, deviceId, deviceSer, payParams.subscriberEventType);
+  authXML = paymentAdapter.authToXML(userPin, deviceId, deviceSer, payParams);
 
   try {
     const client = await socketClient(host, port, ttl);

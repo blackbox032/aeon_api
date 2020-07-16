@@ -9,6 +9,7 @@ function toXML(userPin, deviceId, deviceSer, transType) {
     `<DeviceId>${deviceId}</DeviceId>` +
     `<DeviceSer>${deviceSer}</DeviceSer>` +
     `<TransType>${transType}</TransType>` +
+    `<Recon transReference="${transReference}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";
