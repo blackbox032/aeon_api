@@ -11,8 +11,8 @@ function toXML(userPin, deviceId, deviceSer, meterNumber, amount, payParams) {
     `<UserPin>${userPin}</UserPin>` +
     `<MeterNum>${meterNumber}</MeterNum>` +
     `<Amount>${amount}</Amount>` +
-    // `<LoyaltyProfileId>${payParams.profileId}</LoyaltyProfileId>` +
-    // `<Recon transReference="${transReference}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
+    `<LoyaltyProfileId>${payParams.loyaltyCard}</LoyaltyProfileId>` +
+    `<Recon transReference="${transReference}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";
