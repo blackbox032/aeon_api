@@ -21,7 +21,7 @@ function toXML(
     `<TransType>${transType}</TransType>` +
     `<Reference>${reference}</Reference>` +
     `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
-    `<LoyaltyProfileId>${payParams.loyaltyCard}</LoyaltyProfileId>` +
+    `<LoyaltyProfileId>${payParams.loyaltyProfileID}</LoyaltyProfileId>` +
     `<Amount>${amount}</Amount>` +
     `<Recon transReference="${transReference}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
     `</event>` +

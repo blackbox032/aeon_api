@@ -22,7 +22,7 @@ function toXML(
     `<Reference>${reference}</Reference>` +
     `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
     `<ProductCode>${productCode}</ProductCode>` +
-    `<LoyaltyProfileId>${payParams.loyaltyCard}</LoyaltyProfileId>` +
+    `<LoyaltyProfileId>${payParams.loyaltyProfileID}</LoyaltyProfileId>` +
     `<Recon transReference="${transReference}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;

@@ -16,6 +16,7 @@ function toXML(
     `<event>` +
     `<TransRef>${confirmationRef}</TransRef>` +
     `<Reference>${reference}</Reference>` +
+    `<LoyaltyProfileId>${payParams.loyaltyProfileID}</LoyaltyProfileId>` +
     `<Recon transReference="${transReference}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;

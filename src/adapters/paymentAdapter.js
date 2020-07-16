@@ -23,7 +23,7 @@ function subscriberInfoToXML(accountNo, sessionId, payParams) {
     `<accountNo>${accountNo}</accountNo>` +
     `<productId>${payParams.productID}</productId>` +
     `<providerId>${payParams.providerID}</providerId>` +
-    `<LoyaltyProfileId>${payParams.loyaltyCard}</LoyaltyProfileId>` +
+    `<LoyaltyProfileId>${payParams.loyaltyProfileID}</LoyaltyProfileId>` +
     `<Recon transReference="${transReference}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;

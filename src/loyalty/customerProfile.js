@@ -10,14 +10,15 @@ const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 
 // --------------------------------------------------------------------------------------------------------------
 
-const createProfile = async(msisdn, loyaltyCard) => {
+const createProfile = async msisdn => {
   const endpoint = '/consumer/loyalty/v1/profile';
+  const id = "Sterring" + locMsisdn;
   const Reqdata = {
     deviceId,
-    loyaltyCard,
-    name: loyaltyCard,
-    surname: loyaltyCard,
+    name: id,
+    surname: id,
     mobile: msisdn,
+    loyaltyCard: id,
     deviceUserId: deviceId,
   }
 
@@ -47,8 +48,8 @@ getProfileByMSISDN = async msisdn => {
 
   const config = {
     method: 'get',
-    // url: LOYALTY_URL + endpoint + msisdn,
-    url: LOYALTY_URL + endpoint + '0726159343',
+    url: LOYALTY_URL + endpoint + msisdn,
+    // url: LOYALTY_URL + endpoint + '0726159343',
     auth: {
       username: LOYALTY_USERNAME,
       password: LOYALTY_PASSWORD
