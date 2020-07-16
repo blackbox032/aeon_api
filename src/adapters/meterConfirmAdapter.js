@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function toXML(userPin, deviceId, deviceSer, meterNumber, amount, payParams) {
+function toXML(userPin, deviceId, deviceSer, meterNumber, amount, payParams = {}) {
   ret =
     `<request>` +
     `<Version>2.0</Version>` +
