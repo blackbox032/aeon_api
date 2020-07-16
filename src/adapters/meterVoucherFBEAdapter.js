@@ -5,7 +5,8 @@ function toXML(
   confirmationRef,
   transReference,
   reference,
-  meterNumber
+  meterNumber,
+  payParams
 ) {
   ret =
     `<request>` +
@@ -16,7 +17,8 @@ function toXML(
     `<Type>FBE</Type>` +
     `<TransRef>${confirmationRef}</TransRef>` +
     `<Reference>${reference}</Reference>` +
-    `<Recon transReference="${transReference}" accountNumber="${meterNumber}"></Recon>` +
+    `<LoyaltyProfileId>${payParams.profileId}</LoyaltyProfileId>` +
+    `<Recon transReference="${transReference}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";
