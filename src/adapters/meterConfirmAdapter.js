@@ -12,7 +12,7 @@ function toXML(userPin, deviceId, deviceSer, meterNumber, amount, payParams = {}
     `<MeterNum>${meterNumber}</MeterNum>` +
     `<Amount>${amount}</Amount>` +
     `<LoyaltyProfileId>${payParams.loyaltyProfileID}</LoyaltyProfileId>` +
-    `<Recon accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
+    `<Recon accountNumber="${payParams.fromAccount}" sysReference="${meterNumber}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";
