@@ -67,7 +67,7 @@ async function doPayment(accountNo, amount, payParams) {
 }
 
 async function doGetSubscriberInfo(accountNo, payParams) {
-  authXML = paymentAdapter.authToXML(userPin, deviceId, deviceSer, payParams.subscriberEventType);
+  authXML = paymentAdapter.authToXML(userPin, deviceId, deviceSer, payParams);
 
   try {
     const client = await socketClient(host, port, ttl);

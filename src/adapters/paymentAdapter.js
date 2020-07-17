@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function authToXML(userPin, deviceId, deviceSer, transType) {
+function authToXML(userPin, deviceId, deviceSer, payParams) {
 
   return `<request>` +
     `<EventType>Authentication</EventType>` +
@@ -8,7 +8,7 @@ function authToXML(userPin, deviceId, deviceSer, transType) {
     `<UserPin>${userPin}</UserPin>` +
     `<DeviceId>${deviceId}</DeviceId>` +
     `<DeviceSer>${deviceSer}</DeviceSer>` +
-    `<TransType>${transType}</TransType>` +
+    `<TransType>${payParams.subscriberEventType}</TransType>` +
     `</event>` +
     `</request>` +
     "\n";
@@ -24,7 +24,7 @@ function subscriberInfoToXML(accountNo, sessionId, payParams) {
     `<productId>${payParams.productID}</productId>` +
     `<providerId>${payParams.providerID}</providerId>` +
     `<LoyaltyProfileId>${payParams.loyaltyProfileID}</LoyaltyProfileId>` +
-    `<Recon transReference="${transReference}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
+    `<Recon accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";
@@ -45,7 +45,7 @@ function paymentToXML(accountNo, amount, sessionId, payParams) {
     `<providerId>${payParams.providerID}</providerId>` +
     `<trxId>${payParams.trxID}</trxId>` +
     '<wantPrintJob>0</wantPrintJob>' +
-    `<Recon transReference="${transReference}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
+    `<Recon accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";
