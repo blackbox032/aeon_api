@@ -141,11 +141,11 @@ async function _doMeterTopUp(
   }
 }
 
-async function doMeterTopUp(meterNumber, amount, transReference, reference, payParams) {
-  return await _doMeterTopUp(meterNumber, amount, transReference, reference, payParams);
+async function doMeterTopUp(meterNumber, amount, transReference, reference, isFBE, payParams) {
+  return await _doMeterTopUp(meterNumber, amount, transReference, reference, false, payParams);
 }
 
-async function doMeterTopUpFBE(meterNumber, transReference, reference, payParams) {
+async function doMeterTopUpFBE(meterNumber, transReference, reference, isFBE, payParams) {
   return await _doMeterTopUp(meterNumber, 0, transReference, reference, true, payParams);
 }
 
