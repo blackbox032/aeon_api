@@ -45,7 +45,7 @@ const createProfile = async msisdn => {
 
 getProfileByMSISDN = async msisdn => {
   const endpoint = '/consumer/loyalty/v1/profile/complete/filterbymobilenumber?mobilenumber=';
-
+  // TODO: logging
   const config = {
     method: 'get',
     url: LOYALTY_URL + endpoint + msisdn,
