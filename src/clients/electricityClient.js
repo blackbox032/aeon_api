@@ -94,14 +94,16 @@ async function _doMeterTopUp(
             response.TransRef,
             transReference,
             reference,
-            meterNumber
+            meterNumber,
+            payParams
           ) :
           meterVoucherAdapter.toXML(
             response.SessionId,
             response.TransRef,
             transReference,
             reference,
-            meterNumber
+            meterNumber,
+            payParams
           );
         logger.log(
           logger.levels.TRACE,
