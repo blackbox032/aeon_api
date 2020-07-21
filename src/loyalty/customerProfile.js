@@ -12,7 +12,7 @@ const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 
 const createProfile = async msisdn => {
   const endpoint = '/consumer/loyalty/v1/profile';
-  const id = "Sterring" + locMsisdn;
+  const id = "Sterring" + msisdn;
   const Reqdata = {
     deviceId,
     name: id,
