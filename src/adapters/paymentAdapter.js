@@ -15,8 +15,9 @@ function authToXML(userPin, deviceId, deviceSer, payParams) {
 }
 
 function subscriberInfoToXML(accountNo, sessionId, payParams) {
-  const eventType = payParams.eventType == undefined ? 'GetSubscriberBillInfo' : payParams.eventType,
-    ret =
+  const eventType = payParams.eventType == undefined ? 'GetSubscriberBillInfo' : payParams.eventType;
+  console.log('I get to subscriberInfoToXML with: ', accountNo, sessionId, payParams)
+  ret =
     `<request>` +
     `<EventType>${eventType}</EventType>` +
     `<SessionId>${sessionId}</SessionId>` +
