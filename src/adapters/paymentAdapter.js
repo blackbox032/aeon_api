@@ -19,7 +19,7 @@ function subscriberInfoToXML(accountNo, sessionId, payParams) {
   let moreParams = '';
 
   if (eventType != 'GetSubscriberBillInfo') {
-    moreParams = `<realTime>1</realTime><verifyOnly>1</verifyOnly><amountDue>10.00</amountDue>`
+    moreParams = `<realTime>1</realTime><verifyOnly>${payParams.verifyOnly}</verifyOnly><amountDue>10.00</amountDue>`
   }
 
   ret =
