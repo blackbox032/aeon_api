@@ -23,6 +23,7 @@ function toXML(
     `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
     `<LoyaltyProfileId>${payParams.loyaltyProfileID}</LoyaltyProfileId>` +
     `<Amount>${amount}</Amount>` +
+    `<tenderType>creditCard</tenderType>` +
     `<Recon transReference="${transReference}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;

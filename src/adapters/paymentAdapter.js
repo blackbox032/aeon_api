@@ -53,6 +53,7 @@ function paymentToXML(accountNo, amount, sessionId, payParams) {
     `<providerId>${payParams.providerID}</providerId>` +
     `<trxId>${payParams.trxID}</trxId>` +
     '<wantPrintJob>0</wantPrintJob>' +
+    `<tenderType>creditCard</tenderType>` +
     `<Recon accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
