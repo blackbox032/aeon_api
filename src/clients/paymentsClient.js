@@ -29,7 +29,7 @@ async function doPayment(accountNo, amount, payParams) {
       client.end();
       return authResp;
     }
-    let infoXML = paymentAdapter.subscriberInfoToXML(accountNo, authResp.SessionId, payParams);
+    let infoXML = paymentAdapter.subscriberInfoToXML(accountNo, authResp.SessionId, payParams, amount);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Req: ${infoXML}`, {});
     const subscriberResp = await client.request(infoXML)
       .then((serverResponse) => {

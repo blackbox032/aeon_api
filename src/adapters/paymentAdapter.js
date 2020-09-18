@@ -14,12 +14,12 @@ function authToXML(userPin, deviceId, deviceSer, payParams) {
     "\n";
 }
 
-function subscriberInfoToXML(accountNo, sessionId, payParams) {
+function subscriberInfoToXML(accountNo, sessionId, payParams, amount = '10.00') {
   const eventType = payParams.eventType == undefined ? 'GetSubscriberBillInfo' : payParams.eventType;
   let moreParams = '';
 
   if (eventType != 'GetSubscriberBillInfo') {
-    moreParams = `<realTime>1</realTime><verifyOnly>1</verifyOnly><amountDue>10.00</amountDue>`
+    moreParams = `<realTime>1</realTime><verifyOnly>${payParams.verifyOnly}</verifyOnly><amountDue>${amount}</amountDue>`
   }
 
   ret =
