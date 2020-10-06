@@ -11,7 +11,7 @@ const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 
 async function doPayment(accountNo, amount, payParams) {
   authXML = paymentAdapter.authToXML(userPin, deviceId, deviceSer, payParams);
-  const isConfirmAPI = false;
+  let isConfirmAPI = false;
   try {
     const client = await socketClient(host, port, ttl);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Req: ${authXML}`, {});
