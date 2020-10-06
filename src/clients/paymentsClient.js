@@ -4,14 +4,14 @@ const paymentAdapter = require("../adapters/paymentAdapter");
 
 const port = process.env.AEON_AIRTIME_PORT || 7800;
 const host = process.env.AEON_AIRTIME_URL || "aeon.qa.bltelecoms.net";
-const ttl = process.env.TTL || 60000;
+const ttl = process.env.TTL_PAYMENT || 180000;
 const userPin = process.env.AEON_AIRTIME_PIN || "016351";
 const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "865181";
 const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 
 async function doPayment(accountNo, amount, payParams) {
   authXML = paymentAdapter.authToXML(userPin, deviceId, deviceSer, payParams);
-
+  const isConfirmAPI = false;
   try {
     const client = await socketClient(host, port, ttl);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Req: ${authXML}`, {});
@@ -22,7 +22,7 @@ async function doPayment(accountNo, amount, payParams) {
       })
       .catch((aeonErrorObject) => {
         client.end();
-        return aeonErrorObject;
+        return {...aeonErrorObject, isConfirmAPI };
       });
 
     if (authResp.error) {
@@ -38,7 +38,7 @@ async function doPayment(accountNo, amount, payParams) {
       })
       .catch((aeonErrorObject) => {
         client.end();
-        return aeonErrorObject;
+        return {...aeonErrorObject, isConfirmAPI };
       });
 
     if (subscriberResp.error) {
@@ -46,6 +46,7 @@ async function doPayment(accountNo, amount, payParams) {
       return subscriberResp;
     }
 
+    isConfirmAPI = true;
     let payXML = paymentAdapter.paymentToXML(accountNo, amount, authResp.SessionId, payParams);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API payXML Req: ${payXML}`, {});
     return await client.request(payXML)
@@ -56,10 +57,8 @@ async function doPayment(accountNo, amount, payParams) {
       })
       .catch((aeonErrorObject) => {
         client.end();
-        return aeonErrorObject;
+        return {...aeonErrorObject, isConfirmAPI };
       });
-
-
   } catch (error) {
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Socket Client Error`, { error });
     return error;
