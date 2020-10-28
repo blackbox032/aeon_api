@@ -46,6 +46,7 @@ async function doPayment(accountNo, amount, payParams) {
       return subscriberResp;
     }
 
+    payParams.trxID = subscriberResp.TransRef;
     isConfirmAPI = true;
     let payXML = paymentAdapter.paymentToXML(accountNo, amount, authResp.SessionId, payParams);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API payXML Req: ${payXML}`, {});
