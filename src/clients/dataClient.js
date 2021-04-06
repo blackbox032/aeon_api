@@ -99,7 +99,8 @@ async function doBundleTopUp(
   phoneNumber,
   productCode,
   transReference,
-  payParams
+  payParams,
+  retries = 3
 ) {
   xml = bundleTopUpAdapter.toXML(
     userPin,
@@ -128,7 +129,17 @@ async function doBundleTopUp(
           `Aeon API Response: ${serverResponse}`, {}
         );
         client.end();
-        return bundleTopUpAdapter.toJS(serverResponse);
+        if (retries < 1) {
+          return bundleTopUpAdapter.toJS(serverResponse);
+        }
+        switch (bundleTopUpAdapter.toJS(serverResponse).AeonErrorText) {
+          case 'Technical Error':
+          case "Supplier offline, please retry":
+          case "Supplier Offline":
+            return setTimeout(() => doBundleTopUp(transType, reference, phoneNumber, productCode, transReference, payParams, retries - 1), 5000);
+          default:
+            return bundleTopUpAdapter.toJS(serverResponse);
+        }
       })
       .catch((aeonErrorObject) => {
         client.end();

@@ -9,10 +9,10 @@ async function callingCode() {
 
 async function test() {
   return await client
-    .doMeterTopUpFBE(
-      "07117341763",
+    .doMeterTopUp(
+      "07117341763", '10',
       "27721289793 07117341763",
-      "ABGGJ3ISiXk_Ago - sCoNzSWMpZMj"
+      "ABGGJ3ISiXk_Ago - sCoNzSWMpZMj", false, { loyaltyProfileID: 123123132 }
     )
     .then((response) => {
       console.log("RETURNED: ", response);

@@ -151,7 +151,7 @@ async function doMeterTopUpFBE(meterNumber, transReference, reference, isFBE, pa
   return await _doMeterTopUp(meterNumber, 0, transReference, reference, true, payParams);
 }
 
-async function getSaleConfirmation(confirmationRef, reference, payParams) {
+async function getSaleConfirmation(confirmationRef, reference, payParams, retries = 3) {
   xml = saleConfirmAdapter.toXML(
     userPin,
     deviceId,
@@ -176,7 +176,17 @@ async function getSaleConfirmation(confirmationRef, reference, payParams) {
           `Aeon API Response: ${serverResponse}`, {}
         );
         client.end();
-        return saleConfirmAdapter.toJS(serverResponse);
+        if (retries < 1) {
+          return saleConfirmAdapter.toJS(serverResponse);
+        }
+        switch (saleConfirmAdapter.toJS(serverResponse).AeonErrorText) {
+          case 'Technical Error':
+          case "Supplier offline, please retry":
+          case "Supplier Offline":
+            return setTimeout(() => getSaleConfirmation(confirmationRef, reference, payParams, retries - 1), 5000);
+          default:
+            return saleConfirmAdapter.toJS(serverResponse);
+        }
       })
       .catch((aeonErrorObject) => {
         client.end();

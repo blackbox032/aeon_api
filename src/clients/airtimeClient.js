@@ -63,7 +63,8 @@ async function doAirtimeTopUp(
   phoneNumber,
   amount,
   transReference,
-  payParams
+  payParams,
+  retries = 3
 ) {
   xml = airtimeTopUpAdapter.toXML(
     userPin,
@@ -92,7 +93,17 @@ async function doAirtimeTopUp(
           `Aeon API Response: ${serverResponse}`, {}
         );
         client.end();
-        return airtimeTopUpAdapter.toJS(serverResponse);
+        if (retries < 1) {
+          return airtimeTopUpAdapter.toJS(serverResponse);
+        }
+        switch (airtimeTopUpAdapter.toJS(serverResponse).AeonErrorText) {
+          case 'Technical Error':
+          case "Supplier offline, please retry":
+          case "Supplier Offline":
+            return setTimeout(() => doAirtimeTopUp(transType, reference, phoneNumber, amount, transReference, payParams, retries - 1), 5000);
+          default:
+            return airtimeTopUpAdapter.toJS(serverResponse);
+        }
       })
       .catch((aeonErrorObject) => {
         client.end();

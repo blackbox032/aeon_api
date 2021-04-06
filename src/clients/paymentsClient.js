@@ -9,7 +9,7 @@ const userPin = process.env.AEON_AIRTIME_PIN || "016351";
 const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "865181";
 const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 
-async function doPayment(accountNo, amount, payParams) {
+async function doPayment(accountNo, amount, payParams, retries = 3) {
   authXML = paymentAdapter.authToXML(userPin, deviceId, deviceSer, payParams);
   let isConfirmAPI = false;
   try {
@@ -34,7 +34,18 @@ async function doPayment(accountNo, amount, payParams) {
     const subscriberResp = await client.request(infoXML)
       .then((serverResponse) => {
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Res: ${serverResponse}`, {});
-        return paymentAdapter.toJS(serverResponse);
+
+        if (retries < 1) {
+          return paymentAdapter.toJS(serverResponse);
+        }
+        switch (paymentAdapter.toJS(serverResponse).AeonErrorText) {
+          case 'Technical Error':
+          case "Supplier offline, please retry":
+          case "Supplier Offline":
+            return setTimeout(() => doPayment(accountNo, amount, payParams, retries - 1), 5000);
+          default:
+            return paymentAdapter.toJS(serverResponse);
+        }
       })
       .catch((aeonErrorObject) => {
         client.end();

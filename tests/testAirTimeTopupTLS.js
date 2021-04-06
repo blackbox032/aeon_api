@@ -12,5 +12,5 @@ const msisdn = "27713523879";
 doTopup();
 
 async function doTopup() {
-  xml = await client.doAirtimeTopUp("Vodacom", "123456", msisdn, "10");
+  xml = await client.doAirtimeTopUp("Vodacom", "123456", msisdn, "10", 'werwetrewrt', { loyaltyProfileID: '23423423' });
 }
