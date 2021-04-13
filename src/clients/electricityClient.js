@@ -56,15 +56,7 @@ async function doVerifyMeter(meterNumber, amount, payParams) {
   }
 }
 
-async function _doMeterTopUp(
-  meterNumber,
-  amount,
-  transReference,
-  reference,
-  fbe = false,
-  payParams,
-  isTimeoutRetry
-) {
+async function _doMeterTopUp(meterNumber, amount, transReference, reference, fbe = false, payParams, retries = 3, isTimeoutRetry = false) {
   xml = meterConfirmAdapter.toXML(
     userPin,
     deviceId,
@@ -114,13 +106,15 @@ async function _doMeterTopUp(
         return await client
           .request(xml)
           .then((topupResponse) => {
-            logger.log(
-              logger.levels.TRACE,
-              logger.sources.AEON_API,
-              `Aeon API Response: ${topupResponse}`, {}
-            );
+            logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${topupResponse}`, {});
             client.end();
-            return meterVoucherAdapter.toJS(topupResponse);
+            if (!isTimeoutRetry && aeonErrorObject.AeonErrorText == 'Communication error') {
+              console.log('1. this logic works topupResponse', isTimeoutRetry)
+              return _doMeterTopUp(accountNo, amount, payParams, undefined, true);
+            }
+            console.log('2. this logic works too topupResponse', isTimeoutRetry)
+            return aeonErrorObject;
+            // return meterVoucherAdapter.toJS(topupResponse);
           })
           .catch((aeonErrorObject) => {
             client.end();
@@ -131,10 +125,10 @@ async function _doMeterTopUp(
         debug("Error: " + aeonErrorObject);
         client.end();
         if (!isTimeoutRetry && aeonErrorObject.AeonErrorText == 'Communication error') {
-          console.log('1. this logic works line 43', isTimeoutRetry)
-          return doPayment(accountNo, amount, payParams, retries - 1, true);
+          console.log('1. this logic works verifyResponse', isTimeoutRetry)
+          return _doMeterTopUp(meterNumber, amount, transReference, reference, fbe, payParams, retries, true);
         }
-        console.log('2. this logic works too line 46', isTimeoutRetry)
+        console.log('2. this logic works too verifyResponse', isTimeoutRetry)
         return aeonErrorObject;
       });
   } catch (error) {
