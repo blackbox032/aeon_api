@@ -4,7 +4,8 @@ const paymentAdapter = require("../adapters/paymentAdapter");
 
 const port = process.env.AEON_AIRTIME_PORT || 7800;
 const host = process.env.AEON_AIRTIME_URL || "aeon.qa.bltelecoms.net";
-const ttl = process.env.TTL_PAYMENT || 180000;
+// const ttl = process.env.TTL_PAYMENT || 180000;
+const ttl = process.env.TTL_PAYMENT || 1000;
 const userPin = process.env.AEON_AIRTIME_PIN || "016351";
 const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "865181";
 const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
@@ -17,11 +18,15 @@ async function doPayment(accountNo, amount, payParams, retries = 3) {
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Req: ${authXML}`, {});
     const authResp = await client.request(authXML)
       .then(async serverResponse => {
+        console.log('\n\naeonErrorObject timeout comes here, by then', aeonErrorObject)
+
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Res: ${serverResponse}`, {});
         return paymentAdapter.toJS(serverResponse);
       })
       .catch((aeonErrorObject) => {
         client.end();
+        console.log('\n\naeonErrorObject timeout comes here, by error', aeonErrorObject)
+
         return {...aeonErrorObject, isConfirmAPI };
       });
 
@@ -33,22 +38,16 @@ async function doPayment(accountNo, amount, payParams, retries = 3) {
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Req: ${infoXML}`, {});
     const subscriberResp = await client.request(infoXML)
       .then((serverResponse) => {
-        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Res: ${serverResponse}`, {});
+        console.log('\n\naeonErrorObject timeout comes here, by then', aeonErrorObject)
 
-        if (retries < 1) {
-          return paymentAdapter.toJS(serverResponse);
-        }
-        switch (paymentAdapter.toJS(serverResponse).AeonErrorText) {
-          case 'Technical Error':
-          case "Supplier offline, please retry":
-          case "Supplier Offline":
-            return setTimeout(() => doPayment(accountNo, amount, payParams, retries - 1), 5000);
-          default:
-            return paymentAdapter.toJS(serverResponse);
-        }
+        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Res: ${serverResponse}`, {});
+        return paymentAdapter.toJS(serverResponse);
       })
       .catch((aeonErrorObject) => {
         client.end();
+        console.log('\n\naeonErrorObject timeout comes here, by error', aeonErrorObject)
+
+        console.log('\n\naeonErrorObject timeout comes here, ', aeonErrorObject)
         return {...aeonErrorObject, isConfirmAPI };
       });
 
@@ -65,10 +64,34 @@ async function doPayment(accountNo, amount, payParams, retries = 3) {
       .then((serverResponse) => {
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API payXML Res: ${serverResponse}`, {});
         client.end();
-        return paymentAdapter.toJS(serverResponse);
+        // return paymentAdapter.toJS(serverResponse);
+
+
+        console.log('\n\naeonErrorObject timeout comes here, by then', aeonErrorObject)
+
+        if (retries < 1) {
+          return paymentAdapter.toJS(serverResponse);
+        }
+        switch (paymentAdapter.toJS(serverResponse).AeonErrorText) {
+          case 'Communication error':
+            // reprint trx
+            // if it was succesful return success message
+            // if was not retry
+            break;
+          case 'Technical Error':
+          case "Supplier offline, please retry":
+          case "Supplier Offline":
+            return setTimeout(() => doPayment(accountNo, amount, payParams, retries - 1), 5000);
+          default:
+            return paymentAdapter.toJS(serverResponse);
+        }
+
+        // client.end();
+        // return paymentAdapter.toJS(serverResponse);
       })
       .catch((aeonErrorObject) => {
         client.end();
+        console.log('\n\naeonErrorObject timeout comes here, by error', aeonErrorObject)
         return {...aeonErrorObject, isConfirmAPI };
       });
   } catch (error) {

@@ -3,7 +3,7 @@ const debug = logger.debug;
 const tls = require("tls");
 const adapterUtils = require("../../adapters/adapterUtils");
 
-socketClient = function (address, port, timeout) {
+socketClient = function(address, port, timeout) {
   return new Promise((resolve, reject) => {
     const client = {
       address: address,
@@ -104,7 +104,7 @@ socketClient = function (address, port, timeout) {
       }
     });
 
-    client.request = async (xml) => {
+    client.request = async(xml) => {
       debug("REQUESTING");
 
       client.data = "";
@@ -117,7 +117,7 @@ socketClient = function (address, port, timeout) {
       });
     };
 
-    client.end = async () => {
+    client.end = async() => {
       try {
         client.socket.destroy();
       } catch {}

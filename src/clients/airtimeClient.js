@@ -8,7 +8,7 @@ const port = process.env.AEON_AIRTIME_PORT || 7800;
 const host = process.env.AEON_AIRTIME_URL || "aeon.qa.bltelecoms.net";
 // const port = process.env.AEON_AIRTIME_PORT || 443;
 // const host = process.env.AEON_AIRTIME_URL || "aeonssl.live.bltelecoms.net";
-const ttl = process.env.TTL || 60;
+const ttl = process.env.TTL || 600;
 const userPin = process.env.AEON_AIRTIME_PIN || "016351";
 const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "865181";
 const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
@@ -107,6 +107,7 @@ async function doAirtimeTopUp(
       })
       .catch((aeonErrorObject) => {
         client.end();
+        console.log('\n\naeonErrorObject timeout comes here, ', aeonErrorObject)
         return aeonErrorObject;
       });
   } catch (error) {

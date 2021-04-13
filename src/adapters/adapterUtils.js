@@ -6,7 +6,7 @@ function nested(obj, path) {
   return path.split(".").reduce((obj, level) => obj && obj[level], obj);
 }
 
-function aeonError(eventType, errorText, aeonErrorText) {
+function aeonError(eventType, errorText, aeonErrorText, AeonError ) {
   return {
     SessionId: "NA",
     EventType: eventType,
@@ -14,6 +14,7 @@ function aeonError(eventType, errorText, aeonErrorText) {
     ErrorText: errorText,
     AEONErrorCode: -1,
     AEONErrorText: aeonErrorText,
+    AeonErrorText: AeonError == undefined ? aeonErrorText : AeonError,
     error: true,
   };
 }
