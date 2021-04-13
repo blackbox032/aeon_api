@@ -18,15 +18,11 @@ async function doPayment(accountNo, amount, payParams, retries = 3, isTimeoutRet
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Req: ${authXML}`, {});
     const authResp = await client.request(authXML)
       .then(async serverResponse => {
-        console.log('\n\naeonErrorObject timeout comes here, by then', aeonErrorObject)
-
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Res: ${serverResponse}`, {});
         return paymentAdapter.toJS(serverResponse);
       })
       .catch((aeonErrorObject) => {
         client.end();
-        console.log('\n\naeonErrorObject timeout comes here, by error', aeonErrorObject)
-
         return {...aeonErrorObject, isConfirmAPI };
       });
 
@@ -38,8 +34,6 @@ async function doPayment(accountNo, amount, payParams, retries = 3, isTimeoutRet
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Req: ${infoXML}`, {});
     const subscriberResp = await client.request(infoXML)
       .then((serverResponse) => {
-        console.log('\n\naeonErrorObject timeout comes here, by then', aeonErrorObject)
-
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Res: ${serverResponse}`, {});
         return paymentAdapter.toJS(serverResponse);
       })
