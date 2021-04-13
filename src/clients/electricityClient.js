@@ -8,7 +8,8 @@ const saleConfirmAdapter = require("../adapters/saleConfirmAdapter");
 
 const port = process.env.AEON_ELECTRICITY_PORT || 7893;
 const host = process.env.AEON_ELECTRICITY_URL || "196.26.170.3";
-const ttl = process.env.TTL || 100;
+// const ttl = process.env.TTL || 100;
+const ttl = 1;
 const userPin = process.env.AEON_ELECTRICITY_PIN || "011234";
 const deviceId = process.env.AEON_ELECTRICITY_DEVICE_ID || "7305";
 const deviceSer = process.env.AEON_ELECTRICITY_DEVICE_SER || "TiZZIw779!";
