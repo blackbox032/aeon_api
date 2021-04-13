@@ -8,7 +8,7 @@ const saleConfirmAdapter = require("../adapters/saleConfirmAdapter");
 
 const port = process.env.AEON_ELECTRICITY_PORT || 7893;
 const host = process.env.AEON_ELECTRICITY_URL || "196.26.170.3";
-const ttl = process.env.TTL || 60000;
+const ttl = process.env.TTL || 100;
 const userPin = process.env.AEON_ELECTRICITY_PIN || "011234";
 const deviceId = process.env.AEON_ELECTRICITY_DEVICE_ID || "7305";
 const deviceSer = process.env.AEON_ELECTRICITY_DEVICE_SER || "TiZZIw779!";
@@ -62,7 +62,8 @@ async function _doMeterTopUp(
   transReference,
   reference,
   fbe = false,
-  payParams
+  payParams,
+  isTimeoutRetry
 ) {
   xml = meterConfirmAdapter.toXML(
     userPin,
@@ -129,6 +130,11 @@ async function _doMeterTopUp(
       .catch((aeonErrorObject) => {
         debug("Error: " + aeonErrorObject);
         client.end();
+        if (!isTimeoutRetry && aeonErrorObject.AeonErrorText == 'Communication error') {
+          console.log('1. this logic works line 43', isTimeoutRetry)
+          return doPayment(accountNo, amount, payParams, retries - 1, true);
+        }
+        console.log('2. this logic works too line 46', isTimeoutRetry)
         return aeonErrorObject;
       });
   } catch (error) {

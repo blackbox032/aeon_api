@@ -39,12 +39,13 @@ async function doPayment(accountNo, amount, payParams, retries = 3, isTimeoutRet
       })
       .catch((aeonErrorObject) => {
         client.end();
-        if (!isTimeoutRetry && aeonErrorObject.AeonErrorText == 'Communication error') {
-          console.log('1. this logic works line 43', isTimeoutRetry)
-          return doPayment(accountNo, amount, payParams, retries - 1, true);
-        }
-        console.log('2. this logic works too line 46', isTimeoutRetry)
-          // return {...aeonErrorObject, isConfirmAPI };
+        // if (!isTimeoutRetry && aeonErrorObject.AeonErrorText == 'Communication error') {
+        //   console.log('1. this logic works line 43', isTimeoutRetry)
+        //   return doPayment(accountNo, amount, payParams, retries - 1, true);
+        // }
+        // console.log('2. this logic works too line 46', isTimeoutRetry)
+        // return {...aeonErrorObject, isConfirmAPI };
+        return {...aeonErrorObject, isConfirmAPI };
       });
 
     if (subscriberResp.error) {
