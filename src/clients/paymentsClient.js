@@ -10,7 +10,7 @@ const userPin = process.env.AEON_AIRTIME_PIN || "016351";
 const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "865181";
 const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 
-async function doPayment(accountNo, amount, payParams, retries = 3) {
+async function doPayment(accountNo, amount, payParams, retries = 3, isTimeoutRetry = false) {
   authXML = paymentAdapter.authToXML(userPin, deviceId, deviceSer, payParams);
   let isConfirmAPI = false;
   try {
@@ -45,9 +45,6 @@ async function doPayment(accountNo, amount, payParams, retries = 3) {
       })
       .catch((aeonErrorObject) => {
         client.end();
-        console.log('\n\naeonErrorObject timeout comes here, by error', aeonErrorObject)
-
-        console.log('\n\naeonErrorObject timeout comes here, ', aeonErrorObject)
         return {...aeonErrorObject, isConfirmAPI };
       });
 
@@ -66,18 +63,10 @@ async function doPayment(accountNo, amount, payParams, retries = 3) {
         client.end();
         // return paymentAdapter.toJS(serverResponse);
 
-
-        console.log('\n\naeonErrorObject timeout comes here, by then', aeonErrorObject)
-
         if (retries < 1) {
           return paymentAdapter.toJS(serverResponse);
         }
         switch (paymentAdapter.toJS(serverResponse).AeonErrorText) {
-          case 'Communication error':
-            // reprint trx
-            // if it was succesful return success message
-            // if was not retry
-            break;
           case 'Technical Error':
           case "Supplier offline, please retry":
           case "Supplier Offline":
@@ -91,7 +80,12 @@ async function doPayment(accountNo, amount, payParams, retries = 3) {
       })
       .catch((aeonErrorObject) => {
         client.end();
-        console.log('\n\naeonErrorObject timeout comes here, by error', aeonErrorObject)
+        if (!isTimeoutRetry && aeonErrorObject.AeonErrorText == 'Communication error') {
+          console.log('1. this logic works', isTimeoutRetry)
+          doPayment(accountNo, amount, payParams, retries - 1, true);
+        }
+        console.log('2. this logic works too', isTimeoutRetry)
+
         return {...aeonErrorObject, isConfirmAPI };
       });
   } catch (error) {
