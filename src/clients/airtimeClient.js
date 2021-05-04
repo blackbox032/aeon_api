@@ -16,6 +16,13 @@ const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 // const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "103936";
 // const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "GniRR3t5639!";
 
+const RETRY_TEXT = [
+  '',
+  '',
+  'Eish Hade, Sterring! Your bank took too long to approve. Mara don’t worry, you didn’t pay.',
+  'Hola Sterring! Don’t go! We are waiting for your banks approval.'
+]
+
 async function doAirtimeValidation(transType, reference, phoneNumber, amount, payParams) {
   xml = mnoAirtimeValidationAdapter.toXML(
     userPin,
@@ -100,6 +107,13 @@ async function doAirtimeTopUp(
           case 'Technical Error':
           case "Supplier offline, please retry":
           case "Supplier Offline":
+            console.log('retries Airtime', retries)
+            console.log('retries Airtime - RETRY_TEXT[retries]', RETRY_TEXT[retries])
+            const sterring_url = `http://sterring_proxy:12121/api/v1/send-message`;
+            const payload = { text: RETRY_TEXT[retries], msisdn: payParams.fromAccount, method: "POST", url: `http://sterring_proxy:12121/api/v1/send-message` }
+            axios.post(payload)
+              .then(res => console.log('sent to: ', res.data))
+              .catch(error => console.log('failed to send to ', sterring_url, ' by ', payload, 'error: ', error.message))
             return setTimeout(() => doAirtimeTopUp(transType, reference, phoneNumber, amount, transReference, payParams, retries - 1), 5000);
           default:
             return airtimeTopUpAdapter.toJS(serverResponse);

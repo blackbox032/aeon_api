@@ -1,6 +1,5 @@
 const logger = require("../utils/logger");
 const debug = logger.debug;
-// const mnoAirtimeValidationAdapter = require("../adapters/mnoAirtimeValidationAdapter");
 const doAuthAdapter = require("../adapters/authAdapter");
 
 const port = process.env.AEON_AIRTIME_PORT || 7800;
