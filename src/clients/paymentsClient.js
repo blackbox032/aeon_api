@@ -49,7 +49,7 @@ async function doPayment(accountNo, amount, payParams, retries = 3, isTimeoutRet
 
         if (!isTimeoutRetry && aeonErrorObject.AeonErrorText == 'Communication error') {
 
-          await reprintClient.reprint()
+          reprintClient.reprint()
 
 
           // console.log('1. this logic works line 43', isTimeoutRetry)
