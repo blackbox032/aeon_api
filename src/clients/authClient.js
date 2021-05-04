@@ -17,20 +17,20 @@ const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 
 async function doAuth(transType) {
   xml = doAuthAdapter.toXML(userPin, deviceId, deviceSer, transType);
-  logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${xml}`, { host, port });
+  logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon doAuth API Request: ${xml}`, { host, port, ttl });
   try {
     const client = await socketClient(host, port, ttl);
 
     return await client
       .request(xml)
       .then((serverResponse) => {
-        console.log(`Aeon API Response: ${serverResponse}`)
+        console.log(`Aeon doAuth API Response: ${serverResponse}`)
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${serverResponse}`, {});
         // client.end();
         return doAuthAdapter.toJS(serverResponse);
       })
       .catch((aeonErrorObject) => {
-        console.log(`Aeon API aeonErrorObject Response: ${aeonErrorObject}`)
+        console.log(`Aeon doAuth API aeonErrorObject Response: ${aeonErrorObject}`)
 
         client.end();
         return aeonErrorObject;
