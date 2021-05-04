@@ -15,6 +15,8 @@ async function reprint() {
 
   // const client = await socketClient(host, port, ttl);
 
+  console.log('tryreprint')
+
   const authDetails = await authClient.doAuth('Reprint');
 
 

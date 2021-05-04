@@ -47,7 +47,9 @@ async function doPayment(accountNo, amount, payParams, retries = 3, isTimeoutRet
       .catch((aeonErrorObject) => {
         client.end();
 
-        if (!isTimeoutRetry && aeonErrorObject.AeonErrorText == 'Communication error') {
+        if (aeonErrorObject.AeonErrorText == 'Communication error') {
+
+          console.log('reprintClient.reprint()', reprintClient.reprint());
 
           reprintClient.reprint()
 
@@ -55,6 +57,7 @@ async function doPayment(accountNo, amount, payParams, retries = 3, isTimeoutRet
           // console.log('1. this logic works line 43', isTimeoutRetry)
           // return doPayment(accountNo, amount, payParams, retries - 1, true);
         }
+        reprintClient.reprint()
         console.log('2. this logic works too line 46', isTimeoutRetry)
         return {...aeonErrorObject, isConfirmAPI };
         // return {...aeonErrorObject, isConfirmAPI };
@@ -102,10 +105,10 @@ async function doPayment(accountNo, amount, payParams, retries = 3, isTimeoutRet
         // if not timeoutRetry then reprint if successful the return else redo the payment
 
         if (!isTimeoutRetry && aeonErrorObject.AeonErrorText == 'Communication error') {
-          reprintClient.reprint()
-            // authClient('Electricity')
-            // .then(res => {
-            //   console.log('Auth Client res', res)
+          // reprintClient.reprint()
+          // authClient('Electricity')
+          // .then(res => {
+          //   console.log('Auth Client res', res)
 
 
           // })
