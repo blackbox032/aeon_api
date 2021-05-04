@@ -101,7 +101,7 @@ async function doAirtimeTopUp(
           `Aeon API Response: ${serverResponse}`, {}
         );
         client.end();
-        if (retries < 1) {
+        if (retries <= 1) {
           return airtimeTopUpAdapter.toJS(serverResponse);
         }
         switch (airtimeTopUpAdapter.toJS(serverResponse).AeonErrorText) {
