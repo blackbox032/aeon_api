@@ -9,7 +9,7 @@ const saleConfirmAdapter = require("../adapters/saleConfirmAdapter");
 const port = process.env.AEON_ELECTRICITY_PORT || 7893;
 const host = process.env.AEON_ELECTRICITY_URL || "196.26.170.3";
 // const ttl = process.env.TTL || 100;
-const ttl = 1;
+const ttl = 17;
 const userPin = process.env.AEON_ELECTRICITY_PIN || "011234";
 const deviceId = process.env.AEON_ELECTRICITY_DEVICE_ID || "7305";
 const deviceSer = process.env.AEON_ELECTRICITY_DEVICE_SER || "TiZZIw779!";
@@ -109,25 +109,43 @@ async function _doMeterTopUp(meterNumber, amount, transReference, reference, fbe
           .then((topupResponse) => {
             logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${topupResponse}`, {});
             client.end();
-            if (!isTimeoutRetry && aeonErrorObject.AeonErrorText == 'Communication error') {
-              console.log('1. this logic works topupResponse', isTimeoutRetry)
-              return _doMeterTopUp(accountNo, amount, payParams, undefined, true);
-            }
-            console.log('2. this logic works too topupResponse', isTimeoutRetry)
-            return aeonErrorObject;
-            // return meterVoucherAdapter.toJS(topupResponse);
+            // if (!isTimeoutRetry && aeonErrorObject.AeonErrorText == 'Communication error') {
+            //   console.log('1. this logic works topupResponse', isTimeoutRetry)
+            //   return _doMeterTopUp(accountNo, amount, payParams, undefined, true);
+            // }
+            // console.log('2. this logic works too topupResponse', isTimeoutRetry)
+            // return aeonErrorObject;
+            return meterVoucherAdapter.toJS(topupResponse);
           })
           .catch((aeonErrorObject) => {
             client.end();
             return aeonErrorObject;
           });
       })
-      .catch((aeonErrorObject) => {
-        debug("Error: " + aeonErrorObject);
+      .catch(async(aeonErrorObject) => {
+        debug("Error: " + JSON.stringify(aeonErrorObject));
         client.end();
         if (!isTimeoutRetry && aeonErrorObject.AeonErrorText == 'Communication error') {
           console.log('1. this logic works verifyResponse', isTimeoutRetry)
-          return _doMeterTopUp(meterNumber, amount, transReference, reference, fbe, payParams, retries, true);
+            // get trx reprint
+          const client = await socketClient(host, port, ttl);
+          return await client
+            .request(xml)
+            .then(async(verifyResponse) => {
+
+
+              return _doMeterTopUp(meterNumber, amount, transReference, reference, fbe, payParams, retries, true);
+
+            })
+            .catch((aeonErrorObject) => {
+              client.end();
+              return aeonErrorObject;
+            });
+
+          // if success, then return it, else retry
+
+
+
         }
         console.log('2. this logic works too verifyResponse', isTimeoutRetry)
         return aeonErrorObject;
