@@ -8,7 +8,7 @@ const port = process.env.AEON_AIRTIME_PORT || 7800;
 const host = process.env.AEON_AIRTIME_URL || "aeon.qa.bltelecoms.net";
 // const port = process.env.AEON_AIRTIME_PORT || 443;
 // const host = process.env.AEON_AIRTIME_URL || "aeonssl.live.bltelecoms.net";
-const ttl = process.env.TTL || 600;
+const ttl = process.env.TTL || 6000;
 const userPin = process.env.AEON_AIRTIME_PIN || "016351";
 const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "865181";
 const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
@@ -111,8 +111,9 @@ async function doAirtimeTopUp(
             console.log('retries Airtime', retries)
             console.log('retries Airtime - RETRY_TEXT[retries]', RETRY_TEXT[retries])
             const sterring_url = `http://sterring_proxy:12121/api/v1/send-message`;
-            const payload = { text: RETRY_TEXT[retries], msisdn: payParams.fromAccount, method: "POST", url: `http://sterring_proxy:12121/api/v1/send-message` }
-            axios.post(payload)
+            const payload = { text: RETRY_TEXT[retries], msisdn: payParams.fromAccount }
+              // , method: "POST", url: `http://sterring_proxy:12121/api/v1/send-message` 
+            axios.post(sterring_url, payload)
               .then(res => console.log('sent to: ', res.data))
               .catch(error => console.log('failed to send to ', sterring_url, ' by ', payload, 'error: ', error.message))
             return setTimeout(() => doAirtimeTopUp(transType, reference, phoneNumber, amount, transReference, payParams, retries - 1), 5000);
