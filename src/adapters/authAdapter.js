@@ -8,10 +8,10 @@ function toXML(userPin, deviceId, deviceSer, transType) {
     `<UserPin>${userPin}</UserPin>` +
     `<DeviceId>${deviceId}</DeviceId>` +
     `<DeviceSer>${deviceSer}</DeviceSer>` +
-    `<TransType>${transType}</Transtype>` +
+    `<TransType>${transType}</TransType>` +
     `</event>` +
     `</request>`;
-  return ret.replace(/\s+/g,"") + "\n";
+  return ret.replace(/\s+/g,"") + "";
 }
 
 //may return success response
