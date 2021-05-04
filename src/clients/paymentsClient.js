@@ -14,7 +14,7 @@ const RETRY_TEXT = [
   '',
   '',
   'Eish Hade, Sterring! Your bank took too long to approve. Mara don’t worry, you didn’t pay.',
-  'Hola Sterring! Don’t go! We are waiting for your banks approval.'
+  'Hola Sterring! Don’t go! We are waiting for your banks approval.Eish Hade, Sterring! Your bank took too long to approve. Mara don’t worry, you didn’t pay.\n\nHit *0* to try again or * to start over'
 ]
 async function doPayment(accountNo, amount, payParams, retries = 3, isTimeoutRetry = false) {
   authXML = paymentAdapter.authToXML(userPin, deviceId, deviceSer, payParams);
