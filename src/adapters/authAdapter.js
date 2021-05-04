@@ -11,7 +11,7 @@ function toXML(userPin, deviceId, deviceSer, transType) {
     `<TransType>${transType}</Transtype>` +
     `</event>` +
     `</request>`;
-  return ret + "";
+  return ret + "\n";
 }
 
 //may return success response
