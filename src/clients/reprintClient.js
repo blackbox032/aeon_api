@@ -17,14 +17,24 @@ async function reprint() {
 
   console.log('tryreprint')
 
-  const authDetails = await authClient.doAuth('Reprint');
+  // const authDetails = 
+  await authClient.doAuth('Reprint')
+    .then(res => {
+      console.log('authClient res', res)
+    })
+    .catch(err => {
+
+      console.log('authClient res err', err)
+    })
+}
 
 
-  console.log('authDetails', authDetails);
 
-  return await authClient.doAuth('Reprint');;
+// console.log('authDetails', authDetails);
 
-  console.log('authDetails', authDetails)
+// return await authClient.doAuth('Reprint');;
+
+// console.log('authDetails', authDetails)
 
 }
 
