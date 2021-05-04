@@ -12,6 +12,7 @@ const ttl = process.env.TTL || 600;
 const userPin = process.env.AEON_AIRTIME_PIN || "016351";
 const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "865181";
 const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
+const axios = require('axios');
 // const userPin = process.env.AEON_AIRTIME_PIN || "011234";
 // const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "103936";
 // const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "GniRR3t5639!";
