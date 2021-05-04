@@ -1,11 +1,12 @@
 const logger = require("../utils/logger");
 const socketClient = require("../clients/sockets/socketClient");
 const paymentAdapter = require("../adapters/paymentAdapter");
+const reprintClient = require("../clients/reprintClient");
 
 const port = process.env.AEON_AIRTIME_PORT || 7800;
 const host = process.env.AEON_AIRTIME_URL || "aeon.qa.bltelecoms.net";
 // const ttl = process.env.TTL_PAYMENT || 180000;
-const ttl = process.env.TTL_PAYMENT || 1000;
+const ttl = process.env.TTL_PAYMENT || 600;
 const userPin = process.env.AEON_AIRTIME_PIN || "016351";
 const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "865181";
 const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
@@ -48,6 +49,7 @@ async function doPayment(accountNo, amount, payParams, retries = 3, isTimeoutRet
 
         if (!isTimeoutRetry && aeonErrorObject.AeonErrorText == 'Communication error') {
 
+          await reprintClient.reprint()
 
 
           // console.log('1. this logic works line 43', isTimeoutRetry)
@@ -100,8 +102,17 @@ async function doPayment(accountNo, amount, payParams, retries = 3, isTimeoutRet
         // if not timeoutRetry then reprint if successful the return else redo the payment
 
         if (!isTimeoutRetry && aeonErrorObject.AeonErrorText == 'Communication error') {
-          console.log('1. this logic works', isTimeoutRetry)
-            // doPayment(accountNo, amount, payParams, retries - 1, true);
+          await reprintClient.reprint()
+            // authClient('Electricity')
+            // .then(res => {
+            //   console.log('Auth Client res', res)
+
+
+          // })
+          // .catch((aeonErrorObject) => console.log('aeonErrorObject', aeonErrorObject))
+
+          // console.log('1. this logic works', isTimeoutRetry)
+          // doPayment(accountNo, amount, payParams, retries - 1, true);
         }
         console.log('2. this logic works too', isTimeoutRetry)
 

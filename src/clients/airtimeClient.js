@@ -94,7 +94,7 @@ async function doAirtimeTopUp(
     const client = await socketClient(host, port, ttl);
     return await client
       .request(xml)
-      .then((serverResponse) => {
+      .then(async(serverResponse) => {
         logger.log(
           logger.levels.TRACE,
           logger.sources.AEON_API,

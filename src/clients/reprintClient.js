@@ -17,9 +17,12 @@ async function reprint() {
 
   const authDetails = await authClient.doAuth('Reprint');
 
+
   console.log('authDetails', authDetails);
 
   return await authClient.doAuth('Reprint');;
+
+  console.log('authDetails', authDetails)
 
 }
 
