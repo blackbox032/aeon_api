@@ -102,7 +102,7 @@ async function doPayment(accountNo, amount, payParams, retries = 3, isTimeoutRet
         // if not timeoutRetry then reprint if successful the return else redo the payment
 
         if (!isTimeoutRetry && aeonErrorObject.AeonErrorText == 'Communication error') {
-          await reprintClient.reprint()
+          reprintClient.reprint()
             // authClient('Electricity')
             // .then(res => {
             //   console.log('Auth Client res', res)
