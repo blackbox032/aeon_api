@@ -36,7 +36,7 @@ async function reprint() {
 
 // console.log('authDetails', authDetails)
 
-}
+
 
 module.exports = {
   reprint
