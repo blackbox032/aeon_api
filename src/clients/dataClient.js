@@ -5,31 +5,22 @@ const bundleTopUpAdapter = require("../adapters/bundleTopUpAdapter");
 const productListAdapter = require("../adapters/productListAdapter");
 const mnoDataBundleValidationAdapter = require("../adapters/mnoDataBundleValidationAdapter");
 
-const port = process.env.AEON_AIRTIME_PORT || 7800;
-const host = process.env.AEON_AIRTIME_URL || "aeon.qa.bltelecoms.net";
-const ttl = process.env.TTL || 60000;
-const userPin = process.env.AEON_AIRTIME_PIN || "016351";
-const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "865181";
-const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
-
-async function getBundleList(transType) {
-  xml = productListAdapter.toXML(userPin, deviceId, deviceSer, transType);
+async function getBundleList({ transType, aeonAuth }) {
+  xml = productListAdapter.toXML(aeonAuth.userPin, aeonAuth.deviceId, aeonAuth.deviceSer, transType);
   logger.log(
     logger.levels.TRACE,
     logger.sources.AEON_API,
-    `Aeon API Request: ${xml}`,
-    { host, port }
+    `Aeon API Request: ${xml}`, aeonAuth
   );
   try {
-    const client = await socketClient(host, port, ttl);
+    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.ttl);
     return await client
       .request(xml)
       .then((serverResponse) => {
         logger.log(
           logger.levels.TRACE,
           logger.sources.AEON_API,
-          `Aeon API Response: ${serverResponse}`,
-          {}
+          `Aeon API Response: ${serverResponse}`, {}
         );
         client.end();
         return productListAdapter.toJS(serverResponse);
@@ -42,8 +33,7 @@ async function getBundleList(transType) {
     logger.log(
       logger.levels.TRACE,
       logger.sources.AEON_API,
-      `Aeon API Socket Client Error`,
-      {
+      `Aeon API Socket Client Error`, {
         error,
       }
     );
@@ -51,11 +41,12 @@ async function getBundleList(transType) {
   }
 }
 
-async function doBundleValidation(transType, reference, phoneNumber, product, amount) {
+async function doBundleValidation(aeonParams) {
+  const { transType, reference, phoneNumber, product, amount, aeonAuth } = aeonParams
   xml = mnoDataBundleValidationAdapter.toXML(
-    userPin,
-    deviceId,
-    deviceSer,
+    aeonAuth.userPin,
+    aeonAuth.deviceId,
+    aeonAuth.deviceSer,
     transType,
     reference,
     phoneNumber,
@@ -65,19 +56,17 @@ async function doBundleValidation(transType, reference, phoneNumber, product, am
   logger.log(
     logger.levels.TRACE,
     logger.sources.AEON_API,
-    `Aeon API Request: ${xml}`,
-    { host, port }
+    `Aeon API Request: ${xml}`, { host, port }
   );
   try {
-    const client = await socketClient(host, port, ttl);
+    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.ttl);
     return await client
       .request(xml)
       .then((serverResponse) => {
         logger.log(
           logger.levels.TRACE,
           logger.sources.AEON_API,
-          `Aeon API Response: ${serverResponse}`,
-          {}
+          `Aeon API Response: ${serverResponse}`, {}
         );
         client.end();
         return mnoDataBundleValidationAdapter.toJS(serverResponse);
@@ -90,8 +79,7 @@ async function doBundleValidation(transType, reference, phoneNumber, product, am
     logger.log(
       logger.levels.TRACE,
       logger.sources.AEON_API,
-      `Aeon API Socket Client Error`,
-      {
+      `Aeon API Socket Client Error`, {
         error,
       }
     );
@@ -99,13 +87,8 @@ async function doBundleValidation(transType, reference, phoneNumber, product, am
   }
 }
 
-async function doBundleTopUp(
-  transType,
-  reference,
-  phoneNumber,
-  productCode,
-  transReference
-) {
+async function doBundleTopUp(aeonParams) {
+  const { transType, reference, phoneNumber, productCode, transReference } = aeonParams;
   xml = bundleTopUpAdapter.toXML(
     userPin,
     deviceId,
@@ -119,8 +102,7 @@ async function doBundleTopUp(
   logger.log(
     logger.levels.TRACE,
     logger.sources.AEON_API,
-    `Aeon API Request: ${xml}`,
-    { host, port }
+    `Aeon API Request: ${xml}`, { host, port }
   );
   try {
     const client = await socketClient(host, port, ttl);
@@ -130,8 +112,7 @@ async function doBundleTopUp(
         logger.log(
           logger.levels.TRACE,
           logger.sources.AEON_API,
-          `Aeon API Response: ${serverResponse}`,
-          {}
+          `Aeon API Response: ${serverResponse}`, {}
         );
         client.end();
         return bundleTopUpAdapter.toJS(serverResponse);
@@ -144,8 +125,7 @@ async function doBundleTopUp(
     logger.log(
       logger.levels.TRACE,
       logger.sources.AEON_API,
-      `Aeon API Socket Client Error`,
-      {
+      `Aeon API Socket Client Error`, {
         error,
       }
     );
