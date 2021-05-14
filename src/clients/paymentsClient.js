@@ -9,11 +9,11 @@ const userPin = process.env.AEON_AIRTIME_PIN || "016351";
 const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "865181";
 const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 
-async function doPayment(accountNo, amount, payParams) {
-  authXML = paymentAdapter.authToXML(userPin, deviceId, deviceSer, payParams);
+async function doPayment(accountNo, amount, aeonParams, aeonAuth) {
+  authXML = paymentAdapter.authToXML(aeonAuth.userPin, aeonAuth.deviceId, aeonAuth.deviceSer, aeonParams);
   let isConfirmAPI = false;
   try {
-    const client = await socketClient(host, port, ttl);
+    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Req: ${authXML}`, {});
     const authResp = await client.request(authXML)
       .then(async serverResponse => {
@@ -29,7 +29,7 @@ async function doPayment(accountNo, amount, payParams) {
       client.end();
       return authResp;
     }
-    let infoXML = paymentAdapter.subscriberInfoToXML(accountNo, authResp.SessionId, payParams, amount);
+    let infoXML = paymentAdapter.subscriberInfoToXML(accountNo, authResp.SessionId, aeonParams, amount);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Req: ${infoXML}`, {});
     const subscriberResp = await client.request(infoXML)
       .then((serverResponse) => {
@@ -46,9 +46,9 @@ async function doPayment(accountNo, amount, payParams) {
       return subscriberResp;
     }
 
-    payParams.trxID = subscriberResp.TransRef;
+    aeonParams.trxID = subscriberResp.TransRef;
     isConfirmAPI = true;
-    let payXML = paymentAdapter.paymentToXML(accountNo, amount, authResp.SessionId, payParams);
+    let payXML = paymentAdapter.paymentToXML(accountNo, amount, authResp.SessionId, aeonParams);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API payXML Req: ${payXML}`, {});
     return await client.request(payXML)
       .then((serverResponse) => {
@@ -66,11 +66,11 @@ async function doPayment(accountNo, amount, payParams) {
   }
 }
 
-async function doGetSubscriberInfo(accountNo, payParams) {
-  authXML = paymentAdapter.authToXML(userPin, deviceId, deviceSer, payParams);
+async function doGetSubscriberInfo(accountNo, aeonParams) {
+  authXML = paymentAdapter.authToXML(aeonAuth.userPin, aeonAuth.deviceId, aeonAuth.deviceSer, aeonParams);
 
   try {
-    const client = await socketClient(host, port, ttl);
+    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Req: ${authXML}`, {});
     const authResp = await client.request(authXML)
       .then(async serverResponse => {
@@ -86,7 +86,7 @@ async function doGetSubscriberInfo(accountNo, payParams) {
       client.end();
       return authResp;
     }
-    let infoXML = paymentAdapter.subscriberInfoToXML(accountNo, authResp.SessionId, payParams);
+    let infoXML = paymentAdapter.subscriberInfoToXML(accountNo, authResp.SessionId, aeonParams);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Req: ${infoXML}`, {});
     const subscriberResp = await client.request(infoXML)
       .then((serverResponse) => {

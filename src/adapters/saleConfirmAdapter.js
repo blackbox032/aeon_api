@@ -11,7 +11,7 @@ function toXML(userPin, deviceId, deviceSer, confrimationRef, reference) {
     `<UserPin>${userPin}</UserPin>` +
     `<TransRef>${confrimationRef}</TransRef>` +
     `<Reference>${reference}</Reference>` +
-    // `<Recon transReference="${transReference}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
+    // `<Recon transReference="${transReference}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";

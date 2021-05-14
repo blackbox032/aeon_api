@@ -9,7 +9,7 @@ function toXML(
   phoneNumber,
   amount,
   transReference,
-  payParams
+  aeonParams
 ) {
   ret =
     `<request>` +
@@ -21,10 +21,10 @@ function toXML(
     `<TransType>${transType}</TransType>` +
     `<Reference>${reference}</Reference>` +
     `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
-    `<LoyaltyProfileId>${payParams.loyaltyProfileID}</LoyaltyProfileId>` +
+    `<LoyaltyProfileId>${aeonParams.loyaltyProfileID}</LoyaltyProfileId>` +
     `<Amount>${amount}</Amount>` +
     `<tenderType>creditCard</tenderType>` +
-    `<Recon transReference="${transReference}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
+    `<Recon transReference="${transReference}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";

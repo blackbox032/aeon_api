@@ -16,20 +16,21 @@ const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 // const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "103936";
 // const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "GniRR3t5639!";
 
-async function doAirtimeValidation(transType, reference, phoneNumber, amount, payParams) {
+async function doAirtimeValidation(transType, reference, phoneNumber, amount, aeonParams, aeonAuth) {
   xml = mnoAirtimeValidationAdapter.toXML(
-    userPin,
-    deviceId,
-    deviceSer,
+    aeonAuth.userPin,
+    aeonAuth.deviceId,
+    aeonAuth.deviceSer,
     transType,
     reference,
     phoneNumber,
     amount,
-    payParams
+    aeonParams,
+    aeonAuth
   );
-  logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${xml}`, { host, port });
+  logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${xml}`, aeonAuth);
   try {
-    const client = await socketClient(host, port, ttl);
+    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
     return await client
       .request(xml)
       .then((serverResponse) => {
@@ -63,26 +64,27 @@ async function doAirtimeTopUp(
   phoneNumber,
   amount,
   transReference,
-  payParams
+  aeonParams,
+  aeonAuth
 ) {
   xml = airtimeTopUpAdapter.toXML(
-    userPin,
-    deviceId,
-    deviceSer,
+    aeonAuth.userPin,
+    aeonAuth.deviceId,
+    aeonAuth.deviceSer,
     transType,
     reference,
     phoneNumber,
     amount,
     transReference,
-    payParams
+    aeonParams
   );
   logger.log(
     logger.levels.TRACE,
     logger.sources.AEON_API,
-    `Aeon API Request: ${xml}`, { host, port }
+    `Aeon API Request: ${xml}`, aeonAuth
   );
   try {
-    const client = await socketClient(host, port, ttl);
+    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.ttl);
     return await client
       .request(xml)
       .then((serverResponse) => {

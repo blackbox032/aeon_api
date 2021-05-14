@@ -18,11 +18,11 @@ const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 // const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "GniRR3t5639!";
 
 
-async function doAuth(transType) {
-  xml = doAuthAdapter.toXML(userPin, deviceId, deviceSer, transType);
-  logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${xml}`, { host, port });
+async function doAuth(transType, aeonAuth) {
+  xml = doAuthAdapter.toXML(aeonAuth.userPin, aeonAuth.deviceId, aeonAuth.deviceSer, transType);
+  logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${xml}`, aeonAuth);
   try {
-    const client = await socketClient(host, port, ttl);
+    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
     return await client
       .request(xml)
       .then((serverResponse) => {

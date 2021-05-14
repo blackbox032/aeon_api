@@ -13,22 +13,22 @@ const userPin = process.env.AEON_ELECTRICITY_PIN || "011234";
 const deviceId = process.env.AEON_ELECTRICITY_DEVICE_ID || "7305";
 const deviceSer = process.env.AEON_ELECTRICITY_DEVICE_SER || "TiZZIw779!";
 
-async function doVerifyMeter(meterNumber, amount, payParams) {
+async function doVerifyMeter(meterNumber, amount, aeonParams, aeonAuth) {
   xml = meterConfirmAdapter.toXML(
-    userPin,
-    deviceId,
-    deviceSer,
+    aeonAuth.userPin,
+    aeonAuth.deviceId,
+    aeonAuth.deviceSer,
     meterNumber,
     amount,
-    payParams
+    aeonParams
   );
   logger.log(
     logger.levels.TRACE,
     logger.sources.AEON_API,
-    `Aeon API Request: ${xml}`, { host, port }
+    `Aeon API Request: ${xml}`, aeonAuth
   );
   try {
-    const client = await socketClient(host, port, ttl);
+    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
     return await client
       .request(xml)
       .then((serverResponse) => {
@@ -62,23 +62,24 @@ async function _doMeterTopUp(
   transReference,
   reference,
   fbe = false,
-  payParams
+  aeonParams,
+  aeonAuth
 ) {
   xml = meterConfirmAdapter.toXML(
-    userPin,
-    deviceId,
-    deviceSer,
+    aeonAuth.userPin,
+    aeonAuth.deviceId,
+    aeonAuth.deviceSer,
     meterNumber,
     amount,
-    payParams
+    aeonParams
   );
   logger.log(
     logger.levels.TRACE,
     logger.sources.AEON_API,
-    `Aeon API Request: ${xml}`, { host, port }
+    `Aeon API Request: ${xml}`, aeonAuth
   );
   try {
-    const client = await socketClient(host, port, ttl);
+    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
     return await client
       .request(xml)
       .then(async(verifyResponse) => {
@@ -95,7 +96,8 @@ async function _doMeterTopUp(
             transReference,
             reference,
             meterNumber,
-            payParams
+            aeonParams,
+            aeonAuth
           ) :
           meterVoucherAdapter.toXML(
             response.SessionId,
@@ -103,12 +105,13 @@ async function _doMeterTopUp(
             transReference,
             reference,
             meterNumber,
-            payParams
+            aeonParams,
+            aeonAuth
           );
         logger.log(
           logger.levels.TRACE,
           logger.sources.AEON_API,
-          `Aeon API Request: ${xml}`, { host, port }
+          `Aeon API Request: ${xml}`, aeonAuth
         );
         return await client
           .request(xml)
@@ -143,30 +146,30 @@ async function _doMeterTopUp(
   }
 }
 
-async function doMeterTopUp(meterNumber, amount, transReference, reference, isFBE, payParams) {
-  return await _doMeterTopUp(meterNumber, amount, transReference, reference, false, payParams);
+async function doMeterTopUp(meterNumber, amount, transReference, reference, isFBE, aeonParams, aeonAuth) {
+  return await _doMeterTopUp(meterNumber, amount, transReference, reference, false, aeonParams, aeonAuth);
 }
 
-async function doMeterTopUpFBE(meterNumber, transReference, reference, isFBE, payParams) {
-  return await _doMeterTopUp(meterNumber, 0, transReference, reference, true, payParams);
+async function doMeterTopUpFBE(meterNumber, transReference, reference, isFBE, aeonParams, aeonAuth) {
+  return await _doMeterTopUp(meterNumber, 0, transReference, reference, true, aeonParams, aeonAuth);
 }
 
-async function getSaleConfirmation(confirmationRef, reference, payParams) {
+async function getSaleConfirmation(confirmationRef, reference, aeonParams, aeonAuth) {
   xml = saleConfirmAdapter.toXML(
-    userPin,
-    deviceId,
-    deviceSer,
+    aeonAuth.userPin,
+    aeonAuth.deviceId,
+    aeonAuth.deviceSer,
     confirmationRef,
     reference,
-    payParams
+    aeonParams
   );
   logger.log(
     logger.levels.TRACE,
     logger.sources.AEON_API,
-    `Aeon API Request: ${xml}`, { host, port }
+    `Aeon API Request: ${xml}`, aeonAuth
   );
   try {
-    const client = await socketClient(host, port, ttl);
+    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
     return await client
       .request(xml)
       .then((serverResponse) => {

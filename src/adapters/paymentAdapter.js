@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function authToXML(userPin, deviceId, deviceSer, payParams) {
+function authToXML(userPin, deviceId, deviceSer, aeonParams) {
 
   return `<request>` +
     `<EventType>Authentication</EventType>` +
@@ -8,18 +8,18 @@ function authToXML(userPin, deviceId, deviceSer, payParams) {
     `<UserPin>${userPin}</UserPin>` +
     `<DeviceId>${deviceId}</DeviceId>` +
     `<DeviceSer>${deviceSer}</DeviceSer>` +
-    `<TransType>${payParams.subscriberEventType}</TransType>` +
+    `<TransType>${aeonParams.subscriberEventType}</TransType>` +
     `</event>` +
     `</request>` +
     "\n";
 }
 
-function subscriberInfoToXML(accountNo, sessionId, payParams, amount = '10.00') {
-  const eventType = payParams.eventType == undefined ? 'GetSubscriberBillInfo' : payParams.eventType;
+function subscriberInfoToXML(accountNo, sessionId, aeonParams, amount = '10.00') {
+  const eventType = aeonParams.eventType == undefined ? 'GetSubscriberBillInfo' : aeonParams.eventType;
   let moreParams = '';
 
   if (eventType != 'GetSubscriberBillInfo') {
-    moreParams = `<realTime>1</realTime><verifyOnly>${payParams.verifyOnly}</verifyOnly><amountDue>${amount}</amountDue>`
+    moreParams = `<realTime>1</realTime><verifyOnly>${aeonParams.verifyOnly}</verifyOnly><amountDue>${amount}</amountDue>`
   }
 
   ret =
@@ -28,18 +28,18 @@ function subscriberInfoToXML(accountNo, sessionId, payParams, amount = '10.00') 
     `<SessionId>${sessionId}</SessionId>` +
     `<event>` +
     `<accountNo>${accountNo}</accountNo>` +
-    `<productId>${payParams.productID}</productId>` +
-    `<providerId>${payParams.providerID}</providerId>` +
-    `<LoyaltyProfileId>${payParams.loyaltyProfileID}</LoyaltyProfileId>` +
+    `<productId>${aeonParams.productID}</productId>` +
+    `<providerId>${aeonParams.providerID}</providerId>` +
+    `<LoyaltyProfileId>${aeonParams.loyaltyProfileID}</LoyaltyProfileId>` +
     moreParams +
-    `<Recon transReference="${Date.now()}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
+    `<Recon transReference="${Date.now()}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";
 }
 
 
-function paymentToXML(accountNo, amount, sessionId, payParams) {
+function paymentToXML(accountNo, amount, sessionId, aeonParams) {
   ret =
     `<request>` +
     `<EventType>Confirm</EventType>` +
@@ -48,12 +48,12 @@ function paymentToXML(accountNo, amount, sessionId, payParams) {
     `<accountNumber>${accountNo}</accountNumber>` +
     `<amountDue>${amount}</amountDue>` +
     `<confirmType>commit</confirmType>` +
-    `<productId>${payParams.productID}</productId>` +
-    `<providerId>${payParams.providerID}</providerId>` +
-    `<trxId>${payParams.trxID}</trxId>` +
+    `<productId>${aeonParams.productID}</productId>` +
+    `<providerId>${aeonParams.providerID}</providerId>` +
+    `<trxId>${aeonParams.trxID}</trxId>` +
     '<wantPrintJob>0</wantPrintJob>' +
     `<tenderType>creditCard</tenderType>` +
-    `<Recon transReference="${Date.now()}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
+    `<Recon transReference="${Date.now()}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";

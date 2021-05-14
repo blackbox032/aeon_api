@@ -12,15 +12,15 @@ const userPin = process.env.AEON_AIRTIME_PIN || "016351";
 const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "865181";
 const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 
-async function getBundleList(transType, payParams) {
-  xml = productListAdapter.toXML(userPin, deviceId, deviceSer, transType, payParams);
+async function getBundleList(transType, aeonParams, aeonAuth) {
+  xml = productListAdapter.toXML(aeonAuth.userPin, aeonAuth.deviceId, aeonAuth.deviceSer, transType, aeonParams);
   logger.log(
     logger.levels.TRACE,
     logger.sources.AEON_API,
-    `Aeon API Request: ${xml}`, { host, port }
+    `Aeon API Request: ${xml}`, aeonAuth
   );
   try {
-    const client = await socketClient(host, port, ttl);
+    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
     return await client
       .request(xml)
       .then((serverResponse) => {
@@ -48,11 +48,11 @@ async function getBundleList(transType, payParams) {
   }
 }
 
-async function doBundleValidation(transType, reference, phoneNumber, product, amount, payParams) {
+async function doBundleValidation(transType, reference, phoneNumber, product, amount, aeonParams, aeonAuth) {
   xml = mnoDataBundleValidationAdapter.toXML(
-    userPin,
-    deviceId,
-    deviceSer,
+    aeonAuth.userPin,
+    aeonAuth.deviceId,
+    aeonAuth.deviceSer,
     transType,
     reference,
     phoneNumber,
@@ -62,10 +62,10 @@ async function doBundleValidation(transType, reference, phoneNumber, product, am
   logger.log(
     logger.levels.TRACE,
     logger.sources.AEON_API,
-    `Aeon API Request: ${xml}`, { host, port }
+    `Aeon API Request: ${xml}`, aeonAuth
   );
   try {
-    const client = await socketClient(host, port, ttl);
+    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
     return await client
       .request(xml)
       .then((serverResponse) => {
@@ -99,26 +99,27 @@ async function doBundleTopUp(
   phoneNumber,
   productCode,
   transReference,
-  payParams
+  aeonParams,
+  aeonAuth
 ) {
   xml = bundleTopUpAdapter.toXML(
-    userPin,
-    deviceId,
-    deviceSer,
+    aeonAuth.userPin,
+    aeonAuth.deviceId,
+    aeonAuth.deviceSer,
     transType,
     reference,
     phoneNumber,
     productCode,
     transReference,
-    payParams
+    aeonParams
   );
   logger.log(
     logger.levels.TRACE,
     logger.sources.AEON_API,
-    `Aeon API Request: ${xml}`, { host, port }
+    `Aeon API Request: ${xml}`, aeonAuth
   );
   try {
-    const client = await socketClient(host, port, ttl);
+    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
     return await client
       .request(xml)
       .then((serverResponse) => {

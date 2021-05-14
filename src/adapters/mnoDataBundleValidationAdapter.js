@@ -9,7 +9,7 @@ function toXML(
   phoneNumber,
   productCode,
   amount,
-  payParams
+  aeonParams
 ) {
   ret =
     `<request>` +
@@ -24,7 +24,7 @@ function toXML(
     `<Amount>${amount}</Amount>` +
     `<ProductCode>${productCode}</ProductCode>` +
     `<tenderType>creditCard</tenderType>` +
-    // `<Recon transReference="${transReference}" accountNumber="${payParams.fromAccount}" sysReference="${payParams.toAccount}"></Recon>` +
+    // `<Recon transReference="${transReference}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";
