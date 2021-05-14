@@ -66,7 +66,7 @@ async function doPayment(accountNo, amount, aeonParams, aeonAuth) {
   }
 }
 
-async function doGetSubscriberInfo(accountNo, aeonParams) {
+async function doGetSubscriberInfo(accountNo, aeonParams, aeonAuth) {
   authXML = paymentAdapter.authToXML(aeonAuth.userPin, aeonAuth.deviceId, aeonAuth.deviceSer, aeonParams);
 
   try {
