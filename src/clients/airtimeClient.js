@@ -84,7 +84,7 @@ async function doAirtimeTopUp(
     `Aeon API Request: ${xml}`, aeonAuth
   );
   try {
-    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.ttl);
+    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
     return await client
       .request(xml)
       .then((serverResponse) => {
