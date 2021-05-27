@@ -70,6 +70,9 @@ async function doGetSubscriberInfo(accountNo, aeonParams, aeonAuth) {
   authXML = paymentAdapter.authToXML(aeonAuth.userPin, aeonAuth.deviceId, aeonAuth.deviceSer, aeonParams);
 
   try {
+
+    console.log('doGetSubscriberInfo aeonAuth', accountNo, aeonParams, authXML, aeonAuth)
+
     const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Req: ${authXML}`, {});
     const authResp = await client.request(authXML)
