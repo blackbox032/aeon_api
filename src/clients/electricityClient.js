@@ -29,6 +29,8 @@ async function doVerifyMeter(meterNumber, amount, aeonParams, aeonAuth) {
   );
   try {
     const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
+    console.log(' client ', client)
+
     return await client
       .request(xml)
       .then((serverResponse) => {
@@ -80,6 +82,8 @@ async function _doMeterTopUp(
   );
   try {
     const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
+    console.log(' client ', client)
+
     return await client
       .request(xml)
       .then(async(verifyResponse) => {
@@ -170,6 +174,8 @@ async function getSaleConfirmation(confirmationRef, reference, aeonParams, aeonA
   );
   try {
     const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
+    console.log(' client ', client)
+
     return await client
       .request(xml)
       .then((serverResponse) => {

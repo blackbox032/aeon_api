@@ -31,6 +31,8 @@ async function doAirtimeValidation(transType, reference, phoneNumber, amount, ae
   logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${xml}`, aeonAuth);
   try {
     const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
+    console.log(' client ', client)
+
     return await client
       .request(xml)
       .then((serverResponse) => {
@@ -85,6 +87,7 @@ async function doAirtimeTopUp(
   );
   try {
     const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
+    console.log(' client ', client)
     return await client
       .request(xml)
       .then((serverResponse) => {
