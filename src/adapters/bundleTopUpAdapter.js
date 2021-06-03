@@ -1,16 +1,17 @@
 var utils = require("./adapterUtils");
 
-function toXML(
+function toXML({
   userPin,
   deviceId,
-  deviceSer,
+  deviceSer
+}, {
   transType,
   reference,
   phoneNumber,
   productCode,
   transReference,
   aeonParams
-) {
+}) {
   ret =
     `<request>` +
     `<EventType>DoBundleTopup</EventType>` +

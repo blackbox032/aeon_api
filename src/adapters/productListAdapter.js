@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function toXML(userPin, deviceId, deviceSer, transType, aeonParams) {
+function toXML({ userPin, deviceId, deviceSer }, aeonParams, transType) {
   ret =
     `<request>` +
     `<EventType>GetProductList</EventType>` +

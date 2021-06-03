@@ -5,12 +5,12 @@ const socketClient = require("../src/clients/socketClient");
 const client1 = socketClient("127.0.0.1", 8090, 60000);
 client1
   .request("1")
-  .then((serverResponse) => {
-    console.log("1: ", serverResponse);
+  .then((resXML) => {
+    console.log("1: ", resXML);
     client1
       .request("2")
-      .then((serverResponse) => {
-        console.log("2: ", serverResponse);
+      .then((resXML) => {
+        console.log("2: ", resXML);
         client1.end();
       })
       .catch((ex) => {

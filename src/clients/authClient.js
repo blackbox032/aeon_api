@@ -16,19 +16,20 @@ const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
 // const userPin = process.env.AEON_AIRTIME_PIN || "011234";
 // const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "103936";
 // const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "GniRR3t5639!";
+const db_api = require('../db/db_api');
 
 
-async function doAuth(transType, aeonAuth) {
+async function doAuth(aeonAuth, aeonParams) {
   xml = doAuthAdapter.toXML(aeonAuth.userPin, aeonAuth.deviceId, aeonAuth.deviceSer, transType);
   logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${xml}`, aeonAuth);
   try {
-    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
+    const client = await socketClient(aeonAuth, aeonParams);
     return await client
       .request(xml)
-      .then((serverResponse) => {
-        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${serverResponse}`, {});
+      .then((resXML) => {
+        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${resXML}`, {});
         client.end();
-        return doAuthAdapter.toJS(serverResponse);
+        return doAuthAdapter.toJS(resXML);
       })
       .catch((aeonErrorObject) => {
         client.end();

@@ -17,12 +17,12 @@ async function test() {
     const client = await socketClient(host, port, ttl);
     return await client
       .request(xml)
-      .then(async (serverResponse) => {
+      .then(async(resXML) => {
         return await client
           .request(xml)
-          .then((serverResponse2) => {
+          .then((resXML2) => {
             client.end();
-            return serverResponse2;
+            return resXML2;
           })
           .catch((aeonErrorObject) => {
             client.end();
@@ -30,7 +30,7 @@ async function test() {
           });
         client.end();
         return ret;
-        //return airtimeTopUpAdapter.toJS(serverResponse);
+        //return airtimeTopUpAdapter.toJS(resXML);
       })
       .catch((aeonErrorObject) => {
         client.end();

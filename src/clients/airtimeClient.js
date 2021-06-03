@@ -1,113 +1,62 @@
 const logger = require("../utils/logger");
-const debug = logger.debug;
 const socketClient = require("./sockets/socketClient");
 const airtimeTopUpAdapter = require("../adapters/airtimeTopUpAdapter");
 const mnoAirtimeValidationAdapter = require("../adapters/mnoAirtimeValidationAdapter");
+const db_api = require('../db/db_api');
 
-const port = process.env.AEON_AIRTIME_PORT || 7800;
-const host = process.env.AEON_AIRTIME_URL || "aeon.qa.bltelecoms.net";
-// const port = process.env.AEON_AIRTIME_PORT || 443;
-// const host = process.env.AEON_AIRTIME_URL || "aeonssl.live.bltelecoms.net";
-const ttl = process.env.TTL || 60000;
-const userPin = process.env.AEON_AIRTIME_PIN || "016351";
-const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "865181";
-const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
-// const userPin = process.env.AEON_AIRTIME_PIN || "011234";
-// const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "103936";
-// const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "GniRR3t5639!";
-
-async function doAirtimeValidation(transType, reference, phoneNumber, amount, aeonParams, aeonAuth) {
-  xml = mnoAirtimeValidationAdapter.toXML(
-    aeonAuth.userPin,
-    aeonAuth.deviceId,
-    aeonAuth.deviceSer,
-    transType,
-    reference,
-    phoneNumber,
-    amount,
-    aeonParams,
-    aeonAuth
-  );
+async function doAirtimeValidation(aeonAuth, aeonParams) {
+  let reqXML = mnoAirtimeValidationAdapter.toXML(aeonAuth, aeonParams);
   logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${xml}`, aeonAuth);
   try {
-    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
+    const client = await socketClient(aeonAuth, aeonParams);
+    const requestAt = Date.now();
     return await client
-      .request(xml)
-      .then((serverResponse) => {
-        logger.log(
-          logger.levels.TRACE,
-          logger.sources.AEON_API,
-          `Aeon API Response: ${serverResponse}`, {}
-        );
+      .request(reqXML)
+      .then((resXML) => {
+        const resTime = Date.now() - requestAt;
         client.end();
-        return mnoAirtimeValidationAdapter.toJS(serverResponse);
+        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${resXML}`, {});
+        const resJSON = mnoAirtimeValidationAdapter.toJS(resXML);
+        db_api.log_req_res(client.socket_id, requestAt, resTime, aeonParams, resJSON, reqXML, resXML)
+        return resJSON;
       })
       .catch((aeonErrorObject) => {
+        const resTime = Date.now() - requestAt;
         client.end();
+        db_api.log_req_res(client.socket_id, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
         return aeonErrorObject;
       });
   } catch (error) {
-    logger.log(
-      logger.levels.TRACE,
-      logger.sources.AEON_API,
-      `Aeon API Socket Client Error`, {
-        error,
-      }
-    );
+    db_api.log_req_res(undefined, undefined, Date.now(), aeonParams, { error: error.message })
+    logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Socket Client Error`, { error });
     return error;
   }
 }
 
-async function doAirtimeTopUp(
-  transType,
-  reference,
-  phoneNumber,
-  amount,
-  transReference,
-  aeonParams,
-  aeonAuth
-) {
-  xml = airtimeTopUpAdapter.toXML(
-    aeonAuth.userPin,
-    aeonAuth.deviceId,
-    aeonAuth.deviceSer,
-    transType,
-    reference,
-    phoneNumber,
-    amount,
-    transReference,
-    aeonParams
-  );
-  logger.log(
-    logger.levels.TRACE,
-    logger.sources.AEON_API,
-    `Aeon API Request: ${xml}`, aeonAuth
-  );
+async function doAirtimeTopUp(aeonAuth, aeonParams) {
+  let reqXML = airtimeTopUpAdapter.toXML(aeonAuth, aeonParams);
+  logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${xml}`, aeonAuth);
   try {
-    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.ttl);
+    const client = await socketClient(aeonAuth, aeonParams);
     return await client
-      .request(xml)
-      .then((serverResponse) => {
-        logger.log(
-          logger.levels.TRACE,
-          logger.sources.AEON_API,
-          `Aeon API Response: ${serverResponse}`, {}
-        );
+      .request(reqXML)
+      .then((resXML) => {
+        const resTime = Date.now();
+        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${resXML}`, {});
         client.end();
-        return airtimeTopUpAdapter.toJS(serverResponse);
+        const resJSON = airtimeTopUpAdapter.toJS(resXML);
+        db_api.log_req_res(client.socket_id, requestAt, resTime, aeonParams, resJSON, reqXML, resXML)
+        return resJSON;
       })
       .catch((aeonErrorObject) => {
+        const resTime = Date.now();
         client.end();
+        db_api.log_req_res(client.socket_id, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
         return aeonErrorObject;
       });
   } catch (error) {
-    logger.log(
-      logger.levels.TRACE,
-      logger.sources.AEON_API,
-      `Aeon API Socket Client Error`, {
-        error,
-      }
-    );
+    db_api.log_req_res(undefined, undefined, Date.now(), aeonParams, { error: error.message })
+    logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Socket Client Error`, { error });
     return error;
   }
 }

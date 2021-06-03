@@ -27,7 +27,7 @@ function subscriberInfoToXML(accountNo, sessionId, aeonParams, amount = '10.00')
     `<EventType>${eventType}</EventType>` +
     `<SessionId>${sessionId}</SessionId>` +
     `<event>` +
-    `<accountNo>${accountNo}</accountNo>` +
+    `<accountNo>${aeonParams.accountNo}</accountNo>` +
     `<productId>${aeonParams.productID}</productId>` +
     `<providerId>${aeonParams.providerID}</providerId>` +
     `<LoyaltyProfileId>${aeonParams.loyaltyProfileID}</LoyaltyProfileId>` +

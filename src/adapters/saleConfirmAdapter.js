@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function toXML(userPin, deviceId, deviceSer, confrimationRef, reference) {
+function toXML({ userPin, deviceId, deviceSer }, { confrimationRef, reference }) {
   ret =
     `<request>` +
     `<Version>2.1</Version>` +

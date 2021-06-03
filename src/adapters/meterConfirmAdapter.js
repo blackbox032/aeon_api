@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function toXML(userPin, deviceId, deviceSer, meterNumber, amount, aeonParams = {}) {
+function toXML({ userPin, deviceId, deviceSer }, aeonParams = {}) {
   ret =
     `<request>` +
     `<Version>2.0</Version>` +
@@ -9,11 +9,11 @@ function toXML(userPin, deviceId, deviceSer, meterNumber, amount, aeonParams = {
     `<DeviceId>${deviceId}</DeviceId>` +
     `<DeviceSer>${deviceSer}</DeviceSer>` +
     `<UserPin>${userPin}</UserPin>` +
-    `<MeterNum>${meterNumber}</MeterNum>` +
-    `<Amount>${amount}</Amount>` +
+    `<MeterNum>${aeonParams.meterNumber}</MeterNum>` +
+    `<Amount>${aeonParams.amount}</Amount>` +
     `<LoyaltyProfileId>${aeonParams.loyaltyProfileID}</LoyaltyProfileId>` +
     `<tenderType>creditCard</tenderType>` +
-    `<Recon transReference="${Date.now()}" accountNumber="${aeonParams.fromAccount}" sysReference="${meterNumber}"></Recon>` +
+    `<Recon transReference="${Date.now()}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.meterNumber}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";
