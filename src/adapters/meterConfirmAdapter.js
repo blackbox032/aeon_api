@@ -9,11 +9,11 @@ function toXML({ userPin, deviceId, deviceSer }, aeonParams = {}) {
     `<DeviceId>${deviceId}</DeviceId>` +
     `<DeviceSer>${deviceSer}</DeviceSer>` +
     `<UserPin>${userPin}</UserPin>` +
-    `<MeterNum>${aeonParams.meterNumber}</MeterNum>` +
-    `<Amount>${aeonParams.amount}</Amount>` +
+    `<MeterNum>${aeonParams.toAccount}</MeterNum>` +
+    `<Amount>${aeonParams.amount || '100'}</Amount>` +
     `<LoyaltyProfileId>${aeonParams.loyaltyProfileID}</LoyaltyProfileId>` +
     `<tenderType>creditCard</tenderType>` +
-    `<Recon transReference="${Date.now()}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.meterNumber}"></Recon>` +
+    `<Recon transReference="${Date.now()}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";

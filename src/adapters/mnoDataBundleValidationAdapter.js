@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function toXML({ userPin, deviceId, deviceSer, aeonParams }) {
+function toXML({ userPin, deviceId, deviceSer }, aeonParams) {
   ret =
     `<request>` +
     `<EventType>MNOValidation</EventType>` +
@@ -9,9 +9,9 @@ function toXML({ userPin, deviceId, deviceSer, aeonParams }) {
     `<DeviceId>${deviceId}</DeviceId>` +
     `<DeviceSer>${deviceSer}</DeviceSer>` +
     `<TransType>${aeonParams.transType}</TransType>` +
-    `<Reference>${aeonParams.reference}</Reference>` +
-    `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
-    `<Amount>${aeonParams.amount}</Amount>` +
+    `<Reference>${aeonParams.trxRef}</Reference>` +
+    `<PhoneNumber>${aeonParams.toAccount}</PhoneNumber>` +
+    `<Amount>${aeonParams.amount || '100'}</Amount>` +
     `<ProductCode>${aeonParams.productCode}</ProductCode>` +
     `<tenderType>creditCard</tenderType>` +
     // `<Recon transReference="${transReference}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +

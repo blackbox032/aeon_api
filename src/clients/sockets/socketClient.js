@@ -1,4 +1,5 @@
-const db_api = require('../../db//db_api');
+const db_api = require('../../db/db_api');
+const dt = require('../../utils/date_time');
 
 const socketTypes = {
   TCP: "TCP",
@@ -7,16 +8,13 @@ const socketTypes = {
 
 const socketType = process.env.AEON_SOCKET_TYPE || socketTypes.TCP;
 
-const client =
-  socketType == socketTypes.TCP ?
-  require("./socketTCP") :
-  require("./socketTLS");
+const client = socketType == socketTypes.TCP ? require("./socketTCP") : require("./socketTLS");
 
-async function socketClient(aeonAuth, fromAccount) {
-  const client = await client(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
-  const id = fromAccount + get_time().replace(/[:]/g, '');
-  db_api.log_socket(id, aeonAuth, client);
-  return {...client, socket_id: id };
+async function socketClient(aeonAuth, { fromAccount }) {
+  const clientData = await client(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
+  const id = fromAccount.slice(-5) + dt.get_date_str().replace(/[:/ ]/g, '');
+  db_api.log_socket(id, aeonAuth, clientData);
+  return {...clientData, socket_id: id };
 }
 
 module.exports = socketClient;

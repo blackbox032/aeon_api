@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function authToXML(userPin, deviceId, deviceSer, aeonParams) {
+function authToXML({ userPin, deviceId, deviceSer }, aeonParams) {
 
   return `<request>` +
     `<EventType>Authentication</EventType>` +
@@ -14,12 +14,12 @@ function authToXML(userPin, deviceId, deviceSer, aeonParams) {
     "\n";
 }
 
-function subscriberInfoToXML(accountNo, sessionId, aeonParams, amount = '10.00') {
+function subscriberInfoToXML(sessionId, aeonParams) {
   const eventType = aeonParams.eventType == undefined ? 'GetSubscriberBillInfo' : aeonParams.eventType;
   let moreParams = '';
 
   if (eventType != 'GetSubscriberBillInfo') {
-    moreParams = `<realTime>1</realTime><verifyOnly>${aeonParams.verifyOnly}</verifyOnly><amountDue>${amount}</amountDue>`
+    moreParams = `<realTime>1</realTime><verifyOnly>${aeonParams.verifyOnly}</verifyOnly><amountDue>${aeonParams.amount || '100'}</amountDue>`
   }
 
   ret =
@@ -27,7 +27,7 @@ function subscriberInfoToXML(accountNo, sessionId, aeonParams, amount = '10.00')
     `<EventType>${eventType}</EventType>` +
     `<SessionId>${sessionId}</SessionId>` +
     `<event>` +
-    `<accountNo>${aeonParams.accountNo}</accountNo>` +
+    `<accountNo>${aeonParams.toAccount}</accountNo>` +
     `<productId>${aeonParams.productID}</productId>` +
     `<providerId>${aeonParams.providerID}</providerId>` +
     `<LoyaltyProfileId>${aeonParams.loyaltyProfileID}</LoyaltyProfileId>` +
@@ -39,14 +39,14 @@ function subscriberInfoToXML(accountNo, sessionId, aeonParams, amount = '10.00')
 }
 
 
-function paymentToXML(accountNo, amount, sessionId, aeonParams) {
+function paymentToXML(sessionId, aeonParams) {
   ret =
     `<request>` +
     `<EventType>Confirm</EventType>` +
     `<SessionId>${sessionId}</SessionId>` +
     `<event>` +
-    `<accountNumber>${accountNo}</accountNumber>` +
-    `<amountDue>${amount}</amountDue>` +
+    `<accountNumber>${aeonParams.toAccount}</accountNumber>` +
+    `<amountDue>${aeonParams.amount}</amountDue>` +
     `<confirmType>commit</confirmType>` +
     `<productId>${aeonParams.productID}</productId>` +
     `<providerId>${aeonParams.providerID}</providerId>` +

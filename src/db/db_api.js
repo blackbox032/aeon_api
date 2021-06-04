@@ -1,11 +1,6 @@
 const mysql = require("mysql");
-const child_process = require('child_process');
+const dt = require('../utils/date_time')
 
-const utils = require('../helpers/utils');
-const ENV = require('../constants/env_consts');
-const infobip_api = require("./infobip_api");
-const sms_api = require('./sms_api');
-const DB = require('../constants/db_conts');
 
 // ------------------------------------------------------------------------------------------------------------------------------
 
@@ -20,8 +15,8 @@ const connection = mysql.createConnection({
 
 // ------------------------------------------------------------------------------------------------------------------------------
 
-const MYSQL_LOG_SOCKET = `INSERT INTO log_aeon_api SET ?;`
-const MYSQL_LOG_REQ_RES = `INSERT INTO log_aeon_api SET ?;`
+const MYSQL_LOG_SOCKET = `INSERT INTO aeon_api_sockets SET ?;`
+const MYSQL_LOG_REQ_RES = `INSERT INTO aeon_api_req_res SET ?;`
 
 // ------------------------------------------------------------------------------------------------------------------------------
 
@@ -33,10 +28,11 @@ module.exports.log_socket = (id, aeonAuth) => {
     user_pin: aeonAuth.userPin,
     device_id: aeonAuth.deviceId,
     device_ser: aeonAuth.deviceSer,
-    // connection_result: 
+    app_name: aeonAuth.appName
+      // connection_result: 
   };
 
-  connection.query(MYSQL_CREATE_SOCKET, socketParams, async function(error) {
+  connection.query(MYSQL_LOG_SOCKET, socketParams, async function(error) {
     if (error) {
       console.log(error)
     };
@@ -45,18 +41,17 @@ module.exports.log_socket = (id, aeonAuth) => {
 
 // ------------------------------------------------------------------------------------------------------------------------------
 
-module.exports.log_req_res = (socket_id, req_id, req_at, res_time_ms, req_json, res_json, req_xml) => {
+module.exports.log_req_res = (socket_id, req_id, req_at, res_time_ms, req_json, res_json, req_xml, res_xml) => {
+
   const apiParams = {
     socket_id,
     req_id,
-    msisdn: req_json.fromAccount,
-    req_json,
+    req_json: JSON.stringify(req_json),
     req_xml,
-    req_at,
-    res_json,
+    req_at: dt.date_str(req_at),
+    res_json: JSON.stringify(res_json),
     res_xml,
-    res_time_ms,
-
+    res_time_ms
   };
 
   connection.query(MYSQL_LOG_REQ_RES, apiParams, async function(error) {

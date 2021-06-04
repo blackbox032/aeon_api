@@ -9,9 +9,9 @@ function toXML({ userPin, deviceId, deviceSer }, aeonParams) {
     `<DeviceId>${deviceId}</DeviceId>` +
     `<DeviceSer>${deviceSer}</DeviceSer>` +
     `<TransType>${aeonParams.transType}</TransType>` +
-    `<Reference>${aeonParams.reference}</Reference>` +
-    `<PhoneNumber>${aeonParams.phoneNumber}</PhoneNumber>` +
-    `<Amount>${aeonParams.amount}</Amount>` +
+    `<Reference>${aeonParams.trxRef}</Reference>` +
+    `<PhoneNumber>${aeonParams.toAccount}</PhoneNumber>` +
+    `<Amount>${aeonParams.amount || '100'}</Amount>` +
     `<ProductCode>0</ProductCode>` +
     `<tenderType>creditCard</tenderType>` +
     // `<Recon transReference="${transReference}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
