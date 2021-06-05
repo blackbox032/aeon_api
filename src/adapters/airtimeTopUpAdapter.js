@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function toXML({ userPin, deviceId, deviceSer }, { transType, reference, phoneNumber, amount, transReference, aeonParams }) {
+function toXML({ userPin, deviceId, deviceSer }, aeonParams) {
   ret =
     `<request>` +
     `<EventType>GetTopup</EventType>` +
@@ -8,13 +8,13 @@ function toXML({ userPin, deviceId, deviceSer }, { transType, reference, phoneNu
     `<UserPin>${userPin}</UserPin>` +
     `<DeviceId>${deviceId}</DeviceId>` +
     `<DeviceSer>${deviceSer}</DeviceSer>` +
-    `<TransType>${transType}</TransType>` +
-    `<Reference>${reference}</Reference>` +
-    `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
+    `<TransType>${aeonParams.transType}</TransType>` +
+    `<Reference>${aeonParams.reference}</Reference>` +
+    `<PhoneNumber>${aeonParams.phoneNumber}</PhoneNumber>` +
     `<LoyaltyProfileId>${aeonParams.loyaltyProfileID}</LoyaltyProfileId>` +
-    `<Amount>${amount}</Amount>` +
+    `<Amount>${aeonParams.amount}</Amount>` +
     `<tenderType>creditCard</tenderType>` +
-    `<Recon transReference="${transReference}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
+    `<Recon transReference="${aeonParams.transReference}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";

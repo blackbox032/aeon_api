@@ -1,13 +1,6 @@
 var utils = require("./adapterUtils");
 
-function toXML(
-  sessionId,
-  confirmationRef,
-  transReference,
-  reference,
-  meterNumber,
-  aeonParams
-) {
+function toXML(sessionId, confirmationRef, aeonParams) {
   ret =
     `<request>` +
     `<Version>2.0</Version>` +
@@ -15,10 +8,10 @@ function toXML(
     `<EventType>GetVoucher</EventType>` +
     `<event>` +
     `<TransRef>${confirmationRef}</TransRef>` +
-    `<Reference>${reference}</Reference>` +
+    `<Reference>${aeonParams.reference}</Reference>` +
     `<LoyaltyProfileId>${aeonParams.loyaltyProfileID}</LoyaltyProfileId>` +
     `<tenderType>creditCard</tenderType>` +
-    `<Recon transReference="${transReference}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
+    `<Recon transReference="${aeonParams.transReference}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";
