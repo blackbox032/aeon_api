@@ -60,7 +60,7 @@ module.exports.log_req_res = (socket_id, req_id, req_at, res_time_ms, req_json, 
     req_id,
     req_json: JSON.stringify(req_json),
     req_xml,
-    req_at: dt.date_str(req_at),
+    req_at: dt.date_str(req_at, 'sv-SE'),
     res_json: JSON.stringify(res_json),
     res_xml,
     res_time_ms
