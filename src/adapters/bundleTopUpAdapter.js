@@ -10,7 +10,7 @@ function toXML({ userPin, deviceId, deviceSer }, aeonParams) {
     `<DeviceSer>${deviceSer}</DeviceSer>` +
     `<TransType>${aeonParams.transType}</TransType>` +
     `<Reference>${aeonParams.reference}</Reference>` +
-    `<PhoneNumber>${aeonParams.phoneNumber}</PhoneNumber>` +
+    `<PhoneNumber>${aeonParams.toAccount}</PhoneNumber>` +
     `<ProductCode>${aeonParams.productCode}</ProductCode>` +
     `<LoyaltyProfileId>${aeonParams.loyaltyProfileID}</LoyaltyProfileId>` +
     `<tenderType>creditCard</tenderType>` +

@@ -70,7 +70,7 @@ async function doBundleTopUp(aeonAuth, aeonParams) {
   reqXML = bundleTopUpAdapter.toXML(aeonAuth, aeonParams);
   logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
   try {
-    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout, phoneNumber);
+    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout, aeonParams);
     const requestAt = Date.now();
     return await client
       .request(reqXML)
