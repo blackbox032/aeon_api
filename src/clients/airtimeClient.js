@@ -38,7 +38,7 @@ async function doAirtimeValidation(aeonAuth, aeonParams) {
 
 async function doAirtimeTopUp(aeonAuth, aeonParams) {
   let reqXML = airtimeTopUpAdapter.toXML(aeonAuth, aeonParams);
-  logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${xml}`, aeonAuth);
+  logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
   try {
     const client = await socketClient(aeonAuth, aeonParams);
     return await client

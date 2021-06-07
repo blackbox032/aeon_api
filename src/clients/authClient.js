@@ -20,12 +20,12 @@ const db_api = require('../db/db_api');
 
 
 async function doAuth(aeonAuth, aeonParams) {
-  xml = doAuthAdapter.toXML(aeonAuth.userPin, aeonAuth.deviceId, aeonAuth.deviceSer, transType);
-  logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${xml}`, aeonAuth);
+  reqXML = doAuthAdapter.toXML(aeonAuth.userPin, aeonAuth.deviceId, aeonAuth.deviceSer, transType);
+  logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
   try {
     const client = await socketClient(aeonAuth, aeonParams);
     return await client
-      .request(xml)
+      .request(reqXML)
       .then((resXML) => {
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${resXML}`, {});
         client.end();

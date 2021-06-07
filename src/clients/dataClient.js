@@ -68,7 +68,7 @@ async function doBundleValidation(aeonAuth, aeonParams) {
 
 async function doBundleTopUp(aeonAuth, aeonParams) {
   reqXML = bundleTopUpAdapter.toXML(aeonAuth, aeonParams);
-  logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${xml}`, aeonAuth);
+  logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
   try {
     const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout, phoneNumber);
     const requestAt = Date.now();

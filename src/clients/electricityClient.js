@@ -44,7 +44,7 @@ async function _doMeterTopUp(aeonAuth, aeonParams, fbe = false) {
   let apiStep = VERIFY_ELECTRCITY;
   try {
     const reqXML = meterConfirmAdapter.toXML(aeonAuth, aeonParams);
-    logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${xml}`, aeonAuth);
+    logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
     const client = await socketClient(aeonAuth, aeonParams);
     const requestAt = Date.now();
     return await client
@@ -57,7 +57,7 @@ async function _doMeterTopUp(aeonAuth, aeonParams, fbe = false) {
         xml = fbe ?
           meterVoucherFBEAdapter.toXML(response.SessionId, response.TransRef, aeonParams, aeonAuth) :
           meterVoucherAdapter.toXML(response.SessionId, response.TransRef, transReference, aeonParams, aeonAuth);
-        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${xml}`, aeonAuth);
+        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
         db_api.log_req_res(client.socket_id, VERIFY_ELECTRCITY, requestAt, resTime, aeonParams, response, reqXML, verifyResponse)
         const topUpAt = Date.now();
         return await client
