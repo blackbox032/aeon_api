@@ -18,7 +18,9 @@ module.exports.date_str = (dateStr, format) => {
 
 
   const date = new Date(dateStr);
-  return date.toLocaleString(format, {
+
+  return date.toLocaleString('sv-SE', {
+    //return date.toLocaleString(format, {
     // timeZone: 'Africa/Johannesburg',
     // year: "2-digit",
     year: 'numeric',

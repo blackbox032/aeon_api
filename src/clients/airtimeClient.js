@@ -48,7 +48,7 @@ async function doAirtimeTopUp(aeonAuth, aeonParams) {
     return await client
       .request(reqXML)
       .then((resXML) => {
-        const resTime = Date.now();
+        const resTime = Date.now() - requestAt;
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${resXML}`, {});
         client.end();
         const resJSON = airtimeTopUpAdapter.toJS(resXML);
@@ -57,7 +57,7 @@ async function doAirtimeTopUp(aeonAuth, aeonParams) {
         return resJSON;
       })
       .catch((aeonErrorObject) => {
-        const resTime = Date.now();
+        const resTime = Date.now() - requestAt;
         client.end();
         db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, AIRTIME_TOPUP, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
