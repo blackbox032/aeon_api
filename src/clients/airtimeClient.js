@@ -44,6 +44,7 @@ async function doAirtimeTopUp(aeonAuth, aeonParams) {
   logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
   try {
     const client = await socketClient(aeonAuth, aeonParams);
+    const requestAt = Date.now();
     return await client
       .request(reqXML)
       .then((resXML) => {
