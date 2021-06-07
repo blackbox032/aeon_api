@@ -57,8 +57,8 @@ async function _doMeterTopUp(aeonAuth, aeonParams, fbe = false) {
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${verifyResponse}`, {});
         response = meterConfirmAdapter.toJS(verifyResponse);
         xml = fbe ?
-          meterVoucherFBEAdapter.toXML(response.SessionId, response.TransRef, aeonParams, aeonAuth) :
-          meterVoucherAdapter.toXML(response.SessionId, response.TransRef, transReference, aeonParams, aeonAuth);
+          meterVoucherFBEAdapter.toXML(response.SessionId, response.TransRef, aeonParams) :
+          meterVoucherAdapter.toXML(response.SessionId, response.TransRef, aeonParams);
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
         db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, VERIFY_ELECTRCITY, requestAt, resTime, aeonParams, response, reqXML, verifyResponse)
