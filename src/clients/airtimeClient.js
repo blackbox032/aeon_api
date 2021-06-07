@@ -63,6 +63,7 @@ async function doAirtimeTopUp(aeonAuth, aeonParams) {
         return aeonErrorObject;
       });
   } catch (error) {
+    console.log('error', error)
     db_api.log_req_res(undefined, undefined, Date.now(), aeonParams, { error: error.message })
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Socket Client Error`, { error });
     return error;
