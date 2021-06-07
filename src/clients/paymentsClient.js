@@ -20,6 +20,7 @@ async function doPayment(aeonAuth, aeonParams) {
       .then(async resXML => {
         const resTime = Date.now() - requestAt;
         const resJSON = paymentAdapter.toJS(resXML);
+        db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, PAYMENT_AUTH, requestAt, resTime, aeonParams, resJSON, reqXML, resXML)
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Res: ${resXML}`, {});
         return resJSON;
@@ -27,6 +28,7 @@ async function doPayment(aeonAuth, aeonParams) {
       .catch((aeonErrorObject) => {
         const resTime = Date.now() - requestAt;;
         client.end();
+        db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, PAYMENT_AUTH, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
         return {...aeonErrorObject, isConfirmAPI };
       });
@@ -45,12 +47,14 @@ async function doPayment(aeonAuth, aeonParams) {
         const resTime = Date.now() - subscriberAt;
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Res: ${resXML}`, {});
         const resJSON = paymentAdapter.toJS(resXML);
+        db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
         db_api.log_req_res(client.socket_id, PAYMENT_INFO, subscriberAt, resTime, aeonParams, resJSON, reqXML, resXML);
         return resJSON;
       })
       .catch((aeonErrorObject) => {
         const resTime = Date.now() - subscriberAt;
         client.end();
+        db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
         db_api.log_req_res(client.socket_id, PAYMENT_INFO, subscriberAt, resTime, aeonParams, aeonErrorObject, reqXML);
         return {...aeonErrorObject, isConfirmAPI };
       });
@@ -72,12 +76,14 @@ async function doPayment(aeonAuth, aeonParams) {
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API payXML Res: ${resXML}`, {});
         client.end();
         const resJSON = paymentAdapter.toJS(resXML);
+        db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
         db_api.log_req_res(client.socket_id, PAYMENT_PAY, requestAt, resTime, aeonParams, resJSON, payXML, resXML)
         return resJSON;
       })
       .catch((aeonErrorObject) => {
         const resTime = Date.now() - payAt;
         client.end();
+        db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
         db_api.log_req_res(client.socket_id, PAYMENT_PAY, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
         return {...aeonErrorObject, isConfirmAPI };
       });
@@ -99,12 +105,14 @@ async function doGetSubscriberInfo(aeonAuth, aeonParams) {
         const resTime = Date.now() - requestAt;
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Res: ${resXML}`, {});
         const resJSON = paymentAdapter.toJS(resXML);
+        db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, PAYMENT_AUTH, requestAt, resTime, aeonParams, resJSON, authXML, resXML)
         return resJSON;
       })
       .catch((aeonErrorObject) => {
         const resTime = Date.now() - requestAt;
         client.end();
+        db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, PAYMENT_AUTH, requestAt, resTime, aeonParams, aeonErrorObject, authXML);
         return aeonErrorObject;
       });
@@ -120,12 +128,14 @@ async function doGetSubscriberInfo(aeonAuth, aeonParams) {
       .then((resXML) => {
         const resTime = Date.now() - subscriberAt;
         const resJSON = paymentAdapter.toJS(resXML);
+        db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
         db_api.log_req_res(client.socket_id, PAYMENT_INFO, subscriberAt, resTime, aeonParams, resJSON, infoXML, resXML)
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Res: ${resXML}`, {});
         client.end();
         return resJSON;
       })
       .catch((aeonErrorObject) => {
+        db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
         db_api.log_req_res(client.socket_id, PAYMENT_INFO, subscriberAt, Date.now(), aeonAuth, aeonParams, aeonErrorObject, infoXML)
         client.end();
         return aeonErrorObject;

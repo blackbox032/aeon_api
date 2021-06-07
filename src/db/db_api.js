@@ -15,8 +15,10 @@ const connection = mysql.createConnection({
 
 // ------------------------------------------------------------------------------------------------------------------------------
 
-const MYSQL_LOG_SOCKET = `INSERT INTO aeon_api_sockets SET ?;`
-const MYSQL_LOG_REQ_RES = `INSERT INTO aeon_api_req_res SET ?;`
+const MYSQL_LOG_SOCKET = `INSERT INTO aeon_api_sockets SET ?;`;
+const MYSQL_LOG_REQ_RES = `INSERT INTO aeon_api_req_res SET ?;`;
+const MYSQL_LOG_SOCKET_TIME_MS = 'UPDATE aeon_api_sockets SET socket_time_ms = ? WHERE id = ?;'
+
 
 // ------------------------------------------------------------------------------------------------------------------------------
 
@@ -28,8 +30,8 @@ module.exports.log_socket = (id, aeonAuth) => {
     user_pin: aeonAuth.userPin,
     device_id: aeonAuth.deviceId,
     device_ser: aeonAuth.deviceSer,
-    app_name: aeonAuth.appName
-      // connection_result: 
+    app_name: aeonAuth.app_name,
+    // connection_result: 
   };
 
   connection.query(MYSQL_LOG_SOCKET, socketParams, async function(error) {
@@ -38,6 +40,16 @@ module.exports.log_socket = (id, aeonAuth) => {
     };
   });
 }
+
+// ------------------------------------------------------------------------------------------------------------------------------
+
+module.exports.log_socket_time_ms = (socket_id, time_ms) => {
+  connection.query(MYSQL_LOG_SOCKET_TIME_MS, [time_ms, socket_id], async function(error) {
+    if (error) {
+      console.log(error)
+    };
+  });
+};
 
 // ------------------------------------------------------------------------------------------------------------------------------
 

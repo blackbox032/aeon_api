@@ -24,12 +24,14 @@ async function doVerifyMeter(aeonAuth, aeonParams) {
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${resXML}`, {});
         client.end();
         const resJSON = meterConfirmAdapter.toJS(resXML);
+        db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, VERIFY_ELECTRCITY, requestAt, resTime, aeonParams, resJSON, reqXML, resXML)
         return resJSON;
       })
       .catch((aeonErrorObject) => {
         const resTime = Date.now() - requestAt;
         client.end();
+        db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, VERIFY_ELECTRCITY, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
         return aeonErrorObject;
       });
@@ -58,6 +60,7 @@ async function _doMeterTopUp(aeonAuth, aeonParams, fbe = false) {
           meterVoucherFBEAdapter.toXML(response.SessionId, response.TransRef, aeonParams, aeonAuth) :
           meterVoucherAdapter.toXML(response.SessionId, response.TransRef, transReference, aeonParams, aeonAuth);
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
+        db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, VERIFY_ELECTRCITY, requestAt, resTime, aeonParams, response, reqXML, verifyResponse)
         const topUpAt = Date.now();
         return await client
@@ -67,11 +70,13 @@ async function _doMeterTopUp(aeonAuth, aeonParams, fbe = false) {
             logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${topupResponse}`, {});
             client.end();
             const resJSON = meterVoucherAdapter.toJS(topupResponse);
+            db_api.log_socket_time_ms(client.socket_id, resTime);
             db_api.log_req_res(client.socket_id, TOPUP_ELECTRCITY, topUpAt, resTime, aeonAuth, aeonParams, resJSON, xml, topupResponse)
             return resJSON;
           })
           .catch((aeonErrorObject) => {
             client.end();
+            db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
             db_api.log_req_res(client.socket_id, TOPUP_ELECTRCITY, requestAt, resTime, aeonParams, aeonErrorObject, xml)
             return aeonErrorObject;
           });
@@ -79,6 +84,7 @@ async function _doMeterTopUp(aeonAuth, aeonParams, fbe = false) {
       .catch((aeonErrorObject) => {
         debug("Error: " + aeonErrorObject);
         client.end();
+        db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
         db_api.log_req_res(client.socket_id, VERIFY_ELECTRCITY, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
         return aeonErrorObject;
       });
@@ -112,12 +118,14 @@ async function getSaleConfirmation(aeonAuth, aeonAuth) {
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${resXML}`, {});
         client.end();
         const resJSON = saleConfirmAdapter.toJS(resXML);
+        db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, SALE_CONFIRM_ELECTRCITY, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
         return resJSON;
       })
       .catch((aeonErrorObject) => {
         const resTime = Date.now() - requestAt;
         client.end();
+        db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, SALE_CONFIRM_ELECTRCITY, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
         return aeonErrorObject;
       });

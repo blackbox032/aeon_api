@@ -21,12 +21,14 @@ async function getBundleList(aeonAuth, aeonParams) {
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${resXML}`, {});
         client.end();
         const resJSON = productListAdapter.toJS(resXML);
+        db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, GET_BUNDLES, requestAt, resTime, aeonParams, resJSON, reqXML, resXML)
         return resJSON;
       })
       .catch((aeonErrorObject) => {
         const resTime = Date.now() - requestAt;
         client.end();
+        db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, GET_BUNDLES, requestAt, resTime, aeonParams, resJSON, reqXML, resXML)
         return aeonErrorObject;
       });
@@ -50,11 +52,13 @@ async function doBundleValidation(aeonAuth, aeonParams) {
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${resXML}`, {});
         client.end();
         const resJSON = mnoDataBundleValidationAdapter.toJS(resXML);
+        db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, VALIDATE_BUNDLES, requestAt, resTime, aeonParams, resJSON, reqXML, resXML)
         return resJSON;
       })
       .catch((aeonErrorObject) => {
         const resTime = Date.now() - requestAt;
+        db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, VALIDATE_BUNDLES, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
         client.end();
         return aeonErrorObject;
@@ -79,12 +83,14 @@ async function doBundleTopUp(aeonAuth, aeonParams) {
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${resXML}`, {});
         client.end();
         const resJSON = bundleTopUpAdapter.toJS(resXML);
+        db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, TOPUP_BUNDLES, requestAt, resTime, aeonParams, resJSON, reqXML, resXML)
         return resJSON;
       })
       .catch((aeonErrorObject) => {
         const resTime = Date.now() - requestAt;
         client.end();
+        db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, TOPUP_BUNDLES, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
         return aeonErrorObject;
       });
