@@ -71,12 +71,13 @@ async function _doMeterTopUp(aeonAuth, aeonParams, fbe = false) {
             client.end();
             const resJSON = meterVoucherAdapter.toJS(topupResponse);
             db_api.log_socket_time_ms(client.socket_id, resTime);
-            db_api.log_req_res(client.socket_id, TOPUP_ELECTRCITY, topUpAt, resTime, aeonAuth, aeonParams, resJSON, xml, topupResponse)
+            db_api.log_req_res(client.socket_id, TOPUP_ELECTRCITY, topUpAt, resTime, aeonParams, resJSON, xml, topupResponse)
             return resJSON;
           })
           .catch((aeonErrorObject) => {
+            const resTime = Date.now() - requestAt;
             client.end();
-            db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
+            db_api.log_socket_time_ms(client.socket_id, resTime);
             db_api.log_req_res(client.socket_id, TOPUP_ELECTRCITY, requestAt, resTime, aeonParams, aeonErrorObject, xml)
             return aeonErrorObject;
           });
