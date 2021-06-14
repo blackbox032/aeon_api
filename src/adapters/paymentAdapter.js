@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function authToXML(userPin, deviceId, deviceSer, transType) {
+function authToXML({ userPin, deviceId, deviceSer }, aeonParams) {
 
   return `<request>` +
     `<EventType>Authentication</EventType>` +
@@ -8,41 +8,52 @@ function authToXML(userPin, deviceId, deviceSer, transType) {
     `<UserPin>${userPin}</UserPin>` +
     `<DeviceId>${deviceId}</DeviceId>` +
     `<DeviceSer>${deviceSer}</DeviceSer>` +
-    `<TransType>${transType}</TransType>` +
+    `<TransType>${aeonParams.subscriberEventType}</TransType>` +
     `</event>` +
     `</request>` +
     "\n";
 }
 
-function subscriberInfoToXML(accountNo, sessionId, payParams) {
+function subscriberInfoToXML(sessionId, aeonParams) {
+  const eventType = aeonParams.eventType == undefined ? 'GetSubscriberBillInfo' : aeonParams.eventType;
+  let moreParams = '';
+
+  if (eventType != 'GetSubscriberBillInfo') {
+    moreParams = `<realTime>1</realTime><verifyOnly>${aeonParams.verifyOnly}</verifyOnly><amountDue>${aeonParams.amount || '100'}</amountDue>`
+  }
+
   ret =
     `<request>` +
-    `<EventType>GetSubscriberBillInfo</EventType>` +
+    `<EventType>${eventType}</EventType>` +
     `<SessionId>${sessionId}</SessionId>` +
     `<event>` +
-    `<accountNo>${accountNo}</accountNo>` +
-    `<productId>${payParams.productID}</productId>` +
-    `<providerId>${payParams.providerID}</providerId>` +
+    `<accountNo>${aeonParams.toAccount}</accountNo>` +
+    `<productId>${aeonParams.productID}</productId>` +
+    `<providerId>${aeonParams.providerID}</providerId>` +
+    `<LoyaltyProfileId>${aeonParams.loyaltyProfileID}</LoyaltyProfileId>` +
+    moreParams +
+    `<Recon transReference="${Date.now()}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";
 }
 
 
-function paymentToXML(accountNo, amount, sessionId, payParams) {
+function paymentToXML(sessionId, aeonParams) {
   ret =
     `<request>` +
     `<EventType>Confirm</EventType>` +
     `<SessionId>${sessionId}</SessionId>` +
     `<event>` +
-    `<accountNumber>${accountNo}</accountNumber>` +
-    `<amountDue>${amount}</amountDue>` +
+    `<accountNumber>${aeonParams.toAccount}</accountNumber>` +
+    `<amountDue>${aeonParams.amount}</amountDue>` +
     `<confirmType>commit</confirmType>` +
-    `<productId>${payParams.productID}</productId>` +
-    '<tenderType>cash</tenderType>' +
-    `<providerId>${payParams.providerID}</providerId>` +
-    `<trxId>${payParams.trxID}</trxId>` +
+    `<productId>${aeonParams.productID}</productId>` +
+    `<providerId>${aeonParams.providerID}</providerId>` +
+    `<trxId>${aeonParams.trxID}</trxId>` +
     '<wantPrintJob>0</wantPrintJob>' +
+    `<tenderType>creditCard</tenderType>` +
+    `<Recon transReference="${Date.now()}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";

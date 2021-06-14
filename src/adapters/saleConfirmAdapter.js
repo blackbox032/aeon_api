@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function toXML(userPin, deviceId, deviceSer, confrimationRef, reference) {
+function toXML({ userPin, deviceId, deviceSer }, { confrimationRef, reference }) {
   ret =
     `<request>` +
     `<Version>2.1</Version>` +
@@ -11,6 +11,7 @@ function toXML(userPin, deviceId, deviceSer, confrimationRef, reference) {
     `<UserPin>${userPin}</UserPin>` +
     `<TransRef>${confrimationRef}</TransRef>` +
     `<Reference>${reference}</Reference>` +
+    // `<Recon transReference="${transReference}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";

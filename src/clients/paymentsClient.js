@@ -2,43 +2,61 @@ const logger = require("../utils/logger");
 const socketClient = require("../clients/sockets/socketClient");
 const paymentAdapter = require("../adapters/paymentAdapter");
 
-const port = process.env.AEON_AIRTIME_PORT || 7800;
-const host = process.env.AEON_AIRTIME_URL || "aeon.qa.bltelecoms.net";
-const ttl = process.env.TTL || 60000;
-const userPin = process.env.AEON_AIRTIME_PIN || "016351";
-const deviceId = process.env.AEON_AIRTIME_DEVICE_ID || "865181";
-const deviceSer = process.env.AEON_AIRTIME_DEVICE_SER || "w!22!t";
+const db_api = require('../db/db_api');
 
-async function doPayment(accountNo, amount, payParams) {
-  authXML = paymentAdapter.authToXML(userPin, deviceId, deviceSer, payParams.subscriberEventType);
+const PAYMENT_AUTH = 'apay';
+const PAYMENT_INFO = 'ipay';
+const PAYMENT_PAY = 'ppay';
 
+async function doPayment(aeonAuth, aeonParams) {
+  let apiStep = PAYMENT_AUTH;
+  authXML = paymentAdapter.authToXML(aeonAuth.userPin, aeonAuth.deviceId, aeonAuth.deviceSer, aeonParams);
+  let isConfirmAPI = false;
   try {
-    const client = await socketClient(host, port, ttl);
+    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout, aeonParams.fromAccount);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Req: ${authXML}`, {});
+    const requestAt = Date.now();
     const authResp = await client.request(authXML)
-      .then(async serverResponse => {
-        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Res: ${serverResponse}`, {});
-        return paymentAdapter.toJS(serverResponse);
+      .then(async resXML => {
+        const resTime = Date.now() - requestAt;
+        const resJSON = paymentAdapter.toJS(resXML);
+        db_api.log_socket_time_ms(client.socket_id, resTime);
+        db_api.log_req_res(client.socket_id, PAYMENT_AUTH, requestAt, resTime, aeonParams, resJSON, reqXML, resXML)
+        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Res: ${resXML}`, {});
+        return resJSON;
       })
       .catch((aeonErrorObject) => {
+        const resTime = Date.now() - requestAt;;
         client.end();
-        return aeonErrorObject;
+        db_api.log_socket_time_ms(client.socket_id, resTime);
+        db_api.log_req_res(client.socket_id, PAYMENT_AUTH, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
+        return {...aeonErrorObject, isConfirmAPI };
       });
 
     if (authResp.error) {
       client.end();
       return authResp;
     }
-    let infoXML = paymentAdapter.subscriberInfoToXML(accountNo, authResp.SessionId, payParams);
+
+    apiStep = PAYMENT_INFO;
+    let infoXML = paymentAdapter.subscriberInfoToXML(authResp.SessionId, aeonParams);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Req: ${infoXML}`, {});
+    const subscriberAt = Date.now();
     const subscriberResp = await client.request(infoXML)
-      .then((serverResponse) => {
-        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Res: ${serverResponse}`, {});
-        return paymentAdapter.toJS(serverResponse);
+      .then((resXML) => {
+        const resTime = Date.now() - subscriberAt;
+        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Res: ${resXML}`, {});
+        const resJSON = paymentAdapter.toJS(resXML);
+        db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
+        db_api.log_req_res(client.socket_id, PAYMENT_INFO, subscriberAt, resTime, aeonParams, resJSON, reqXML, resXML);
+        return resJSON;
       })
       .catch((aeonErrorObject) => {
+        const resTime = Date.now() - subscriberAt;
         client.end();
-        return aeonErrorObject;
+        db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
+        db_api.log_req_res(client.socket_id, PAYMENT_INFO, subscriberAt, resTime, aeonParams, aeonErrorObject, reqXML);
+        return {...aeonErrorObject, isConfirmAPI };
       });
 
     if (subscriberResp.error) {
@@ -46,39 +64,56 @@ async function doPayment(accountNo, amount, payParams) {
       return subscriberResp;
     }
 
-    let payXML = paymentAdapter.paymentToXML(accountNo, amount, authResp.SessionId, payParams);
+    apiStep = PAYMENT_PAY;
+    aeonParams.trxID = subscriberResp.TransRef;
+    isConfirmAPI = true;
+    let payXML = paymentAdapter.paymentToXML(accountNo, amount, authResp.SessionId, aeonParams);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API payXML Req: ${payXML}`, {});
+    const payAt = Date.now();
     return await client.request(payXML)
-      .then((serverResponse) => {
-        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API payXML Res: ${serverResponse}`, {});
+      .then((resXML) => {
+        const resTime = Date.now() - payAt;
+        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API payXML Res: ${resXML}`, {});
         client.end();
-        return paymentAdapter.toJS(serverResponse);
+        const resJSON = paymentAdapter.toJS(resXML);
+        db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
+        db_api.log_req_res(client.socket_id, PAYMENT_PAY, requestAt, resTime, aeonParams, resJSON, payXML, resXML)
+        return resJSON;
       })
       .catch((aeonErrorObject) => {
+        const resTime = Date.now() - payAt;
         client.end();
-        return aeonErrorObject;
+        db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
+        db_api.log_req_res(client.socket_id, PAYMENT_PAY, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
+        return {...aeonErrorObject, isConfirmAPI };
       });
-
-
   } catch (error) {
+    db_api.log_req_res(undefined, apiStep, Date.now(), aeonParams, { error: error.message })
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Socket Client Error`, { error });
     return error;
   }
 }
 
-async function doGetSubscriberInfo(accountNo, payParams) {
-  authXML = paymentAdapter.authToXML(userPin, deviceId, deviceSer, payParams.subscriberEventType);
-
+async function doGetSubscriberInfo(aeonAuth, aeonParams) {
   try {
-    const client = await socketClient(host, port, ttl);
+    authXML = paymentAdapter.authToXML(aeonAuth, aeonParams);
+    const client = await socketClient(aeonAuth, aeonParams);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Req: ${authXML}`, {});
+    const requestAt = Date.now();
     const authResp = await client.request(authXML)
-      .then(async serverResponse => {
-        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Res: ${serverResponse}`, {});
-        return paymentAdapter.toJS(serverResponse);
+      .then(async resXML => {
+        const resTime = Date.now() - requestAt;
+        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Res: ${resXML}`, {});
+        const resJSON = paymentAdapter.toJS(resXML);
+        db_api.log_socket_time_ms(client.socket_id, resTime);
+        db_api.log_req_res(client.socket_id, PAYMENT_AUTH, requestAt, resTime, aeonParams, resJSON, authXML, resXML)
+        return resJSON;
       })
       .catch((aeonErrorObject) => {
+        const resTime = Date.now() - requestAt;
         client.end();
+        db_api.log_socket_time_ms(client.socket_id, resTime);
+        db_api.log_req_res(client.socket_id, PAYMENT_AUTH, requestAt, resTime, aeonParams, aeonErrorObject, authXML);
         return aeonErrorObject;
       });
 
@@ -86,15 +121,22 @@ async function doGetSubscriberInfo(accountNo, payParams) {
       client.end();
       return authResp;
     }
-    let infoXML = paymentAdapter.subscriberInfoToXML(accountNo, authResp.SessionId, payParams);
+    let infoXML = paymentAdapter.subscriberInfoToXML(authResp.SessionId, aeonParams);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Req: ${infoXML}`, {});
+    const subscriberAt = Date.now();
     const subscriberResp = await client.request(infoXML)
-      .then((serverResponse) => {
-        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Res: ${serverResponse}`, {});
+      .then((resXML) => {
+        const resTime = Date.now() - subscriberAt;
+        const resJSON = paymentAdapter.toJS(resXML);
+        db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
+        db_api.log_req_res(client.socket_id, PAYMENT_INFO, subscriberAt, resTime, aeonParams, resJSON, infoXML, resXML)
+        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Res: ${resXML}`, {});
         client.end();
-        return paymentAdapter.toJS(serverResponse);
+        return resJSON;
       })
       .catch((aeonErrorObject) => {
+        db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
+        db_api.log_req_res(client.socket_id, PAYMENT_INFO, subscriberAt, Date.now(), aeonAuth, aeonParams, aeonErrorObject, infoXML)
         client.end();
         return aeonErrorObject;
       });
@@ -102,6 +144,7 @@ async function doGetSubscriberInfo(accountNo, payParams) {
     return subscriberResp;
 
   } catch (error) {
+    db_api.log_req_res(undefined, PAYMENT_INFO, Date.now(), aeonParams, { error: error.message })
     console.log(error)
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Socket Client Error`, { error });
     return error;

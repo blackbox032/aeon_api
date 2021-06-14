@@ -9,7 +9,7 @@ const client = require("../src/clients/paymentsClient");
 
 const accountNo = "81880498";
 
-const payParams = {
+const aeonParams = {
   providerID: 198,
   subscriberEventType: 'BluBillPayment',
   trxID: '0111221',
@@ -18,6 +18,6 @@ const payParams = {
 doPayment();
 
 async function doPayment() {
-  jsonResp = await client.doPayment(accountNo, '101', payParams);
-  await client.doGetSubscriberInfo(accountNo, payParams)
+  jsonResp = await client.doPayment(accountNo, '101', aeonParams);
+  await client.doGetSubscriberInfo(accountNo, aeonParams)
 }

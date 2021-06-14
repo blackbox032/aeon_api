@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function toXML(userPin, deviceId, deviceSer, transType) {
+function toXML({ userPin, deviceId, deviceSer }, aeonParams) {
   ret =
     `<request>` +
     `<EventType>GetProductList</EventType>` +
@@ -8,7 +8,8 @@ function toXML(userPin, deviceId, deviceSer, transType) {
     `<UserPin>${userPin}</UserPin>` +
     `<DeviceId>${deviceId}</DeviceId>` +
     `<DeviceSer>${deviceSer}</DeviceSer>` +
-    `<TransType>${transType}</TransType>` +
+    `<TransType>${aeonParams.transType}</TransType>` +
+    `<Recon transReference="${Date.now()}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";

@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function toXML(sessionId, confrimationRef, reference) {
+function toXML(sessionId, confrimationRef, reference, aeonParams) {
   ret =
     `<request>` +
     `<Version>2.1</Version>` +
@@ -9,6 +9,7 @@ function toXML(sessionId, confrimationRef, reference) {
     `<event>` +
     `<TransRef>${confrimationRef}</TransRef>` +
     `<Reference>${reference}</Reference>` +
+    // `<Recon transReference="${transReference}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";

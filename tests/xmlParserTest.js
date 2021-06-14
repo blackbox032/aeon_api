@@ -10,9 +10,9 @@ var xml = `<response>
 <AttrTag attribute="hello"></AttrTag>
 <data>
 <ErrorCode>123</ErrorCode>
-<ErrorText>An error occured</ErrorText>
+<ErrorText>An error occurred</ErrorText>
 <AEONErrorCode>111</AEONErrorCode>
-<AEONErrorText>An error occured</AEONErrorText>
+<AEONErrorText>An error occurred</AEONErrorText>
 </data>
 </response>`;
 

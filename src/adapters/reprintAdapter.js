@@ -9,6 +9,7 @@ function toXML(sessionId, transRef, origReference, phoneNumber) {
     `<TransRef>${transRef}</TransRef>` +
     `<OrigReference>${origReference}</OrigReference>` +
     `<PhoneNumber>${phoneNumber}</PhoneNumber>` +
+    // `<Recon transReference="${transReference}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";

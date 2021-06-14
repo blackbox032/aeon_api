@@ -6,195 +6,133 @@ const meterVoucherFBEAdapter = require("../adapters/meterVoucherFBEAdapter");
 const meterConfirmAdapter = require("../adapters/meterConfirmAdapter");
 const saleConfirmAdapter = require("../adapters/saleConfirmAdapter");
 
-const port = process.env.AEON_ELECTRICITY_PORT || 7893;
-const host = process.env.AEON_ELECTRICITY_URL || "196.26.170.3";
-const ttl = process.env.TTL || 60000;
-const userPin = process.env.AEON_ELECTRICITY_PIN || "011234";
-const deviceId = process.env.AEON_ELECTRICITY_DEVICE_ID || "7305";
-const deviceSer = process.env.AEON_ELECTRICITY_DEVICE_SER || "TiZZIw779!";
+const db_api = require('../db/db_api');
+const VERIFY_ELECTRCITY = 'velec';
+const TOPUP_ELECTRCITY = 'telec';
+const SALE_CONFIRM_ELECTRCITY = 'selec';
 
-async function doVerifyMeter(meterNumber, amount) {
-  xml = meterConfirmAdapter.toXML(
-    userPin,
-    deviceId,
-    deviceSer,
-    meterNumber,
-    amount
-  );
-  logger.log(
-    logger.levels.TRACE,
-    logger.sources.AEON_API,
-    `Aeon API Request: ${xml}`,
-    { host, port }
-  );
+async function doVerifyMeter(aeonAuth, aeonParams) {
+  reqXML = meterConfirmAdapter.toXML(aeonAuth, aeonParams);
+  logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
   try {
-    const client = await socketClient(host, port, ttl);
+    const client = await socketClient(aeonAuth, aeonParams);
+    const requestAt = Date.now();
     return await client
-      .request(xml)
-      .then((serverResponse) => {
-        logger.log(
-          logger.levels.TRACE,
-          logger.sources.AEON_API,
-          `Aeon API Response: ${serverResponse}`,
-          {}
-        );
+      .request(reqXML)
+      .then((resXML) => {
+        const resTime = Date.now() - requestAt;
+        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${resXML}`, {});
         client.end();
-        return meterConfirmAdapter.toJS(serverResponse);
+        const resJSON = meterConfirmAdapter.toJS(resXML);
+        db_api.log_socket_time_ms(client.socket_id, resTime);
+        db_api.log_req_res(client.socket_id, VERIFY_ELECTRCITY, requestAt, resTime, aeonParams, resJSON, reqXML, resXML)
+        return resJSON;
       })
       .catch((aeonErrorObject) => {
+        const resTime = Date.now() - requestAt;
         client.end();
+        db_api.log_socket_time_ms(client.socket_id, resTime);
+        db_api.log_req_res(client.socket_id, VERIFY_ELECTRCITY, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
         return aeonErrorObject;
       });
   } catch (error) {
-    logger.log(
-      logger.levels.TRACE,
-      logger.sources.AEON_API,
-      `Aeon API Socket Client Error`,
-      {
-        error,
-      }
-    );
+    db_api.log_req_res(undefined, VERIFY_ELECTRCITY, Date.now(), aeonParams, { error: error.message })
     return error;
   }
 }
 
-async function _doMeterTopUp(
-  meterNumber,
-  amount,
-  transReference,
-  reference,
-  fbe = false
-) {
-  xml = meterConfirmAdapter.toXML(
-    userPin,
-    deviceId,
-    deviceSer,
-    meterNumber,
-    amount
-  );
-  logger.log(
-    logger.levels.TRACE,
-    logger.sources.AEON_API,
-    `Aeon API Request: ${xml}`,
-    { host, port }
-  );
+async function _doMeterTopUp(aeonAuth, aeonParams, fbe = false) {
+
+  let apiStep = VERIFY_ELECTRCITY;
   try {
-    const client = await socketClient(host, port, ttl);
+    const reqXML = meterConfirmAdapter.toXML(aeonAuth, aeonParams);
+    logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
+    const client = await socketClient(aeonAuth, aeonParams);
+    const requestAt = Date.now();
     return await client
-      .request(xml)
-      .then(async (verifyResponse) => {
-        logger.log(
-          logger.levels.TRACE,
-          logger.sources.AEON_API,
-          `Aeon API Response: ${verifyResponse}`,
-          {}
-        );
+      .request(reqXML)
+      .then(async(verifyResponse) => {
+        const resTime = Date.now() - requestAt;
+        apiStep = TOPUP_ELECTRCITY
+        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${verifyResponse}`, {});
         response = meterConfirmAdapter.toJS(verifyResponse);
-        xml = fbe
-          ? meterVoucherFBEAdapter.toXML(
-              response.SessionId,
-              response.TransRef,
-              transReference,
-              reference,
-              meterNumber
-            )
-          : meterVoucherAdapter.toXML(
-              response.SessionId,
-              response.TransRef,
-              transReference,
-              reference,
-              meterNumber
-            );
-        logger.log(
-          logger.levels.TRACE,
-          logger.sources.AEON_API,
-          `Aeon API Request: ${xml}`,
-          { host, port }
-        );
+        xml = fbe ?
+          meterVoucherFBEAdapter.toXML(response.SessionId, response.TransRef, aeonParams) :
+          meterVoucherAdapter.toXML(response.SessionId, response.TransRef, aeonParams);
+        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
+        db_api.log_socket_time_ms(client.socket_id, resTime);
+        db_api.log_req_res(client.socket_id, VERIFY_ELECTRCITY, requestAt, resTime, aeonParams, response, reqXML, verifyResponse)
+        const topUpAt = Date.now();
         return await client
           .request(xml)
           .then((topupResponse) => {
-            logger.log(
-              logger.levels.TRACE,
-              logger.sources.AEON_API,
-              `Aeon API Response: ${topupResponse}`,
-              {}
-            );
+            const resTime = Date.now() - requestAt;
+            logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${topupResponse}`, {});
             client.end();
-            return meterVoucherAdapter.toJS(topupResponse);
+            const resJSON = meterVoucherAdapter.toJS(topupResponse);
+            db_api.log_socket_time_ms(client.socket_id, resTime);
+            db_api.log_req_res(client.socket_id, TOPUP_ELECTRCITY, topUpAt, resTime, aeonParams, resJSON, xml, topupResponse)
+            return resJSON;
           })
           .catch((aeonErrorObject) => {
+            const resTime = Date.now() - requestAt;
             client.end();
+            db_api.log_socket_time_ms(client.socket_id, resTime);
+            db_api.log_req_res(client.socket_id, TOPUP_ELECTRCITY, requestAt, resTime, aeonParams, aeonErrorObject, xml)
             return aeonErrorObject;
           });
       })
       .catch((aeonErrorObject) => {
         debug("Error: " + aeonErrorObject);
         client.end();
+        db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
+        db_api.log_req_res(client.socket_id, VERIFY_ELECTRCITY, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
         return aeonErrorObject;
       });
   } catch (error) {
-    logger.log(
-      logger.levels.TRACE,
-      logger.sources.AEON_API,
-      `Aeon API Socket Client Error`,
-      {
-        error,
-      }
-    );
+    db_api.log_req_res(undefined, apiStep, Date.now(), aeonParams, { error: error.message })
+    logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Socket Client Error`, {
+      error
+    });
     return error;
   }
 }
 
-async function doMeterTopUp(meterNumber, amount, transReference, reference) {
-  return await _doMeterTopUp(meterNumber, amount, transReference, reference);
+async function doMeterTopUp(aeonAuth, aeonParams) {
+  return await _doMeterTopUp(aeonAuth, aeonParams);
 }
 
-async function doMeterTopUpFBE(meterNumber, transReference, reference) {
-  return await _doMeterTopUp(meterNumber, 0, transReference, reference, true);
+async function doMeterTopUpFBE(aeonAuth, aeonParams) {
+  return await _doMeterTopUp(aeonAuth, aeonParams, true);
 }
 
-async function getSaleConfirmation(confirmationRef, reference) {
-  xml = saleConfirmAdapter.toXML(
-    userPin,
-    deviceId,
-    deviceSer,
-    confirmationRef,
-    reference
-  );
-  logger.log(
-    logger.levels.TRACE,
-    logger.sources.AEON_API,
-    `Aeon API Request: ${xml}`,
-    { host, port }
-  );
+async function getSaleConfirmation(aeonAuth, aeonAuth) {
+  reqXML = saleConfirmAdapter.toXML(aeonAuth, aeonParams);
+  logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
   try {
-    const client = await socketClient(host, port, ttl);
+    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout, aeonParams.fromAccount);
+    const requestAt = Date.now();
     return await client
       .request(xml)
-      .then((serverResponse) => {
-        logger.log(
-          logger.levels.TRACE,
-          logger.sources.AEON_API,
-          `Aeon API Response: ${serverResponse}`,
-          {}
-        );
+      .then((resXML) => {
+        const resTime = Date.now() - requestAt;
+        logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Response: ${resXML}`, {});
         client.end();
-        return saleConfirmAdapter.toJS(serverResponse);
+        const resJSON = saleConfirmAdapter.toJS(resXML);
+        db_api.log_socket_time_ms(client.socket_id, resTime);
+        db_api.log_req_res(client.socket_id, SALE_CONFIRM_ELECTRCITY, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
+        return resJSON;
       })
       .catch((aeonErrorObject) => {
+        const resTime = Date.now() - requestAt;
         client.end();
+        db_api.log_socket_time_ms(client.socket_id, resTime);
+        db_api.log_req_res(client.socket_id, SALE_CONFIRM_ELECTRCITY, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
         return aeonErrorObject;
       });
   } catch (error) {
-    logger.log(
-      logger.levels.TRACE,
-      logger.sources.AEON_API,
-      `Aeon API Socket Client Error`,
-      {
-        error,
-      }
-    );
+    db_api.log_req_res(undefined, SALE_CONFIRM_ELECTRCITY, Date.now(), aeonParams, { error: error.message })
+    logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Socket Client Error`, { error });
     return error;
   }
 }
