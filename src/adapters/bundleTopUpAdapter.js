@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function toXML({ userPin, deviceId, deviceSer }, aeonParams) {
+function toXML({ userPin, deviceId, deviceSer }, aeonParams, bankResp) {
   ret =
     `<request>` +
     `<EventType>DoBundleTopup</EventType>` +
@@ -14,7 +14,7 @@ function toXML({ userPin, deviceId, deviceSer }, aeonParams) {
     `<ProductCode>${aeonParams.productCode}</ProductCode>` +
     `<LoyaltyProfileId>${aeonParams.loyaltyProfileID}</LoyaltyProfileId>` +
     `<tenderType>creditCard</tenderType>` +
-    `<Recon transReference="${aeonParams.transReference}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}"></Recon>` +
+    `<Recon transReference="${aeonParams.transReference}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount} transNumber=${bankResp.auth_id_res}" authoriser=${bankResp.rrn} transDateTime=${bankResp.trx_datetime.replace(/[T,Z]/g, ' ')}"></Recon>` +
     `</event>` +
     `</request>`;
   return ret + "\n";
