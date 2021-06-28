@@ -39,8 +39,8 @@ async function doAirtimeValidation(aeonAuth, aeonParams) {
   }
 }
 
-async function doAirtimeTopUp(aeonAuth, aeonParams) {
-  let reqXML = airtimeTopUpAdapter.toXML(aeonAuth, aeonParams);
+async function doAirtimeTopUp(aeonAuth, aeonParams, bankRes) {
+  let reqXML = airtimeTopUpAdapter.toXML(aeonAuth, aeonParams, bankRes);
   logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
   try {
     const client = await socketClient(aeonAuth, aeonParams);
