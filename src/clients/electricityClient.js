@@ -41,7 +41,7 @@ async function doVerifyMeter(aeonAuth, aeonParams) {
   }
 }
 
-async function _doMeterTopUp(aeonAuth, aeonParams, fbe = false) {
+async function _doMeterTopUp(aeonAuth, aeonParams, bankRes, fbe = false) {
 
   let apiStep = VERIFY_ELECTRCITY;
   try {
@@ -58,7 +58,7 @@ async function _doMeterTopUp(aeonAuth, aeonParams, fbe = false) {
         response = meterConfirmAdapter.toJS(verifyResponse);
         xml = fbe ?
           meterVoucherFBEAdapter.toXML(response.SessionId, response.TransRef, aeonParams) :
-          meterVoucherAdapter.toXML(response.SessionId, response.TransRef, aeonParams);
+          meterVoucherAdapter.toXML(response.SessionId, response.TransRef, aeonParams, bankRes);
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
         db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, VERIFY_ELECTRCITY, requestAt, resTime, aeonParams, response, reqXML, verifyResponse)
@@ -98,12 +98,12 @@ async function _doMeterTopUp(aeonAuth, aeonParams, fbe = false) {
   }
 }
 
-async function doMeterTopUp(aeonAuth, aeonParams) {
-  return await _doMeterTopUp(aeonAuth, aeonParams);
+async function doMeterTopUp(aeonAuth, aeonParams, bankRes) {
+  return await _doMeterTopUp(aeonAuth, aeonParams, bankRes);
 }
 
-async function doMeterTopUpFBE(aeonAuth, aeonParams) {
-  return await _doMeterTopUp(aeonAuth, aeonParams, true);
+async function doMeterTopUpFBE(aeonAuth, aeonParams, bankRes) {
+  return await _doMeterTopUp(aeonAuth, aeonParams, bankRes, true);
 }
 
 async function getSaleConfirmation(aeonAuth, aeonAuth) {

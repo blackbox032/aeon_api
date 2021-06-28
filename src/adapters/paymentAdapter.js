@@ -39,7 +39,7 @@ function subscriberInfoToXML(sessionId, aeonParams) {
 }
 
 
-function paymentToXML(sessionId, aeonParams, bankResp) {
+function paymentToXML(sessionId, aeonParams, bankResp = {}) {
   ret =
     `<request>` +
     `<EventType>Confirm</EventType>` +

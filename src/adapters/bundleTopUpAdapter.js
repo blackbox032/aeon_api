@@ -1,6 +1,6 @@
 var utils = require("./adapterUtils");
 
-function toXML({ userPin, deviceId, deviceSer }, aeonParams, bankResp) {
+function toXML({ userPin, deviceId, deviceSer }, aeonParams, bankResp = {}) {
   ret =
     `<request>` +
     `<EventType>DoBundleTopup</EventType>` +
