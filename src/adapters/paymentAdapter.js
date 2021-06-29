@@ -53,7 +53,7 @@ function paymentToXML(sessionId, aeonParams, bankResp = {}) {
     `<trxId>${aeonParams.trxID}</trxId>` +
     '<wantPrintJob>0</wantPrintJob>' +
     `<tenderType>creditCard</tenderType>` +
-    `<Recon transReference="${Date.now()}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}" transNumber="${bankResp.auth_id_res}" authoriser="${bankResp.rrn}" transDateTime="${bankResp.trx_datetime.replace(/[T,Z]/g, ' ')}"" ></Recon > ` +
+    `<Recon transReference="${bankResp.auth_id_res}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}" transNumber="${bankResp.user_id}" authoriser="${bankResp.rrn}" transDateTime="${bankResp.trx_datetime.replace(/[T,Z]/g, ' ')}" ></Recon> ` +
     `</event > ` +
     `</request > `;
   return ret + "\n";
