@@ -33,6 +33,8 @@ async function doPayment(aeonAuth, aeonParams, bankResp) {
         return {...aeonErrorObject, isConfirmAPI };
       });
 
+    console.log('authResp', authResp)
+
     if (authResp.error) {
       client.end();
       return authResp;
