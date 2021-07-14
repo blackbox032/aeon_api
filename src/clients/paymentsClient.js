@@ -13,8 +13,8 @@ async function doPayment(aeonAuth, aeonParams, bankResp) {
   authXML = paymentAdapter.authToXML(aeonAuth, aeonParams);
   let isConfirmAPI = false;
   try {
-    const client = await socketClient(aeonAuth, aeonParams);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Req: ${authXML}`, {});
+    const client = await socketClient(aeonAuth, aeonParams);
     const requestAt = Date.now();
     const authResp = await client.request(authXML)
       .then(async resXML => {
@@ -88,8 +88,9 @@ async function doPayment(aeonAuth, aeonParams, bankResp) {
         return {...aeonErrorObject, isConfirmAPI };
       });
   } catch (error) {
+    console.log(error)
     db_api.log_req_res(undefined, apiStep, Date.now(), aeonParams, { error: error.message })
-    logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Socket Client Error`, { error });
+    logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Socket Client Error`, { error: error.message });
     return error;
   }
 }
