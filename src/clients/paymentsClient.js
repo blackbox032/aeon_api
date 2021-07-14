@@ -12,6 +12,9 @@ async function doPayment(aeonAuth, aeonParams, bankResp) {
   let apiStep = PAYMENT_AUTH;
   authXML = paymentAdapter.authToXML(aeonAuth, aeonParams);
   let isConfirmAPI = false;
+
+  console.log('aeonAuth, aeonParams, bankResp', aeonAuth, aeonParams, bankResp)
+
   try {
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Req: ${authXML}`, {});
     const client = await socketClient(aeonAuth, aeonParams);
