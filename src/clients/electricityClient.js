@@ -43,9 +43,10 @@ async function doVerifyMeter(aeonAuth, aeonParams) {
 
 async function _doMeterTopUp(aeonAuth, aeonParams, bankRes, fbe = false) {
 
+  console.log('eonAuth, aeonParams, bankRes', aeonAuth, aeonParams, bankRes)
   let apiStep = VERIFY_ELECTRCITY;
   try {
-    const reqXML = meterConfirmAdapter.toXML(aeonAuth, aeonParams);
+    const reqXML = meterConfirmAdapter.toXML(aeonAuth, aeonParams, bankRes);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
     const client = await socketClient(aeonAuth, aeonParams);
     const requestAt = Date.now();
