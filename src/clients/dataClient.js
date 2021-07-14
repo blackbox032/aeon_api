@@ -70,8 +70,8 @@ async function doBundleValidation(aeonAuth, aeonParams) {
   }
 }
 
-async function doBundleTopUp(aeonAuth, aeonParams) {
-  reqXML = bundleTopUpAdapter.toXML(aeonAuth, aeonParams);
+async function doBundleTopUp(aeonAuth, aeonParams, bankResponse) {
+  reqXML = bundleTopUpAdapter.toXML(aeonAuth, aeonParams, bankResponse);
   logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
   try {
     const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout, aeonParams);
