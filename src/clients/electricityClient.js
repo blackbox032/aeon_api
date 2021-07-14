@@ -41,10 +41,10 @@ async function doVerifyMeter(aeonAuth, aeonParams) {
   }
 }
 
-async function _doMeterTopUp(aeonAuth, aeonParams, bankRes, fbe = false) {
+async function _doMeterTopUp(aeonAuth, aeonParams, bankResponse, fbe = false) {
   let apiStep = VERIFY_ELECTRCITY;
   try {
-    const reqXML = meterConfirmAdapter.toXML(aeonAuth, aeonParams, bankRes);
+    const reqXML = meterConfirmAdapter.toXML(aeonAuth, aeonParams, bankResponse);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
     const client = await socketClient(aeonAuth, aeonParams);
     const requestAt = Date.now();
@@ -57,7 +57,7 @@ async function _doMeterTopUp(aeonAuth, aeonParams, bankRes, fbe = false) {
         response = meterConfirmAdapter.toJS(verifyResponse);
         xml = fbe ?
           meterVoucherFBEAdapter.toXML(response.SessionId, response.TransRef, aeonParams) :
-          meterVoucherAdapter.toXML(response.SessionId, response.TransRef, aeonParams, bankRes);
+          meterVoucherAdapter.toXML(response.SessionId, response.TransRef, aeonParams, bankResponse);
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Request: ${reqXML}`, aeonAuth);
         db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, VERIFY_ELECTRCITY, requestAt, resTime, aeonParams, response, reqXML, verifyResponse)
@@ -89,6 +89,7 @@ async function _doMeterTopUp(aeonAuth, aeonParams, bankRes, fbe = false) {
         return aeonErrorObject;
       });
   } catch (error) {
+    console.log(error)
     db_api.log_req_res(undefined, apiStep, Date.now(), aeonParams, { error: error.message })
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Socket Client Error`, {
       error
