@@ -29,7 +29,7 @@ async function doPayment(aeonAuth, aeonParams, bankResp) {
         const resTime = Date.now() - requestAt;;
         client.end();
         db_api.log_socket_time_ms(client.socket_id, resTime);
-        db_api.log_req_res(client.socket_id, PAYMENT_AUTH, requestAt, resTime, aeonParams, aeonErrorObject, reqXML)
+        db_api.log_req_res(client.socket_id, PAYMENT_AUTH, requestAt, resTime, aeonParams, aeonErrorObject, authXML)
         return {...aeonErrorObject, isConfirmAPI };
       });
 
