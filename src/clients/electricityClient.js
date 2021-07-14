@@ -42,8 +42,6 @@ async function doVerifyMeter(aeonAuth, aeonParams) {
 }
 
 async function _doMeterTopUp(aeonAuth, aeonParams, bankRes, fbe = false) {
-
-  console.log('eonAuth, aeonParams, bankRes', aeonAuth, aeonParams, bankRes)
   let apiStep = VERIFY_ELECTRCITY;
   try {
     const reqXML = meterConfirmAdapter.toXML(aeonAuth, aeonParams, bankRes);
