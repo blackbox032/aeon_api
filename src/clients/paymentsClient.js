@@ -19,25 +19,20 @@ async function doPayment(aeonAuth, aeonParams, bankResp) {
     const requestAt = Date.now();
     const authResp = await client.request(authXML)
       .then(async resXML => {
-        console.log('resXML ', resXML)
-
         const resTime = Date.now() - requestAt;
         const resJSON = paymentAdapter.toJS(resXML);
         db_api.log_socket_time_ms(client.socket_id, resTime);
-        db_api.log_req_res(client.socket_id, PAYMENT_AUTH, requestAt, resTime, aeonParams, resJSON, reqXML, resXML)
+        db_api.log_req_res(client.socket_id, PAYMENT_AUTH, requestAt, resTime, aeonParams, resJSON, authXML, resXML)
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Res: ${resXML}`, {});
         return resJSON;
       })
       .catch((aeonErrorObject) => {
-        console.log('aeonErrorObject error', aeonErrorObject)
         const resTime = Date.now() - requestAt;;
         client.end();
         db_api.log_socket_time_ms(client.socket_id, resTime);
         db_api.log_req_res(client.socket_id, PAYMENT_AUTH, requestAt, resTime, aeonParams, aeonErrorObject, authXML)
         return {...aeonErrorObject, isConfirmAPI };
       });
-
-    console.log('authResp', authResp)
 
     if (authResp.error) {
       client.end();
