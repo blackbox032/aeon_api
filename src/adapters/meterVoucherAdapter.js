@@ -11,9 +11,9 @@ function toXML(sessionId, confirmationRef, aeonParams, bankResp) {
     `<Reference>${aeonParams.reference}</Reference>` +
     `<LoyaltyProfileId>${aeonParams.loyaltyProfileID}</LoyaltyProfileId>` +
     `<tenderType>creditCard</tenderType>` +
-    `<Recon transReference="${bankRes.auth_id_res}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}" transNumber="${bankResp.user_id}" authoriser="${bankResp.rrn}" transDateTime="${bankResp.trx_datetime.replace(/[T,Z]/g, ' ')}"></Recon> ` +
-    `</event > ` +
-    `</request > `;
+    `<Recon transReference="${bankRes.auth_id_res}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}" transNumber="${bankResp.user_id}" authoriser="${bankResp.rrn}" transDateTime="${bankResp.trx_datetime.replace(/[T,Z]/g, ' ')}"></Recon>` +
+    `</event>` +
+    `</request>`;
   return ret + "\n";
 }
 
