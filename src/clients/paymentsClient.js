@@ -10,7 +10,7 @@ const PAYMENT_PAY = 'ppay';
 
 async function doPayment(aeonAuth, aeonParams, bankResp) {
   let apiStep = PAYMENT_AUTH;
-  authXML = paymentAdapter.authToXML(aeonAuth.userPin, aeonAuth.deviceId, aeonAuth.deviceSer, aeonParams);
+  authXML = paymentAdapter.authToXML(aeonAuth, aeonParams);
   let isConfirmAPI = false;
   try {
     const client = await socketClient(aeonAuth, aeonParams);
