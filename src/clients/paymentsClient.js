@@ -8,12 +8,12 @@ const PAYMENT_AUTH = 'apay';
 const PAYMENT_INFO = 'ipay';
 const PAYMENT_PAY = 'ppay';
 
-async function doPayment(aeonAuth, aeonParams) {
+async function doPayment(aeonAuth, aeonParams, bankResp) {
   let apiStep = PAYMENT_AUTH;
   authXML = paymentAdapter.authToXML(aeonAuth.userPin, aeonAuth.deviceId, aeonAuth.deviceSer, aeonParams);
   let isConfirmAPI = false;
   try {
-    const client = await socketClient(aeonAuth.host, aeonAuth.port, aeonAuth.timeout, aeonParams.fromAccount);
+    const client = await socketClient(aeonAuth, aeonParams);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Auth Req: ${authXML}`, {});
     const requestAt = Date.now();
     const authResp = await client.request(authXML)
@@ -67,7 +67,7 @@ async function doPayment(aeonAuth, aeonParams) {
     apiStep = PAYMENT_PAY;
     aeonParams.trxID = subscriberResp.TransRef;
     isConfirmAPI = true;
-    let payXML = paymentAdapter.paymentToXML(accountNo, amount, authResp.SessionId, aeonParams);
+    let payXML = paymentAdapter.paymentToXML(authResp.SessionId, aeonParams, bankResp);
     logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API payXML Req: ${payXML}`, {});
     const payAt = Date.now();
     return await client.request(payXML)
