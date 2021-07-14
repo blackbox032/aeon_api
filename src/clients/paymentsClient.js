@@ -49,14 +49,14 @@ async function doPayment(aeonAuth, aeonParams, bankResp) {
         logger.log(logger.levels.TRACE, logger.sources.AEON_API, `Aeon API Subscriber Res: ${resXML}`, {});
         const resJSON = paymentAdapter.toJS(resXML);
         db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
-        db_api.log_req_res(client.socket_id, PAYMENT_INFO, subscriberAt, resTime, aeonParams, resJSON, reqXML, resXML);
+        db_api.log_req_res(client.socket_id, PAYMENT_INFO, subscriberAt, resTime, aeonParams, resJSON, infoXML, resXML);
         return resJSON;
       })
       .catch((aeonErrorObject) => {
         const resTime = Date.now() - subscriberAt;
         client.end();
         db_api.log_socket_time_ms(client.socket_id, Date.now() - requestAt);
-        db_api.log_req_res(client.socket_id, PAYMENT_INFO, subscriberAt, resTime, aeonParams, aeonErrorObject, reqXML);
+        db_api.log_req_res(client.socket_id, PAYMENT_INFO, subscriberAt, resTime, aeonParams, aeonErrorObject, infoXML);
         return {...aeonErrorObject, isConfirmAPI };
       });
 
