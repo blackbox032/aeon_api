@@ -1,6 +1,9 @@
 var utils = require("./adapterUtils");
 
-function toXML({ userPin, deviceId, deviceSer }, aeonParams = {}, bankResp = {}) {
+function toXML({ userPin, deviceId, deviceSer }, aeonParams = {}, bankResp) {
+
+  const recon = bankResp == undefined ? '' : `<Recon transReference="${bankResp.auth_id_res}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}" transNumber="${bankResp.user_id}" authoriser="${bankResp.rrn}" transDateTime="${bankResp.trx_datetime.replace(/[T,Z]/g, ' ')}"></Recon>`; 
+
   ret =
     `<request>` +
     `<Version>2.0</Version>` +
@@ -13,7 +16,7 @@ function toXML({ userPin, deviceId, deviceSer }, aeonParams = {}, bankResp = {})
     `<Amount>${aeonParams.amount || '100'}</Amount>` +
     `<LoyaltyProfileId>${aeonParams.loyaltyProfileID}</LoyaltyProfileId>` +
     `<tenderType>creditCard</tenderType>` +
-    `<Recon transReference="${bankResp.auth_id_res}" accountNumber="${aeonParams.fromAccount}" sysReference="${aeonParams.toAccount}" transNumber="${bankResp.user_id}" authoriser="${bankResp.rrn}" transDateTime="${bankResp.trx_datetime.replace(/[T,Z]/g, ' ')}"></Recon>` +
+    recon +
     `</event>` +
     `</request>`;
   return ret + "\n";
