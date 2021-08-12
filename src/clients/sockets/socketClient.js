@@ -12,9 +12,9 @@ const client = socketType == socketTypes.TCP ? require("./socketTCP") : require(
 
 async function socketClient(aeonAuth, { fromAccount }) {
   const clientData = await client(aeonAuth.host, aeonAuth.port, aeonAuth.timeout);
-  const id = fromAccount.slice(-5) + dt.get_date_str().replace(/[:/ ]/g, '');
+  const id = dt.get_date_str().replace(/[:/ ]/g, '').slice(-10) + fromAccount.slice(-5);
   db_api.log_socket(id, aeonAuth, clientData);
   return {...clientData, socket_id: id };
-}
+};
 
 module.exports = socketClient;
